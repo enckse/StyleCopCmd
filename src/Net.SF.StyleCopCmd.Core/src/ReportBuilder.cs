@@ -481,11 +481,9 @@ namespace Net.SF.StyleCopCmd.Core
         /// <returns>The path of the violations file.</returns>
         private static string GetViolationsFile(string outputXmlFile)
         {
-            var offp = Path.GetFullPath(outputXmlFile);
             var f = string.Format(
                 CultureInfo.CurrentCulture,
-                "{0}\\{1}.violations.xml",
-                Path.GetFullPath(Path.GetDirectoryName(offp)),
+                "{0}.violations.xml",
                 Path.GetFileNameWithoutExtension(outputXmlFile));
             return f;
         }

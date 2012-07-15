@@ -10,3 +10,4 @@
 [Tt]humbs.db 
 test-results
 *.pidb
+*.violations.xml
