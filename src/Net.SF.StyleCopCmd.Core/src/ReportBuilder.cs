@@ -46,7 +46,7 @@ namespace Net.SF.StyleCopCmd.Core
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
     using System.Xml.Xsl;
-    using Microsoft.StyleCop;
+    using StyleCop;
 
     /// <summary>
     /// This class assists in building a StyleCop report.
@@ -462,7 +462,6 @@ namespace Net.SF.StyleCopCmd.Core
             }
 
             scc.ViolationEncountered -= this.ViolationEncountered;
-            scc.Dispose();
 
             // Write the report to the output XML file.
             this.Report.WriteXml(outputXmlFile);

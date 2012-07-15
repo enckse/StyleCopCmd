@@ -1,3 +1,8 @@
+Changes from the base Mono StyleCopCmd:
+* Adjust references to use a more recent version of StyleCop and adjust the source to compile using that version.
+
+-----------------------------------------------
+
 This is stylecopcmd, the trunk as of 2010-08-20.
 
 This version has been modified very slightly to build and run under mono on linux, 

@@ -40,7 +40,7 @@ namespace Net.SF.StyleCopCmd.Core
 {
     using System.Collections;
     using System.Collections.Generic;
-    using Microsoft.StyleCop;
+    using StyleCop;
     using NAnt.Core;
     using NAnt.Core.Attributes;
     using NAnt.Core.Types;

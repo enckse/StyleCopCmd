@@ -40,21 +40,17 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="net.sf.dotnetcli, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="net.sf.dotnetcli">
       <HintPath>..\..\dll\net.sf.dotnetcli.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.StyleCop.CSharp, Version=4.3.2.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dll\Microsoft.StyleCop.CSharp.dll</HintPath>
+    <Reference Include="StyleCop.CSharp">
+      <HintPath>..\..\dll\StyleCop.CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.StyleCop.CSharp.Rules, Version=4.3.2.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dll\Microsoft.StyleCop.CSharp.Rules.dll</HintPath>
+    <Reference Include="StyleCop.CSharp.Rules">
+      <HintPath>..\..\dll\StyleCop.CSharp.Rules.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.StyleCop, Version=4.3.2.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dll\Microsoft.StyleCop.dll</HintPath>
+    <Reference Include="StyleCop">
+      <HintPath>..\..\dll\StyleCop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

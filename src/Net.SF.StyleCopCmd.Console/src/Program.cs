@@ -92,7 +92,7 @@ namespace Net.SF.StyleCopCmd.Console
         /// <param name="e">The output message to print.</param>
         private static void OutputGenerated(
             object sender, 
-            Microsoft.StyleCop.OutputEventArgs e)
+            StyleCop.OutputEventArgs e)
         {
             Console.WriteLine(e.Output);
         }
