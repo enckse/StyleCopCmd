@@ -464,12 +464,15 @@ namespace Net.SF.StyleCopCmd.Core
             scc.ViolationEncountered -= this.ViolationEncountered;
 
             // Write the report to the output XML file.
-            this.Report.WriteXml(outputXmlFile);
-
-            if (!string.IsNullOrEmpty(this.TransformFile))
-            {
-                this.Transform(outputXmlFile);
-            }
+			if(!string.IsNullOrEmpty(outputXmlFile))
+			{
+	            this.Report.WriteXml(outputXmlFile);
+	
+	            if (!string.IsNullOrEmpty(this.TransformFile))
+	            {
+	                this.Transform(outputXmlFile);
+	            }
+			}
         }
 
         /// <summary>
@@ -481,12 +484,8 @@ namespace Net.SF.StyleCopCmd.Core
         /// <returns>The path of the violations file.</returns>
         private static string GetViolationsFile(string outputXmlFile)
         {
-            var f = string.Format(
-                CultureInfo.CurrentCulture,
-                "{0}.violations.xml",
-                Path.GetFileNameWithoutExtension(outputXmlFile));
-            return f;
-        }
+			return string.IsNullOrEmpty(outputXmlFile) ? "StyleCopViolations.xml" :string.Format(CultureInfo.CurrentCulture, "{0}.violations.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
+		}
 
         /// <summary>
         /// Transforms the outputted report using an XSL transform file.
