@@ -1,5 +1,6 @@
 Changes from the base Mono StyleCopCmd:
 * Adjust references to use a more recent version of StyleCop and adjust the source to compile using that version.
+* "-of" is no longer a required argument (aka direct violation xml reports are now available without the transform)
 
 -----------------------------------------------
 
@@ -25,10 +26,6 @@ The very first time you run the console tool you might see:-
 
 If so, you will have to invoke the command (only once) as root (sudo), 
 stylecop wants to create a registry key, thats all.
-
-If you omit the "-of" argument stylecop may crash trying to create 
-a file with a null filename
-
 
 Ian Norton
 
