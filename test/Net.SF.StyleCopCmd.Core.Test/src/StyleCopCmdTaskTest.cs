@@ -254,6 +254,139 @@ namespace Net.SF.StyleCopCmd.Core.Test
         </properties>
     </nant>
 </configuration>";
+        
+                private const string NantConfigXmlLinux =
+@"<configuration>
+    <nant>
+        <frameworks>
+            <platform name=""unix"" default=""auto"">
+                <task-assemblies>
+                        <!-- include NAnt task assemblies -->
+                        <include name=""*Tasks.dll"" />
+                        <!-- include NAnt test assemblies -->
+                        <include name=""*Tests.dll"" />
+                        <!-- include framework-neutral assemblies -->
+                        <include name=""extensions/common/neutral/**/*.dll"" />
+                        <!-- exclude Microsoft.NET specific task assembly -->
+                        <exclude name=""NAnt.MSNetTasks.dll"" />
+                        <!-- exclude Microsoft.NET specific test assembly -->
+                        <exclude name=""NAnt.MSNet.Tests.dll"" />
+                </task-assemblies>
+                <framework 
+                    name=""net-3.5""
+                    family=""mono""
+                    version=""2.0""
+                    vendor=""Microsoft""
+                    description=""Microsoft .NET Framework 3.5""
+                    sdkdirectory=""${path::combine(sdkInstallRoot, 'bin')}""
+                    frameworkdirectory=""${path::combine(installRoot, '3.5')}""
+                    frameworkassemblydirectory=""${path::combine(installRoot, '2.0')}""
+                    clrversion=""4.0.30319""
+                    >
+                    <runtime>
+                        <probing-paths>
+                            <directory name=""lib/net/2.0"" />
+                            <directory name=""lib/net/neutral"" />
+                            <directory name=""lib/common/2.0"" />
+                            <directory name=""lib/common/neutral"" />
+                        </probing-paths>
+                        <modes>
+                            <strict>
+                                <environment>
+                                    <variable name=""COMPLUS_VERSION"" value=""v2.0.50727"" />
+                                </environment>
+                            </strict>
+                        </modes>
+                    </runtime>
+                    <reference-assemblies basedir=""${path::combine(installRoot, '2.0')}"">
+                        <include name=""Accessibility.dll"" />
+                        <include name=""mscorlib.dll"" />
+                        <include name=""Microsoft.Build.Utilities.dll"" />
+                        <include name=""Microsoft.Vsa.dll"" />
+                        <include name=""Microsoft.VisualBasic.dll"" />
+                        <include name=""Microsoft.VisualBasic.Compatibility.dll"" />
+                        <include name=""Microsoft.VisualBasic.Compatibility.Data.dll"" />
+                        <include name=""System.Configuration.dll"" />
+                        <include name=""System.Configuration.Install.dll"" />
+                        <include name=""System.Data.dll"" />
+                        <include name=""System.Data.OracleClient.dll"" />
+                        <include name=""System.Data.SqlXml.dll"" />
+                        <include name=""System.Deployment.dll"" />
+                        <include name=""System.Design.dll"" />
+                        <include name=""System.DirectoryServices.dll"" />
+                        <include name=""System.dll"" />
+                        <include name=""System.Drawing.Design.dll"" />
+                        <include name=""System.Drawing.dll"" />
+                        <include name=""System.EnterpriseServices.dll"" />
+                        <include name=""System.Management.dll"" />
+                        <include name=""System.Messaging.dll"" />
+                        <include name=""System.Runtime.Remoting.dll"" />
+                        <include name=""System.Runtime.Serialization.Formatters.Soap.dll"" />
+                        <include name=""System.Security.dll"" />
+                        <include name=""System.ServiceProcess.dll"" />
+                        <include name=""System.Transactions.dll"" />
+                        <include name=""System.Web.dll"" />
+                        <include name=""System.Web.Mobile.dll"" />
+                        <include name=""System.Web.RegularExpressions.dll"" />
+                        <include name=""System.Web.Services.dll"" />
+                        <include name=""System.Windows.Forms.dll"" />
+                        <include name=""System.Xml.dll"" />
+                    </reference-assemblies>
+                    <task-assemblies>
+                        <!-- include MS.NET version-neutral assemblies -->
+                        <include name=""extensions/net/neutral/**/*.dll"" />
+                        <!-- include MS.NET 2.0 specific assemblies -->
+                        <include name=""extensions/net/2.0/**/*.dll"" />
+                        <!-- include MS.NET specific task assembly -->
+                        <include name=""NAnt.MSNetTasks.dll"" />
+                        <!-- include MS.NET specific test assembly -->
+                        <include name=""NAnt.MSNet.Tests.dll"" />
+                        <!-- include .NET 2.0 specific assemblies -->
+                        <include name=""extensions/common/2.0/**/*.dll"" />
+                    </task-assemblies>
+                    <tool-paths>
+                        <directory name=""${path::combine(installRoot, '3.5')}"" />
+                        <directory name=""${path::combine(installRoot, '2.0')}"" />
+                    </tool-paths>
+                    <project>
+                        <property name=""installRoot""
+                                  value=""/usr/lib/mono/"" />
+                    </project>
+                    <tasks>
+                        <task name=""jsc"">
+                            <attribute name=""supportsplatform"">true</attribute>
+                        </task>
+                        <task name=""vjc"">
+                            <attribute name=""supportsnowarnlist"">true</attribute>
+                            <attribute name=""supportskeycontainer"">true</attribute>
+                            <attribute name=""supportskeyfile"">true</attribute>
+                            <attribute name=""supportsdelaysign"">true</attribute>
+                        </task>
+                        <task name=""resgen"">
+                            <attribute name=""supportsassemblyreferences"">true</attribute>
+                            <attribute name=""supportsexternalfilereferences"">true</attribute>
+                        </task>
+                        <task name=""al"">
+                            <attribute name=""exename"">${path::combine(sdkInstallRoot, 'bin/al.exe')}</attribute>
+                        </task>
+                        <task name=""delay-sign"">
+                            <attribute name=""exename"">sn</attribute>
+                        </task>
+                        <task name=""license"">
+                            <attribute name=""exename"">lc</attribute>
+                            <attribute name=""supportsassemblyreferences"">true</attribute>
+                        </task>
+                    </tasks>
+                </framework>
+            </platform>
+        </frameworks>
+        <properties>
+            <!-- properties defined here are accessible to all build files -->
+            <!-- <property name=""foo"" value = ""bar"" readonly=""false"" /> -->
+        </properties>
+    </nant>
+</configuration>";
+
 #endregion
 
         /// <summary>
@@ -289,19 +422,20 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void SetUp()
         {
             // Load the NAnt configuration file.
-            NAntConfigXmlDoc.LoadXml(NantConfigXml);
+            string xml = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? NantConfigXmlLinux : NantConfigXml;
+            NAntConfigXmlDoc.LoadXml(xml);
 
             this.rootSolutionPath = GetRootSolutionPath();
             this.transformFilePath = 
-                this.rootSolutionPath + @"\inc\StyleCopReport.xsl";
+                this.rootSolutionPath + @"/inc/StyleCopReport.xsl";
             this.testSolutionPath = 
                 this.rootSolutionPath + 
-                @"\test\Net.SF.StyleCopCmd.Core.Test" +
-                @"\data\StyleCopTestProject";
+                @"/test/Net.SF.StyleCopCmd.Core.Test" +
+                @"/data/StyleCopTestProject";
             this.outputXmlPath =
                 this.rootSolutionPath +
-                @"\test\Net.SF.StyleCopCmd.Core.Test" +
-                @"\build\StyleCopReport.xml";
+                @"/test/Net.SF.StyleCopCmd.Core.Test" +
+                @"/bin/StyleCopReport.xml";
         }
 
         /// <summary>
@@ -363,7 +497,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             <include name=""{2}/*.sln"" />
                         </solutionFiles>
                         <addinDirectories>
-                            <include name=""{3}/test/Net.SF.StyleCopCmd.Core.Test/build"" />
+                            <include name=""{3}/test/Net.SF.StyleCopCmd.Core.Test/bin"" />
                         </addinDirectories>
                     </styleCopCmd>
                 </project>";

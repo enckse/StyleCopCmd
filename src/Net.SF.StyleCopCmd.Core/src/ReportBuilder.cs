@@ -500,7 +500,7 @@ namespace Net.SF.StyleCopCmd.Core
             xt.Load(this.TransformFile);
             var htmlout = string.Format(
                 CultureInfo.CurrentCulture,
-                "{0}\\{1}.html",
+                "{0}/{1}.html",
                 Path.GetFullPath(Path.GetDirectoryName(offp)),
                 Path.GetFileNameWithoutExtension(outputXmlFile));
             xt.Transform(
