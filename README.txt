@@ -1,7 +1,3 @@
-Changes from the base Mono StyleCopCmd:
-* Adjust references to use a more recent version of StyleCop and adjust the source to compile using that version.
-* "-of" is no longer a required argument (aka direct violation xml reports are now available without the transform)
-
 Usage
 ------
 $ mono Net.SF.StyleCopCmd.Console.exe -s <solution> -o /home/me/stylecop-reports/report.xml
