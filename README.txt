@@ -13,4 +13,4 @@ When building:
 (mono Net.SF.StyleCopCmd.Console.exe -pf src/Net.SF.StyleCopCmd.Core/Net.SF.StyleCopCmd.Core.csproj src/Net.SF.StyleCopCmd.Console/Net.SF.StyleCopCmd.Console.csproj)
 
 Dependencies:
-Run build.sh to pull down the required dependencies
+Run dll/build.sh to pull down the required dependencies

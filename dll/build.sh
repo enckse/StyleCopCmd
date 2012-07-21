@@ -1,6 +1,4 @@
 #!/bin/sh
-# Drop the dlls where they have been in the past
-cd dll
 
 # Pull stylecop from the nuget gallery
 # Use NuGet in the future (currently it doesn't work properly on Linux + Mono)
@@ -23,4 +21,3 @@ mv nant-0.92/bin/NAnt.Core.dll ..
 mv nant-0.92/bin/log4net.dll ..
 cd ..
 rm -rf nant-temp
-cd ..

@@ -12,4 +12,4 @@ test-results
 *.pidb
 *.violations.xml
 StyleCopViolations.xml
-dll/*
+dll/*.dll
