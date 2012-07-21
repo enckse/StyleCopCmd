@@ -1,3 +1,5 @@
+This is modified version of the original StyleCopCmd that used more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment
+
 Usage
 ------
 $ mono Net.SF.StyleCopCmd.Console.exe -s <solution> -o /home/me/stylecop-reports/report.xml
