@@ -40,9 +40,6 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="net.sf.dotnetcli">
-      <HintPath>..\..\dll\net.sf.dotnetcli.dll</HintPath>
-    </Reference>
     <Reference Include="StyleCop.CSharp">
       <HintPath>..\..\dll\StyleCop.CSharp.dll</HintPath>
     </Reference>
@@ -51,6 +48,9 @@
     </Reference>
     <Reference Include="StyleCop">
       <HintPath>..\..\dll\StyleCop.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\..\dll\NDesk.Options.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -72,4 +72,14 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy FileWidth="120" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

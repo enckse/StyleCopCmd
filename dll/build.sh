@@ -21,3 +21,12 @@ mv nant-0.92/bin/NAnt.Core.dll ..
 mv nant-0.92/bin/log4net.dll ..
 cd ..
 rm -rf nant-temp
+
+# Pull NDesk.Options too for command line parsing
+mkdir nd-temp
+cd nd-temp
+wget -O ndesk.zip https://nuget.org/api/v2/package/NDesk.Options
+unzip ndesk.zip
+mv lib/NDesk.Options.dll ..
+cd ..
+rm -rf nd-temp

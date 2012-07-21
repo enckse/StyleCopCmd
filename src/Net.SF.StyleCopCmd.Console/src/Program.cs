@@ -39,9 +39,9 @@
 namespace Net.SF.StyleCopCmd.Console
 {
     using System;
-    using System.Reflection;
+    using System.Collections.Generic;
     using Core;
-    using net.sf.dotnetcli;
+    using NDesk.Options;
 
     /// <summary>
     /// The entry-point class for this application.
@@ -51,7 +51,7 @@ namespace Net.SF.StyleCopCmd.Console
         /// <summary>
         /// The command-line options for this application.
         /// </summary>
-        private static readonly Options Opts = new Options();
+        private static OptionSet opts = new OptionSet();
 
         /// <summary>
         /// The entry-point method for this application.
@@ -61,28 +61,61 @@ namespace Net.SF.StyleCopCmd.Console
         /// </param>
         private static void Main(string[] args)
         {
-            // Initialize the command line options.
-            InitOptions();
-
-            // Parse the arguments.
-            var cl = ProcessArguments(args);
-            if (cl == null)
+            IList<string> solutionFiles = new List<string>();
+            IList<string> projectFiles = new List<string>();
+            IList<string> ignorePatterns = new List<string>();
+            IList<string> directories = new List<string>();
+            IList<string> files = new List<string>();
+            IList<string> symbols = new List<string>();
+            string styleCopSettings = null;
+            string outputXml = null;
+            string transform = null;
+            bool recurse = false;
+            bool needHelp = false;
+            opts = new OptionSet()
+            {
+                { "s=|solutionFiles=", "Visual studio solution files to check", opt => { solutionFiles.Add(opt); } },
+                { "p=|projectFiles=", "Visual Studio project files to check", opt => { projectFiles.Add(opt); } },
+                { "i=|ignoreFilePattern=", "Regular expression patterns to ignore files", opt => { ignorePatterns.Add(opt); } },
+                { "d=|directories=", "Directories to check for CSharp files", opt => { directories.Add(opt); } },
+                { "f=|files=", "Files to check", opt => { files.Add(opt); } },
+                { "r|recurse", "Recursive directory search", opt => { recurse = opt != null; } },
+                { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { styleCopSettings = opt; } },
+                { "o=|outputXmlFile=", "The file the NAnt XML output is written to", opt => { outputXml = opt; } },
+                { "t=|xslFile=", "The transform file", opt => { transform = opt; } },
+                { "x=|configurationSymbols=", "Configuration symbols to pass to StyleCop (ex. DEBUG, RELEASE)", opt => { symbols.Add(opt); } },
+                { "?|help", "Print the usage information", opt => { needHelp = true; } }
+            };
+            
+            try
+            {
+                opts.Parse(args);
+                needHelp = needHelp || (solutionFiles.Count == 0 && projectFiles.Count == 0 && directories.Count == 0 && files.Count == 0);
+            }
+            catch (OptionException error)
+            {
+                Console.WriteLine("Invalid arguments");
+                Console.WriteLine(error);
+                needHelp = true;
+            }
+            
+            if (needHelp)
             {
                 PrintUsageAndHelp();
                 return;
             }
-
+            
             new StyleCopReport().ReportBuilder()
-                .WithStyleCopSettingsFile(cl.GetOptionValue("s"))
-                .WithRecursion(cl.HasOption("r"))
-                .WithSolutionsFiles(cl.GetOptionValues("sf"))
-                .WithProjectFiles(cl.GetOptionValues("pf"))
-                .WithDirectories(cl.GetOptionValues("d"))
-                .WithFiles(cl.GetOptionValues("f"))
-                .WithIgnorePatterns(cl.GetOptionValues("ifp"))
-                .WithTransformFile(cl.GetOptionValue("tf"))
+                .WithStyleCopSettingsFile(styleCopSettings)
+                .WithRecursion(recurse)
+                .WithSolutionsFiles(solutionFiles)
+                .WithProjectFiles(projectFiles)
+                .WithDirectories(directories)
+                .WithFiles(files)
+                .WithIgnorePatterns(ignorePatterns)
+                .WithTransformFile(transform)
                 .WithOutputEventHandler(OutputGenerated)
-                .Create(cl.GetOptionValue("of"));
+                .Create(outputXml);
         }
 
         /// <summary>
@@ -102,148 +135,9 @@ namespace Net.SF.StyleCopCmd.Console
         /// </summary>
         private static void PrintUsageAndHelp()
         {
-            var hf = new HelpFormatter();
-            hf.PrintHelp(
-                Assembly.GetExecutingAssembly().GetName().Name,
-                Opts,
-                true);
-        }
-
-        /// <summary>
-        /// Initialize the options this program takes.
-        /// </summary>
-        private static void InitOptions()
-        {
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("solutionFiles")
-                    .HasArgs()
-                    .WithArgName("filePaths")
-                    .WithDescription("Visual Studio solutions files to check")
-                    .Create("sf"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("projectFiles")
-                    .HasArgs()
-                    .WithArgName("filePaths")
-                    .WithDescription("Visual Studio project files to check")
-                    .Create("pf"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("ignoreFilePattern")
-                    .HasArgs()
-                    .WithArgName("patterns")
-                    .WithDescription(
-                    "Regular expression patterns that " +
-                    "can be used to ignore files")
-                    .Create("ifp"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("directories")
-                    .HasArgs()
-                    .WithArgName("dirPaths")
-                    .WithDescription("Directories to check for CSharp files")
-                    .Create("d"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("recurse")
-                    .WithDescription("Recursive directory search")
-                    .Create("r"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("files")
-                    .HasArgs()
-                    .WithArgName("filePaths")
-                    .WithDescription("Files to check")
-                    .Create("f"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("styleCopSettingsFile")
-                    .HasArg()
-                    .WithArgName("filePath")
-                    .WithDescription("Use the given StyleCop settings file")
-                    .Create("sc"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("configurationSymbols")
-                    .HasArgs()
-                    .WithArgName("symbols")
-                    .WithDescription(
-                    "Configuration symbols to pass to StyleCop " +
-                    "(ex. DEBUG, RELEASE)")
-                    .Create("cs"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("outputXmlFile")
-                    .HasArg()
-                    .WithArgName("filePath")
-                    .WithDescription("The file the XML output is written to")
-                    .Create("of"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("xslFile")
-                    .HasArg()
-                    .WithArgName("filePath")
-                    .WithDescription("The transform file")
-                    .Create("tf"));
-
-            Opts.AddOption(
-                OptionBuilder.Factory
-                    .WithLongOpt("help")
-                    .WithDescription("Print this help screen")
-                    .Create("?"));
-        }
-
-        /// <summary>
-        /// Process the command line arguments against the
-        /// expected options.
-        /// </summary>
-        /// <param name="args">
-        /// The command line arguments.
-        /// </param>
-        /// <returns>
-        /// A CommandLine object if successful, otherwise false.
-        /// </returns>
-        private static CommandLine ProcessArguments(string[] args)
-        {
-            var pp = new PosixParser();
-            CommandLine cl;
-
-            try
-            {
-                cl = pp.Parse(
-                    Opts,
-                    args);
-            }
-            catch (ParseException e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-
-            if (cl.HasOption("?"))
-            {
-                return null;
-            }
-
-            if (!(cl.HasOption("sf") ||
-                  cl.HasOption("pf") ||
-                  cl.HasOption("d") ||
-                  cl.HasOption("f")))
-            {
-                return null;
-            }
-
-            return cl;
+            Console.WriteLine("StyleCopCmd");
+            Console.WriteLine("Provides an interface for using StyleCop (specifically for Mono on Linux)");
+            opts.WriteOptionDescriptions(Console.Out);
         }
     }
 }
