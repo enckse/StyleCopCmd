@@ -40,10 +40,10 @@ namespace Net.SF.StyleCopCmd.Core
 {
     using System.Collections;
     using System.Collections.Generic;
-    using StyleCop;
     using NAnt.Core;
     using NAnt.Core.Attributes;
     using NAnt.Core.Types;
+    using StyleCop;
 
     /// <summary>
     /// This class provides a NAnt task that calls StyleCopCmd.

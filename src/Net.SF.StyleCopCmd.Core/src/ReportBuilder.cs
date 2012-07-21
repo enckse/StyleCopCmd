@@ -67,8 +67,7 @@ namespace Net.SF.StyleCopCmd.Core
         // ReSharper disable UnusedPrivateMember
 
         /// <summary>
-        /// Prevents a default instance of the ReportBuilder class from
-        /// being created.
+        /// Prevents a default instance of the <see cref="ReportBuilder" /> class from being created.
         /// </summary>
         private ReportBuilder()
         {
@@ -464,15 +463,15 @@ namespace Net.SF.StyleCopCmd.Core
             scc.ViolationEncountered -= this.ViolationEncountered;
 
             // Write the report to the output XML file.
-			if(!string.IsNullOrEmpty(outputXmlFile))
-			{
-	            this.Report.WriteXml(outputXmlFile);
-	
-	            if (!string.IsNullOrEmpty(this.TransformFile))
-	            {
-	                this.Transform(outputXmlFile);
-	            }
-			}
+            if (!string.IsNullOrEmpty(outputXmlFile))
+            {
+                this.Report.WriteXml(outputXmlFile);
+
+                if (!string.IsNullOrEmpty(this.TransformFile))
+                {
+                    this.Transform(outputXmlFile);
+                }
+            }
         }
 
         /// <summary>
@@ -484,8 +483,8 @@ namespace Net.SF.StyleCopCmd.Core
         /// <returns>The path of the violations file.</returns>
         private static string GetViolationsFile(string outputXmlFile)
         {
-			return string.IsNullOrEmpty(outputXmlFile) ? "StyleCopViolations.xml" :string.Format(CultureInfo.CurrentCulture, "{0}.violations.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
-		}
+            return string.IsNullOrEmpty(outputXmlFile) ? "StyleCopViolations.xml" : string.Format(CultureInfo.CurrentCulture, "{0}.violations.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
+        }
 
         /// <summary>
         /// Transforms the outputted report using an XSL transform file.
@@ -619,7 +618,7 @@ namespace Net.SF.StyleCopCmd.Core
                     return;
                 }
             }
-
+            
             var sr = solutionsRow ??
                      this.Report.Solutions.SingleOrDefault(
                          r => r.Name == "Files") ??
@@ -673,8 +672,7 @@ namespace Net.SF.StyleCopCmd.Core
                 RegexOptions.Multiline | RegexOptions.IgnoreCase);
             foreach (Match sm in smatches)
             {
-				var mstring = sm.Groups["ppath"].Value.Replace(@"\", Path.DirectorySeparatorChar.ToString() );
-				
+                var mstring = sm.Groups["ppath"].Value.Replace(@"\", Path.DirectorySeparatorChar.ToString());
                 var ppath =
                     Path.GetFullPath(
                         Path.GetDirectoryName(
@@ -738,9 +736,9 @@ namespace Net.SF.StyleCopCmd.Core
             // Add the source files.
             foreach (var n in cnodes)
             {
-                var fpath =
-                    Path.GetFullPath(Path.GetDirectoryName(projectFilePath))
-                    +  Path.DirectorySeparatorChar.ToString() + n.Attribute(XName.Get("Include")).Value;
+                var fpath = Path.Combine(
+                    Path.GetFullPath(Path.GetDirectoryName(projectFilePath)), 
+                    n.Attribute(XName.Get("Include")).Value.Replace(@"\", Path.DirectorySeparatorChar.ToString()));
 
                 this.AddFile(
                     fpath,

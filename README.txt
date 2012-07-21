@@ -8,6 +8,6 @@ $ mono Net.SF.StyleCopCmd.Console.exe -sf <solution> -of /home/me/stylecop-repor
 $ mono Net.SF.StyleCopCmd.Console.exe -f <file.cs>   -of /home/me/stylecop-reports/report.xml
 $ mono Net.SF.StyleCopCmd.Console.exe -pf <proj.csproj> <proj.csproj>
 
-Forked to create a more updated version
-Please see the previous version for a few additional notes/known issues:
-https://github.com/inorton/StyleCopCmd
+When building:
+* Make sure to run StyleCopCmd over the project itself, exclude the test project:
+(mono Net.SF.StyleCopCmd.Console.exe -pf src/Net.SF.StyleCopCmd.Core/Net.SF.StyleCopCmd.Core.csproj src/Net.SF.StyleCopCmd.Console/Net.SF.StyleCopCmd.Console.csproj)
