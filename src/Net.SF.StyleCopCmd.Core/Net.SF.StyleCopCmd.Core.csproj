@@ -67,9 +67,6 @@
     <Compile Include="src\StyleCopReportExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="conf\default.properties" />
-    <None Include="conf\local.properties" />
-    <None Include="nant.build" />
     <None Include="src\StyleCopReport.xsc">
       <DependentUpon>StyleCopReport.xsd</DependentUpon>
     </None>

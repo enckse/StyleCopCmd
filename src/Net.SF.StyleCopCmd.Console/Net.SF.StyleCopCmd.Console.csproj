@@ -58,11 +58,6 @@
     <Compile Include="src\Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="conf\default.properties" />
-    <None Include="conf\local.properties" />
-    <None Include="nant.build" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Net.SF.StyleCopCmd.Core\Net.SF.StyleCopCmd.Core.csproj">
       <Project>{47294B06-DCA7-4E6A-9A40-5DB5291E4E3B}</Project>
       <Name>Net.SF.StyleCopCmd.Core</Name>
