@@ -44,7 +44,7 @@ namespace Net.SF.StyleCopCmd.Core.Test.Console
                             method.Invoke(instance, null);
                             System.Console.WriteLine("Passed");
                         }
-                        catch(Exception error)
+                        catch (Exception error)
                         {
                             System.Console.WriteLine("Failed");
                             System.Console.WriteLine(error);
