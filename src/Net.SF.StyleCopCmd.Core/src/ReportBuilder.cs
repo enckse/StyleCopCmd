@@ -171,25 +171,12 @@ namespace Net.SF.StyleCopCmd.Core
 
         /// <summary>
         /// Gets or sets a list of directories used by StyleCop to search for 
-        /// add-ins.
+        /// add-ins. Currently not available from the command line
         /// </summary>
         private IList<string> AddInDirectories
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Includes the following directories in the StyleCop processor's
-        /// search path for add-ins.
-        /// </summary>
-        /// <param name="addinDirectories">The directories to include.</param>
-        /// <returns>This ReportBuilder.</returns>
-        public ReportBuilder WithAddInDirectories(
-            IList<string> addinDirectories)
-        {
-            this.AddInDirectories = addinDirectories;
-            return this;
         }
 
         /// <summary>
