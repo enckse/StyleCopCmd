@@ -41,7 +41,6 @@ namespace Net.SF.StyleCopCmd.Core.Test
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using NUnit.Framework;
 
     /// <summary>
@@ -51,51 +50,114 @@ namespace Net.SF.StyleCopCmd.Core.Test
     public class ReportBuilderTest
     {
         /// <summary>
+        /// The base path for testing.
+        /// </summary>
+        private static readonly string BasePath = GetTestSolutionPath();
+        
+        /// <summary>
+        /// Constant test name for testing the StyleCop calls
+        /// </summary>
+        private const string TestName = "StyleCopTestProject";
+        
+        /// <summary>
+        /// The solution path.
+        /// </summary>
+        private static readonly string Solution = JoinAll(BasePath, TestName + ".sln");
+        
+        /// <summary>
+        /// The project path.
+        /// </summary>
+        private static readonly string Project = JoinAll(BasePath, TestName, TestName + ".csproj");
+        
+        /// <summary>
+        /// The directory path for testing
+        /// </summary>
+        private static readonly string DirectoryPath = JoinAll(BasePath, TestName, "src") + Path.DirectorySeparatorChar;
+        
+        /// <summary>
         /// Tests the WithSolutionFiles method.
         /// </summary>
         [Test]
         public void WithSolutionFilesTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithSolutionsFiles(
-                new[]
-                {
-                    @"c:\foo.txt"
-                });
-            var sf = GetPrivateProperty<IList<string>>(
-                rb,
-                "SolutionFiles");
-            Assert.AreEqual(
-                1,
-                sf.Count);
-            Assert.AreEqual(
-                @"c:\foo.txt",
-                sf[0]);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithSolutionsFiles(new List<string> () { Solution });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual("8 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
         }
-
+        
+        /// <summary>
+        /// Withs multiple solution files test.
+        /// </summary>
+        [Test]
+        public void WithMultipleSolutionFilesTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithSolutionsFiles(new List<string> () { Solution, Solution });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual("16 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("AssemblyInfo.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassOne.cs"), result[3]);
+            Assert.IsTrue(result[4].EndsWith("ClassOne.cs"), result[4]);
+            Assert.IsTrue(result[5].EndsWith("ClassTwo.cs"), result[5]);
+            Assert.IsTrue(result[6].EndsWith("ClassTwo.cs"), result[6]);
+        }
+  
+        /// <summary>
+        /// Tests with no real settings
+        /// </summary>
+        [Test]
+        public void WithNothingTest()
+        {
+            var report = new StyleCopReport().ReportBuilder();          
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("No violations encountered", result[0]);
+        }
+        
         /// <summary>
         /// Tests the WithProjectFiles method.
         /// </summary>
         [Test]
         public void WithProjectFilesTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithProjectFiles(
-                new[]
-                {
-                    @"c:\foo.txt"
-                });
-            var sf = GetPrivateProperty<IList<string>>(
-                rb,
-                "ProjectFiles");
-            Assert.AreEqual(
-                1,
-                sf.Count);
-            Assert.AreEqual(
-                @"c:\foo.txt",
-                sf[0]);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithProjectFiles(new List<string> () { Project });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual("8 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
+        }
+        
+        /// <summary>
+        /// Withs multiple project files test.
+        /// </summary>
+        [Test]
+        public void WithMultipleProjectFilesTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithProjectFiles(new List<string> () { Project, Project });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual("16 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("AssemblyInfo.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassOne.cs"), result[3]);
+            Assert.IsTrue(result[4].EndsWith("ClassOne.cs"), result[4]);
+            Assert.IsTrue(result[5].EndsWith("ClassTwo.cs"), result[5]);
+            Assert.IsTrue(result[6].EndsWith("ClassTwo.cs"), result[6]);
         }
 
         /// <summary>
@@ -104,78 +166,93 @@ namespace Net.SF.StyleCopCmd.Core.Test
         [Test]
         public void WithDirectoriesTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithDirectories(
-                new[]
-                {
-                    @"c:\windows",
-                    @"c:\program files"
-                });
-            var sf = GetPrivateProperty<IList<string>>(
-                rb,
-                "Directories");
-            Assert.AreEqual(
-                2,
-                sf.Count);
-            Assert.AreEqual(
-                @"c:\windows",
-                sf[0]);
-            Assert.AreEqual(
-                @"c:\program files",
-                sf[1]);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("3 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
-
+  
+        /// <summary>
+        /// Withs multiple directories test.
+        /// </summary>
+        [Test]
+        public void WithMultipleDirectoriesTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath, DirectoryPath });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual("6 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+        }
+        
         /// <summary>
         /// Tests the WithFiles method.
         /// </summary>
         [Test]
         public void WithFilesTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithFiles(
-                new[]
-                {
-                    @"c:\windows\foo1.txt",
-                    @"c:\program files\foo2.txt"
-                });
-            var sf = GetPrivateProperty<IList<string>>(
-                rb,
-                "Files");
-            Assert.AreEqual(
-                2,
-                sf.Count);
-            Assert.AreEqual(
-                @"c:\windows\foo1.txt",
-                sf[0]);
-            Assert.AreEqual(
-                @"c:\program files\foo2.txt",
-                sf[1]);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithFiles(new List<string> () { DirectoryPath + "ClassOne.cs" });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("3 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
-
+        
+        /// <summary>
+        /// Withs multiple files test.
+        /// </summary>
+        [Test]
+        public void WithMultipleFilesTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithFiles(new List<string> () { DirectoryPath + "ClassOne.cs", DirectoryPath + "SubNamespace" + Path.DirectorySeparatorChar + "ClassTwo.cs" });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual("7 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
+        }
+        
         /// <summary>
         /// Tests the WithIngorePatterns method.
         /// </summary>
         [Test]
         public void WithIgnorePatternsTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithIgnorePatterns(
-                new[]
-                {
-                    @"AssemblyInfo.cs"
-                });
-            var sf = GetPrivateProperty<IList<string>>(
-                rb,
-                "IgnorePatterns");
-            Assert.AreEqual(
-                1,
-                sf.Count);
-            Assert.AreEqual(
-                @"AssemblyInfo.cs",
-                sf[0]);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithProjectFiles(new List<string>() { Project })
+                            .WithIgnorePatterns(new List<string> () { "ClassOne" });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual("5 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
+        }
+        
+        /// <summary>
+        /// Withs multiple patterns test.
+        /// </summary>
+        [Test]
+        public void WithMultiplePatternsTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithProjectFiles(new List<string>() { Project })
+                            .WithIgnorePatterns(new List<string> () { "ClassOne", "Info" });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("4 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassTwo.cs"), result[1]);
         }
 
         /// <summary>
@@ -184,43 +261,74 @@ namespace Net.SF.StyleCopCmd.Core.Test
         [Test]
         public void WithRecursionTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithRecursion();
-            var sf = GetPrivateProperty<bool>(
-                rb,
-                "RecursionEnabled");
-            Assert.AreEqual(
-                true,
-                sf);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithRecursion();
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual("7 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
         }
 
         /// <summary>
         /// Tests the WithProcessorSymbols method.
         /// </summary>
         [Test]
-        public void WithProcessorSymbols()
+        public void WithProcessorSymbolsTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithProcessorSymbols(
-                new[]
-                {
-                    "DEBUG",
-                    "CODE_ANALYSIS",
-                });
-            var sf = GetPrivateProperty<IList<string>>(
-                rb,
-                "ProcessorSymbols");
-            Assert.AreEqual(
-                2,
-                sf.Count);
-            Assert.AreEqual(
-                "DEBUG",
-                sf[0]);
-            Assert.AreEqual(
-                "CODE_ANALYSIS",
-                sf[1]);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithProcessorSymbols(new List<string>() { "SOMEOTHER" });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("6 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+        }
+        
+        /// <summary>
+        /// Withs multiple symbols test.
+        /// </summary>
+        [Test]
+        public void WithMultipleSymbolsTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "SOMECONDITIONAL" });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("8 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+            
+            report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "SOMECONDITIONAL" });
+            
+            result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("5 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+            
+            report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "!SOMECONDITIONAL" });
+            
+            result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("6 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
+            
+            report = new StyleCopReport().ReportBuilder()
+                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "!SOMECONDITIONAL" });
+            
+            result = ExecuteTest(report, null);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("3 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
 
         /// <summary>
@@ -229,103 +337,80 @@ namespace Net.SF.StyleCopCmd.Core.Test
         [Test]
         public void WithStyleCopSettingsFileTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithStyleCopSettingsFile("c:\\scs.settings");
-            var sf = GetPrivateProperty<string>(
-                rb,
-                "StyleCopSettingsFile");
-            Assert.AreEqual(
-                @"c:\scs.settings",
-                sf);
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithSolutionsFiles(new List<string> () { Solution })
+                            .WithStyleCopSettingsFile(JoinAll(BasePath, "LocalSettings.Setting"));
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual("7 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
         }
-
+        
         /// <summary>
-        /// Tests the AddSolutionFile method.
+        /// Output report test.
         /// </summary>
         [Test]
-        public void AddSolutionFileTest()
+        public void OutputReportTest()
         {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            var sf = System.String.Join( Path.DirectorySeparatorChar.ToString(),
-			                            new string[] { GetTestSolutionPath() , "StyleCopTestProject.sln" } );
+            var testReport = "test-output";
+            var testReportFull = "test-output.violations.xml";
+            if (File.Exists(testReportFull))
+            {
+                File.Delete(testReportFull);
+            }
             
-            var t = rb.GetType();
-            var mi = t.GetMethod(
-                "AddSolutionFile",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
+            var report = new StyleCopReport().ReportBuilder();
+            ExecuteTest(report, testReport);
+            Assert.IsTrue(File.Exists(testReportFull));
+        }
+        
+        /// <summary>
+        /// Executes the test.
+        /// </summary>
+        /// <returns>
+        /// The output from stylecop event output
+        /// </returns>
+        /// <param name='builder'>
+        /// Input report for testing
+        /// </param>
+        /// <param name='outputFile'>
+        /// Output file.
+        /// </param>
+        private static IList<string> ExecuteTest(ReportBuilder builder, string outputFile)
+        {
+            var outputList = new List<string>();
+            builder.WithOutputEventHandler((x,y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
+            builder.Create(outputFile);
+            return outputList.OrderBy(value => value).ToList();
+        }
+        
+        /// <summary>
+        /// Joins all paths into a single path
+        /// </summary>
+        /// <returns>
+        /// The complete path
+        /// </returns>
+        /// <param name='path'>
+        /// Path base.
+        /// </param>
+        /// <param name='paths'>
+        /// Paths to append.
+        /// </param>
+        private static string JoinAll(string path, params string[] paths)
+        {
+            string output = path;
+            if (paths != null && paths.Length > 0)
+            {
+                foreach(var item in paths)
+                {
+                    output = Path.Combine(output, item);
+                }
+            }
             
-            // Invoke the method.
-            mi.Invoke(
-                rb,
-                new[] { sf });
-
-            Assert.AreEqual(
-                1,
-                scr.Solutions.Rows.Count);
-            Assert.AreEqual(
-                1,
-                scr.Projects.Rows.Count);
-            Assert.AreEqual(
-                3,
-                scr.SourceCodeFiles.Rows.Count);
-        }
-
-        /// <summary>
-        /// Tests the AddProjectFile method.
-        /// </summary>
-        [Test]
-        public void AddProjectFileTest()
-        {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            var sf = System.String.Join( Path.DirectorySeparatorChar.ToString(), 
-			    new string[]{ GetTestSolutionPath(), "StyleCopTestProject","StyleCopTestProject.csproj" });
-
-            var t = rb.GetType();
-            var mi = t.GetMethod(
-                "AddProjectFile",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
-
-            // Invoke the method.
-            mi.Invoke(
-                rb,
-                new[] { sf, null });
-
-            Assert.AreEqual(
-                1,
-                scr.Solutions.Rows.Count);
-            Assert.AreEqual(
-                1,
-                scr.Projects.Rows.Count);
-            Assert.AreEqual(
-                3,
-                scr.SourceCodeFiles.Rows.Count);
-        }
-
-        /// <summary>
-        /// Gets a private property from a ReportBuilder instance.
-        /// </summary>
-        /// <typeparam name="T">
-        /// The type of the property being returned.
-        /// </typeparam>
-        /// <param name="reportBuilder">
-        /// The ReportBuilder instance to get the private property from.
-        /// </param>
-        /// <param name="propertyName">
-        /// The name of the property to get.
-        /// </param>
-        /// <returns>The property value.</returns>
-        private static T GetPrivateProperty<T>(
-            ReportBuilder reportBuilder,
-            string propertyName)
-        {
-            var t = reportBuilder.GetType();
-            var pi = t.GetProperty(
-                propertyName,
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            return (T) pi.GetValue(reportBuilder, null);
+            return output;
         }
 
         /// <summary>

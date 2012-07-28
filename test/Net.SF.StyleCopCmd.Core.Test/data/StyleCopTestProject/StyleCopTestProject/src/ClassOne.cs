@@ -12,7 +12,14 @@ namespace StyleCopTestProject
 {
     public class ClassOne
     {
-     
+
+#if SOMECONDITIONAL
+        private string Test;
+#endif
+
+#if SOMEOTHER
+	private string Test2;
+#endif
    
     }
 }
