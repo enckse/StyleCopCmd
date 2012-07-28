@@ -50,14 +50,14 @@ namespace Net.SF.StyleCopCmd.Core.Test
     public class ReportBuilderTest
     {
         /// <summary>
-        /// The base path for testing.
-        /// </summary>
-        private static readonly string BasePath = GetTestSolutionPath();
-        
-        /// <summary>
         /// Constant test name for testing the StyleCop calls
         /// </summary>
         private const string TestName = "StyleCopTestProject";
+        
+        /// <summary>
+        /// The base path for testing.
+        /// </summary>
+        private static readonly string BasePath = GetTestSolutionPath();
         
         /// <summary>
         /// The solution path.
@@ -81,7 +81,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithSolutionFilesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithSolutionsFiles(new List<string> () { Solution });
+                            .WithSolutionsFiles(new List<string>() { Solution });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(4, result.Count);
@@ -98,7 +98,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithMultipleSolutionFilesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithSolutionsFiles(new List<string> () { Solution, Solution });
+                            .WithSolutionsFiles(new List<string>() { Solution, Solution });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(7, result.Count);
@@ -130,7 +130,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithProjectFilesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithProjectFiles(new List<string> () { Project });
+                            .WithProjectFiles(new List<string>() { Project });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(4, result.Count);
@@ -147,7 +147,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithMultipleProjectFilesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithProjectFiles(new List<string> () { Project, Project });
+                            .WithProjectFiles(new List<string>() { Project, Project });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(7, result.Count);
@@ -167,7 +167,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithDirectoriesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath });
+                            .WithDirectories(new List<string>() { DirectoryPath });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(2, result.Count);
@@ -182,7 +182,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithMultipleDirectoriesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath, DirectoryPath });
+                            .WithDirectories(new List<string>() { DirectoryPath, DirectoryPath });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(3, result.Count);
@@ -198,7 +198,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithFilesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithFiles(new List<string> () { DirectoryPath + "ClassOne.cs" });
+                            .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs" });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(2, result.Count);
@@ -213,7 +213,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithMultipleFilesTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithFiles(new List<string> () { DirectoryPath + "ClassOne.cs", DirectoryPath + "SubNamespace" + Path.DirectorySeparatorChar + "ClassTwo.cs" });
+                            .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs", DirectoryPath + "SubNamespace" + Path.DirectorySeparatorChar + "ClassTwo.cs" });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(3, result.Count);
@@ -230,7 +230,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         {
             var report = new StyleCopReport().ReportBuilder()
                             .WithProjectFiles(new List<string>() { Project })
-                            .WithIgnorePatterns(new List<string> () { "ClassOne" });
+                            .WithIgnorePatterns(new List<string>() { "ClassOne" });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(3, result.Count);
@@ -247,7 +247,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         {
             var report = new StyleCopReport().ReportBuilder()
                             .WithProjectFiles(new List<string>() { Project })
-                            .WithIgnorePatterns(new List<string> () { "ClassOne", "Info" });
+                            .WithIgnorePatterns(new List<string>() { "ClassOne", "Info" });
             
             var result = ExecuteTest(report, null);
             Assert.AreEqual(2, result.Count);
@@ -262,7 +262,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithRecursionTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithDirectories(new List<string>() { DirectoryPath })
                             .WithRecursion();
             
             var result = ExecuteTest(report, null);
@@ -279,7 +279,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithProcessorSymbolsTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER" });
             
             var result = ExecuteTest(report, null);
@@ -295,7 +295,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithMultipleSymbolsTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "SOMECONDITIONAL" });
             
             var result = ExecuteTest(report, null);
@@ -304,7 +304,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
             report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "SOMECONDITIONAL" });
             
             result = ExecuteTest(report, null);
@@ -313,7 +313,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
             report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "!SOMECONDITIONAL" });
             
             result = ExecuteTest(report, null);
@@ -322,7 +322,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
             report = new StyleCopReport().ReportBuilder()
-                            .WithDirectories(new List<string> () { DirectoryPath })
+                            .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "!SOMECONDITIONAL" });
             
             result = ExecuteTest(report, null);
@@ -338,7 +338,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         public void WithStyleCopSettingsFileTest()
         {
             var report = new StyleCopReport().ReportBuilder()
-                            .WithSolutionsFiles(new List<string> () { Solution })
+                            .WithSolutionsFiles(new List<string>() { Solution })
                             .WithStyleCopSettingsFile(JoinAll(BasePath, "LocalSettings.Setting"));
             
             var result = ExecuteTest(report, null);
@@ -382,7 +382,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         private static IList<string> ExecuteTest(ReportBuilder builder, string outputFile)
         {
             var outputList = new List<string>();
-            builder.WithOutputEventHandler((x,y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
+            builder.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
             builder.Create(outputFile);
             return outputList.OrderBy(value => value).ToList();
         }
@@ -404,7 +404,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
             string output = path;
             if (paths != null && paths.Length > 0)
             {
-                foreach(var item in paths)
+                foreach (var item in paths)
                 {
                     output = Path.Combine(output, item);
                 }
@@ -436,11 +436,9 @@ namespace Net.SF.StyleCopCmd.Core.Test
                 d = d.Parent;
             }
 
-            var r = System.String.Join( Path.DirectorySeparatorChar.ToString(),
-			    new string[] { 
-				    d.FullName ,
-                    "test","Net.SF.StyleCopCmd.Core.Test",
-                    "data","StyleCopTestProject" } );
+            var r = string.Join(
+                Path.DirectorySeparatorChar.ToString(),
+                new string[] { d.FullName, "test", "Net.SF.StyleCopCmd.Core.Test", "data", TestName });
 
             return r;
         }
