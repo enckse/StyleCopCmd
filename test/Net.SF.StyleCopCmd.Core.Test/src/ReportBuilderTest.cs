@@ -84,7 +84,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithSolutionsFiles(new List<string>() { Solution });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(4, result.Count, BasePath);
             Assert.AreEqual("8 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
@@ -101,7 +101,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithSolutionsFiles(new List<string>() { Solution, Solution });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual(7, result.Count, BasePath);
             Assert.AreEqual("16 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("AssemblyInfo.cs"), result[2]);
@@ -119,7 +119,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
         {
             var report = new StyleCopReport().ReportBuilder();          
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(1, result.Count, BasePath);
             Assert.AreEqual("No violations encountered", result[0]);
         }
         
@@ -133,7 +133,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProjectFiles(new List<string>() { Project });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(4, result.Count, BasePath);
             Assert.AreEqual("8 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
@@ -150,7 +150,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProjectFiles(new List<string>() { Project, Project });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual(7, result.Count, BasePath);
             Assert.AreEqual("16 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("AssemblyInfo.cs"), result[2]);
@@ -170,7 +170,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithDirectories(new List<string>() { DirectoryPath });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("3 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
@@ -185,7 +185,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithDirectories(new List<string>() { DirectoryPath, DirectoryPath });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(3, result.Count, BasePath);
             Assert.AreEqual("6 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
@@ -201,7 +201,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs" });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("3 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
@@ -216,7 +216,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs", DirectoryPath + "SubNamespace" + Path.DirectorySeparatorChar + "ClassTwo.cs" });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(3, result.Count, BasePath);
             Assert.AreEqual("7 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
@@ -233,7 +233,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithIgnorePatterns(new List<string>() { "ClassOne" });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(3, result.Count, BasePath);
             Assert.AreEqual("5 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
@@ -250,7 +250,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithIgnorePatterns(new List<string>() { "ClassOne", "Info" });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("4 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassTwo.cs"), result[1]);
         }
@@ -266,7 +266,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithRecursion();
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(3, result.Count, BasePath);
             Assert.AreEqual("7 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
@@ -283,7 +283,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER" });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("6 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
@@ -299,7 +299,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "SOMECONDITIONAL" });
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("8 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
@@ -308,7 +308,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "SOMECONDITIONAL" });
             
             result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("5 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
@@ -317,7 +317,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "!SOMECONDITIONAL" });
             
             result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("6 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
@@ -326,7 +326,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "!SOMECONDITIONAL" });
             
             result = ExecuteTest(report, null);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(2, result.Count, BasePath);
             Assert.AreEqual("3 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
         }
@@ -342,7 +342,7 @@ namespace Net.SF.StyleCopCmd.Core.Test
                             .WithStyleCopSettingsFile(JoinAll(BasePath, "LocalSettings.Setting"));
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(4, result.Count, BasePath);
             Assert.AreEqual("7 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
             Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
