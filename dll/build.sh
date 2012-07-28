@@ -12,16 +12,6 @@ mv tools/StyleCop.CSharp.Rules.dll ..
 cd ..
 rm -rf sc-temp
 
-# Pull the nant release as well
-mkdir nant-temp
-cd nant-temp
-wget -O nant.zip http://sourceforge.net/projects/nant/files/nant/0.92/nant-0.92-bin.zip/download
-unzip nant.zip
-mv nant-0.92/bin/NAnt.Core.dll ..
-mv nant-0.92/bin/log4net.dll ..
-cd ..
-rm -rf nant-temp
-
 # Pull NDesk.Options too for command line parsing
 mkdir nd-temp
 cd nd-temp

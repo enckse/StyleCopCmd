@@ -69,7 +69,6 @@ namespace Net.SF.StyleCopCmd.Console
             IList<string> symbols = new List<string>();
             string styleCopSettings = null;
             string outputXml = null;
-            string transform = null;
             bool recurse = false;
             bool needHelp = false;
             opts = new OptionSet()
@@ -82,7 +81,6 @@ namespace Net.SF.StyleCopCmd.Console
                 { "r|recurse", "Recursive directory search", opt => { recurse = opt != null; } },
                 { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { styleCopSettings = opt; } },
                 { "o=|outputXmlFile=", "The file the NAnt XML output is written to", opt => { outputXml = opt; } },
-                { "t=|xslFile=", "The transform file", opt => { transform = opt; } },
                 { "x=|configurationSymbols=", "Configuration symbols to pass to StyleCop (ex. DEBUG, RELEASE)", opt => { symbols.Add(opt); } },
                 { "?|help", "Print the usage information", opt => { needHelp = true; } }
             };
@@ -113,7 +111,6 @@ namespace Net.SF.StyleCopCmd.Console
                 .WithDirectories(directories)
                 .WithFiles(files)
                 .WithIgnorePatterns(ignorePatterns)
-                .WithTransformFile(transform)
                 .WithOutputEventHandler(OutputGenerated)
                 .Create(outputXml);
         }

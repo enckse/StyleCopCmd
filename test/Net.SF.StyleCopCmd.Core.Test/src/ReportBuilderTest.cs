@@ -241,23 +241,6 @@ namespace Net.SF.StyleCopCmd.Core.Test
         }
 
         /// <summary>
-        /// Tests the WithTransformFile method.
-        /// </summary>
-        [Test]
-        public void WithTransformFileTest()
-        {
-            var scr = new StyleCopReport();
-            var rb = scr.ReportBuilder();
-            rb.WithTransformFile("c:\\StyleCopReport.xsl");
-            var sf = GetPrivateProperty<string>(
-                rb,
-                "TransformFile");
-            Assert.AreEqual(
-                @"c:\StyleCopReport.xsl",
-                sf);
-        }
-
-        /// <summary>
         /// Tests the AddSolutionFile method.
         /// </summary>
         [Test]

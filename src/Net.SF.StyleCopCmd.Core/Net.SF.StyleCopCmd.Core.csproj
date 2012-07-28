@@ -43,9 +43,6 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="NAnt.Core">
-      <HintPath>..\..\dll\NAnt.Core.dll</HintPath>
-    </Reference>
     <Reference Include="StyleCop.CSharp">
       <HintPath>..\..\dll\StyleCop.CSharp.dll</HintPath>
     </Reference>
@@ -57,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\StyleCopCmdTask.cs" />
     <Compile Include="src\ReportBuilder.cs" />
     <Compile Include="src\StyleCopReport.Designer.cs">
       <DependentUpon>StyleCopReport.xsd</DependentUpon>
