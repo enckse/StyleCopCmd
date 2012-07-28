@@ -13,3 +13,4 @@ test-results
 *.violations.xml
 StyleCopViolations.xml
 dll/*.dll
+TestResult.xml
