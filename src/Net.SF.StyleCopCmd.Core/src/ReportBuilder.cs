@@ -64,8 +64,6 @@ namespace Net.SF.StyleCopCmd.Core
             this.Report = report;
         }
 
-        // ReSharper disable UnusedPrivateMember
-
         /// <summary>
         /// Prevents a default instance of the <see cref="ReportBuilder" /> class from being created.
         /// </summary>
@@ -73,8 +71,6 @@ namespace Net.SF.StyleCopCmd.Core
         {
             // Do nothing
         }
-
-        // ReSharper restore UnusedPrivateMember
 
         /// <summary>
         /// Occurs when the stle processor outputs a message.
@@ -395,14 +391,11 @@ namespace Net.SF.StyleCopCmd.Core
             // Add the source code files to the style cop checker
             foreach (var f in this.Report.SourceCodeFiles)
             {
-                // ReSharper disable AccessToModifiedClosure
                 var cp = cps.SingleOrDefault(i => i.Key == f.CodeProjectID);
                 scc.Core.Environment.AddSourceCode(
                     cp,
                     f.Path,
                     null);
-
-                // ReSharper restore AccessToModifiedClosure
             }
             
             if (this.OutputGenerated != null)
@@ -599,8 +592,6 @@ namespace Net.SF.StyleCopCmd.Core
             
             var pf = XDocument.Load(projectFilePath);
 
-            // ReSharper disable PossibleNullReferenceException
-
             // Get the source files that are not auto-generated.
             var cnodes =
                 pf.Root.Descendants().Where(
@@ -626,8 +617,6 @@ namespace Net.SF.StyleCopCmd.Core
                     solutionsRow,
                     pr);
             }
-
-            // ReSharper restore PossibleNullReferenceException
         }
     }
 }
