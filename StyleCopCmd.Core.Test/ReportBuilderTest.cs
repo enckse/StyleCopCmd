@@ -357,7 +357,7 @@ namespace StyleCopCmd.Core.Test
         public void OutputReportTest()
         {
             var testReport = "test-output";
-            var testReportFull = "test-output.violations.xml";
+            var testReportFull = string.Format("{0}.xml", testReport);
             if (File.Exists(testReportFull))
             {
                 File.Delete(testReportFull);
