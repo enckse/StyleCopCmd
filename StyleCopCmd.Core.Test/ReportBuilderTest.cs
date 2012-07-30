@@ -72,7 +72,7 @@ namespace StyleCopCmd.Core.Test
         /// <summary>
         /// The directory path for testing
         /// </summary>
-        private static readonly string DirectoryPath = JoinAll(BasePath, TestName, "src") + Path.DirectorySeparatorChar;
+        private static readonly string DirectoryPath = JoinAll(BasePath, TestName) + Path.DirectorySeparatorChar;
         
         /// <summary>
         /// Tests the WithSolutionFiles method.
@@ -438,7 +438,7 @@ namespace StyleCopCmd.Core.Test
 
             var r = string.Join(
                 Path.DirectorySeparatorChar.ToString(),
-                new string[] { d.FullName, "test", "Net.SF.StyleCopCmd.Core.Test", "data", TestName });
+                new string[] { d.FullName, "StyleCopCmd.Core.Test", "data", TestName });
 
             return r;
         }
