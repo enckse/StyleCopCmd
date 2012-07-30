@@ -8,8 +8,8 @@
     <ProjectGuid>{A0DF8DAE-90FD-4734-B0D2-AD58BA960660}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Net.SF.StyleCopCmd.Console</RootNamespace>
-    <AssemblyName>Net.SF.StyleCopCmd.Console</AssemblyName>
+    <RootNamespace>StyleCopCmd.Console</RootNamespace>
+    <AssemblyName>StyleCopCmd.Console</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,26 +41,26 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="StyleCop.CSharp">
-      <HintPath>..\..\dll\StyleCop.CSharp.dll</HintPath>
+      <HintPath>..\dll\StyleCop.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop.CSharp.Rules">
-      <HintPath>..\..\dll\StyleCop.CSharp.Rules.dll</HintPath>
+      <HintPath>..\dll\StyleCop.CSharp.Rules.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop">
-      <HintPath>..\..\dll\StyleCop.dll</HintPath>
+      <HintPath>..\dll\StyleCop.dll</HintPath>
     </Reference>
     <Reference Include="NDesk.Options">
-      <HintPath>..\..\dll\NDesk.Options.dll</HintPath>
+      <HintPath>..\dll\NDesk.Options.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="src\Program.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Net.SF.StyleCopCmd.Core\Net.SF.StyleCopCmd.Core.csproj">
+    <ProjectReference Include="..\StyleCopCmd.Core\StyleCopCmd.Core.csproj">
       <Project>{47294B06-DCA7-4E6A-9A40-5DB5291E4E3B}</Project>
-      <Name>Net.SF.StyleCopCmd.Core</Name>
+      <Name>StyleCopCmd.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

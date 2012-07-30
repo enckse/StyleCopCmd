@@ -1,15 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{80497E36-C653-4751-BB72-A99F5592FCB3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StyleCopCmd.Console", "StyleCopCmd.Console\StyleCopCmd.Console.csproj", "{A0DF8DAE-90FD-4734-B0D2-AD58BA960660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.SF.StyleCopCmd.Console", "src\Net.SF.StyleCopCmd.Console\Net.SF.StyleCopCmd.Console.csproj", "{A0DF8DAE-90FD-4734-B0D2-AD58BA960660}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StyleCopCmd.Core", "StyleCopCmd.Core\StyleCopCmd.Core.csproj", "{47294B06-DCA7-4E6A-9A40-5DB5291E4E3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.SF.StyleCopCmd.Core", "src\Net.SF.StyleCopCmd.Core\Net.SF.StyleCopCmd.Core.csproj", "{47294B06-DCA7-4E6A-9A40-5DB5291E4E3B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8CCE940E-F413-45F0-9B70-6294E1CE8B1D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.SF.StyleCopCmd.Core.Test", "test\Net.SF.StyleCopCmd.Core.Test\Net.SF.StyleCopCmd.Core.Test.csproj", "{E724C203-AFFE-4F4B-9A56-3B7AE32F1525}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StyleCopCmd.Core.Test", "StyleCopCmd.Core.Test\StyleCopCmd.Core.Test.csproj", "{E724C203-AFFE-4F4B-9A56-3B7AE32F1525}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1DB8E48F-9D0A-4264-9591-251463AA4027}"
 	ProjectSection(SolutionItems) = preProject
@@ -42,7 +38,7 @@ Global
 		{E724C203-AFFE-4F4B-9A56-3B7AE32F1525} = {8CCE940E-F413-45F0-9B70-6294E1CE8B1D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\Net.SF.StyleCopCmd.Console\Net.SF.StyleCopCmd.Console.csproj
+		StartupItem = StyleCopCmd.Console\StyleCopCmd.Console.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

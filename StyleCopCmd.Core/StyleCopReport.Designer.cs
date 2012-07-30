@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace Net.SF.StyleCopCmd.Core {
+namespace StyleCopCmd.Core {
     
     
     /// <summary>

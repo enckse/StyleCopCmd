@@ -8,8 +8,8 @@
     <ProjectGuid>{47294B06-DCA7-4E6A-9A40-5DB5291E4E3B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Net.SF.StyleCopCmd.Core</RootNamespace>
-    <AssemblyName>Net.SF.StyleCopCmd.Core</AssemblyName>
+    <RootNamespace>StyleCopCmd.Core</RootNamespace>
+    <AssemblyName>StyleCopCmd.Core</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,35 +44,35 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="StyleCop.CSharp">
-      <HintPath>..\..\dll\StyleCop.CSharp.dll</HintPath>
+      <HintPath>..\dll\StyleCop.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop.CSharp.Rules">
-      <HintPath>..\..\dll\StyleCop.CSharp.Rules.dll</HintPath>
+      <HintPath>..\dll\StyleCop.CSharp.Rules.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop">
-      <HintPath>..\..\dll\StyleCop.dll</HintPath>
+      <HintPath>..\dll\StyleCop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\ReportBuilder.cs" />
-    <Compile Include="src\StyleCopReport.Designer.cs">
+    <Compile Include="ReportBuilder.cs" />
+    <Compile Include="StyleCopReport.Designer.cs">
       <DependentUpon>StyleCopReport.xsd</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="src\StyleCopReportExtensions.cs" />
+    <Compile Include="StyleCopReportExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\StyleCopReport.xsc">
+    <None Include="StyleCopReport.xsc">
       <DependentUpon>StyleCopReport.xsd</DependentUpon>
     </None>
-    <None Include="src\StyleCopReport.xsd">
+    <None Include="StyleCopReport.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>StyleCopReport.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Net.SF.StyleCopCmd.Core</CustomToolNamespace>
       <SubType>Designer</SubType>
     </None>
-    <None Include="src\StyleCopReport.xss">
+    <None Include="StyleCopReport.xss">
       <DependentUpon>StyleCopReport.xsd</DependentUpon>
     </None>
   </ItemGroup>

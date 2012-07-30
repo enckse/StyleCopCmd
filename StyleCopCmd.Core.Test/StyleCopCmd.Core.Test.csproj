@@ -8,8 +8,8 @@
     <ProjectGuid>{E724C203-AFFE-4F4B-9A56-3B7AE32F1525}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Net.SF.StyleCopCmd.Core.Test</RootNamespace>
-    <AssemblyName>Net.SF.StyleCopCmd.Core.Test</AssemblyName>
+    <RootNamespace>StyleCopCmd.Core.Test</RootNamespace>
+    <AssemblyName>StyleCopCmd.Core.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,26 +44,26 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="StyleCop.CSharp">
-      <HintPath>..\..\dll\StyleCop.CSharp.dll</HintPath>
+      <HintPath>..\dll\StyleCop.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop.CSharp.Rules">
-      <HintPath>..\..\dll\StyleCop.CSharp.Rules.dll</HintPath>
+      <HintPath>..\dll\StyleCop.CSharp.Rules.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop">
-      <HintPath>..\..\dll\StyleCop.dll</HintPath>
+      <HintPath>..\dll\StyleCop.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\bin\nunit.framework.dll</HintPath>
+      <HintPath>..\bin\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\ReportBuilderTest.cs" />
-    <Compile Include="src\StyleCopReportExtensionsTest.cs" />
+    <Compile Include="ReportBuilderTest.cs" />
+    <Compile Include="StyleCopReportExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Net.SF.StyleCopCmd.Core\Net.SF.StyleCopCmd.Core.csproj">
+    <ProjectReference Include="..\StyleCopCmd.Core\StyleCopCmd.Core.csproj">
       <Project>{47294B06-DCA7-4E6A-9A40-5DB5291E4E3B}</Project>
-      <Name>Net.SF.StyleCopCmd.Core</Name>
+      <Name>StyleCopCmd.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
