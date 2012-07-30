@@ -266,10 +266,11 @@ namespace StyleCopCmd.Core.Test
                             .WithRecursion();
             
             var result = ExecuteTest(report, null);
-            Assert.AreEqual(3, result.Count, BasePath);
-            Assert.AreEqual("7 violations encountered.", result[0]);
+            Assert.AreEqual(4, result.Count, BasePath);
+            Assert.AreEqual("8 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
-            Assert.IsTrue(result[2].EndsWith("ClassTwo.cs"), result[2]);
+            Assert.IsTrue(result[2].EndsWith("AssemblyInfo.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
         }
 
         /// <summary>
