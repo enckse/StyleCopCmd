@@ -71,6 +71,8 @@ namespace StyleCopCmd.Console
             string outputXml = null;
             bool recurse = false;
             bool needHelp = false;
+            bool violations = false;
+            bool quiet = false;
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Visual studio solution files to check", opt => { solutionFiles.Add(opt); } },
@@ -82,7 +84,9 @@ namespace StyleCopCmd.Console
                 { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { styleCopSettings = opt; } },
                 { "o=|outputXmlFile=", "The file the NAnt XML output is written to", opt => { outputXml = opt; } },
                 { "x=|configurationSymbols=", "Configuration symbols to pass to StyleCop (ex. DEBUG, RELEASE)", opt => { symbols.Add(opt); } },
-                { "?|help", "Print the usage information", opt => { needHelp = true; } }
+                { "v|violations", "Print all violation information instead of the summary", opt => { violations = true; } },
+                { "q|quiet", "Do not print any information to console", opt => { quiet = true; } },
+                { "?|help", "Print the usage information", opt => { needHelp = true; } },
             };
             
             try
@@ -103,16 +107,28 @@ namespace StyleCopCmd.Console
                 return;
             }
             
-            new StyleCopReport().ReportBuilder()
+            var report = new StyleCopReport().ReportBuilder()
                 .WithStyleCopSettingsFile(styleCopSettings)
                 .WithRecursion(recurse)
                 .WithSolutionsFiles(solutionFiles)
                 .WithProjectFiles(projectFiles)
                 .WithDirectories(directories)
                 .WithFiles(files)
-                .WithIgnorePatterns(ignorePatterns)
-                .WithOutputEventHandler(OutputGenerated)
-                .Create(outputXml);
+                .WithIgnorePatterns(ignorePatterns);
+            
+            if (!quiet)
+            {
+                if (violations)
+                {
+                    report = report.WithViolationEventHandler(ViolationEncountered);
+                }
+                else
+                {
+                    report = report.WithOutputEventHandler(OutputGenerated);
+                }
+            }
+   
+            report.Create(outputXml);
         }
 
         /// <summary>
@@ -125,6 +141,22 @@ namespace StyleCopCmd.Console
             StyleCop.OutputEventArgs e)
         {
             Console.WriteLine(e.Output);
+        }
+        
+        /// <summary>
+        /// Prints each violation (to console) that the StyleCop processor encounters
+        /// </summary>
+        /// <param name='sender'>
+        /// The event sender.
+        /// </param>
+        /// <param name='e'>
+        /// The violation to print.
+        /// </param>
+        private static void ViolationEncountered(object sender, StyleCop.ViolationEventArgs e)
+        {
+            Console.WriteLine(string.Format("File: {0}", e.SourceCode.Path));
+            Console.WriteLine(string.Format("Line: {0} -> {1}", e.LineNumber, e.Message));
+            Console.WriteLine();
         }
 
         /// <summary>

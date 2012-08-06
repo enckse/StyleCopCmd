@@ -78,6 +78,11 @@ namespace StyleCopCmd.Core
         public event EventHandler<OutputEventArgs> OutputGenerated;
 
         /// <summary>
+        /// Occurs when the stylecop processor encounters a violation
+        /// </summary>
+        public event EventHandler<ViolationEventArgs> ViolationEncountered;
+
+        /// <summary>
         /// Gets or sets the StyleCopReport data set that is used to store the 
         /// style cop results and write the results to an XML file.
         /// </summary>
@@ -314,7 +319,22 @@ namespace StyleCopCmd.Core
             this.OutputGenerated += outputEventHandler;
             return this;
         }
-
+    
+        /// <summary>
+        /// Add a violation event handler for handling any violations encountered during StyleCop processing
+        /// </summary>
+        /// <returns>
+        /// The violation event handler.
+        /// </returns>
+        /// <param name='violationHandler'>
+        /// Violation handler.
+        /// </param>
+        public ReportBuilder WithViolationEventHandler(EventHandler<ViolationEventArgs> violationHandler)
+        {
+            this.ViolationEncountered = violationHandler;
+            return this;
+        }
+    
         /// <summary>
         /// Creates a StyleCop report.
         /// </summary>
@@ -402,6 +422,11 @@ namespace StyleCopCmd.Core
             {
                 scc.OutputGenerated += this.OutputGenerated;
             }
+            
+            if (this.ViolationEncountered != null)
+            {
+                scc.ViolationEncountered += this.ViolationEncountered;
+            }
 
             scc.Start(
                 cps,
@@ -410,6 +435,11 @@ namespace StyleCopCmd.Core
             if (this.OutputGenerated != null)
             {
                 scc.OutputGenerated -= this.OutputGenerated;
+            }
+            
+            if (this.ViolationEncountered != null)
+            {
+                scc.ViolationEncountered -= this.ViolationEncountered;
             }
         }
 

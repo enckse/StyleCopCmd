@@ -369,6 +369,30 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
+        /// Verbose output test
+        /// </summary>
+        [Test]
+        public void ViolationsTest()
+        {
+            var violationList = new List<string>();
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithSolutionsFiles(new List<string>() { Solution })
+                            .WithViolationEventHandler((x, y) => { violationList.Add(((StyleCop.ViolationEventArgs)y).Message); });
+            
+            ExecuteTest(report, null);
+            violationList = violationList.OrderBy(value => value).ToList();
+            Assert.AreEqual(8, violationList.Count);
+            Assert.AreEqual("A closing curly bracket must not be preceded by a blank line.", violationList[0]);
+            Assert.AreEqual("A closing curly bracket must not be preceded by a blank line.", violationList[1]);
+            Assert.AreEqual("All using directives must be placed inside of the namespace.", violationList[2]);
+            Assert.AreEqual("An opening curly bracket must not be followed by a blank line.", violationList[3]);
+            Assert.AreEqual("An opening curly bracket must not be followed by a blank line.", violationList[4]);
+            Assert.AreEqual("The class must have a documentation header.", violationList[5]);
+            Assert.AreEqual("The class must have a documentation header.", violationList[6]);
+            Assert.AreEqual("The file has no header, the header Xml is invalid, or the header is not located at the top of the file.", violationList[7]);
+        }
+        
+        /// <summary>
         /// Executes the test.
         /// </summary>
         /// <returns>
