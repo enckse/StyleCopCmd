@@ -11,7 +11,5 @@
 test-results
 *.pidb
 StyleCopViolations.xml
-.c9revisions/*
-.settings
 dll/*
 *TestResult.xml
