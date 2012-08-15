@@ -69,7 +69,7 @@
     <None Include="StyleCopReport.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>StyleCopReport.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>Net.SF.StyleCopCmd.Core</CustomToolNamespace>
+      <CustomToolNamespace>StyleCopCmd.Core</CustomToolNamespace>
       <SubType>Designer</SubType>
     </None>
     <None Include="StyleCopReport.xss">
