@@ -12,7 +12,7 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Source file represented in memory.
     /// </summary>
-    internal class SourceFile
+    public sealed class SourceFile
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleCopCmd.Core.SourceFile"/> class.

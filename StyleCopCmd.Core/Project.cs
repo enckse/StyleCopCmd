@@ -12,7 +12,7 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Representation of a project in memory
     /// </summary>
-    internal class Project
+    public sealed class Project
     {   
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleCopCmd.Core.Project"/> class.

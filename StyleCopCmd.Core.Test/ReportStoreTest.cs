@@ -23,8 +23,40 @@ namespace StyleCopCmd.Core.Test
         public void AddProject()
         {
             ReportStore store = new ReportStore();
+            Assert.AreEqual(1, store.Projects.Count);
             Assert.AreEqual(1, store.AddProject("test"));
             Assert.AreEqual(2, store.AddProject("test"));
+            Assert.AreEqual(3, store.Projects.Count);
+        }
+        
+        /// <summary>
+        /// Adding a project to the store
+        /// </summary>
+        [Test]
+        public void AddProjectDedupe()
+        {
+            ReportStore store = new ReportStore();
+            store.Dedupe = true;
+            Assert.AreEqual(1, store.AddProject("test"));
+            Assert.AreEqual(1, store.AddProject("test"));
+            Assert.AreEqual(2, store.AddProject("test2"));
+            Assert.AreEqual(3, store.Projects.Count);
+        }
+        
+        /// <summary>
+        /// Adding a project to the store
+        /// </summary>
+        [Test]
+        public void AddFileDedupe()
+        {
+            ReportStore store = new ReportStore();
+            store.Dedupe = true;
+            int reference = store.AddProject("test");
+            store.AddSourceFile("test", reference);
+            store.AddSourceFile("test", 0);
+            Assert.AreEqual(2, store.SourceFiles.Count);
+            store.AddSourceFile("test", reference);
+            Assert.AreEqual(2, store.SourceFiles.Count);
         }
         
         /// <summary>
@@ -36,6 +68,7 @@ namespace StyleCopCmd.Core.Test
             ReportStore store = new ReportStore();
             store.AddSourceFile("test", 0);
             store.AddSourceFile("test", 0);
+            Assert.AreEqual(2, store.SourceFiles.Count);
         }
         
         /// <summary>
@@ -46,6 +79,8 @@ namespace StyleCopCmd.Core.Test
         {
             ReportStore store = new ReportStore();
             store.AddSourceFile("test", store.AddProject("test"));
+            Assert.AreEqual(1, store.SourceFiles.Count);
+            Assert.AreEqual(2, store.Projects.Count);
         }
         
         /// <summary>

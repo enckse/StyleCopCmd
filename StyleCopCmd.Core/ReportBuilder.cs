@@ -170,7 +170,27 @@ namespace StyleCopCmd.Core
             get;
             set;
         }
-
+        
+        /// <summary>
+        /// Enables eliminating the duplicates.
+        /// </summary>
+        /// <returns>This ReportBuilder.</returns>
+        public ReportBuilder WithDedupe()
+        {
+            return this.WithDedupe(true);
+        }
+        
+        /// <summary>
+        /// Enables eliminating the duplicates.
+        /// </summary>
+        /// <param name="dedupe">True to enable dedupe of projects/files</param>
+        /// <returns>This ReportBuilder.</returns>
+        public ReportBuilder WithDedupe(bool dedupe)
+        {
+            this.Report.Dedupe = dedupe;
+            return this;
+        }
+        
         /// <summary>
         /// Adds Visual Studio Solution files to check. Visual Studio 2008
         /// is supported.
@@ -570,7 +590,7 @@ namespace StyleCopCmd.Core
             var pr = project.HasValue ? project.Value : ReportStore.FileProject;
 
             this.Report.AddSourceFile(
-                filePath,
+                Path.GetFullPath(filePath),
                 pr);
         }
 

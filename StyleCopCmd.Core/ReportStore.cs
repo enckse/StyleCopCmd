@@ -41,6 +41,19 @@ namespace StyleCopCmd.Core
             this.Projects = new Collection<Project>();
             this.SourceFiles = new Collection<SourceFile>();
             this.Projects.Add(new Project(FileProject, "Files"));
+            this.Dedupe = false;
+        }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether to provide a dedupe on projects and files
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if dedupe; otherwise, <c>false</c>.
+        /// </value>
+        public bool Dedupe
+        {
+            get;
+            set;
         }
         
         /// <summary>
@@ -49,7 +62,7 @@ namespace StyleCopCmd.Core
         /// <value>
         /// The projects.
         /// </value>
-        internal Collection<Project> Projects
+        public Collection<Project> Projects
         {
             get;
             private set;
@@ -61,7 +74,7 @@ namespace StyleCopCmd.Core
         /// <value>
         /// The source files.
         /// </value>
-        internal Collection<SourceFile> SourceFiles
+        public Collection<SourceFile> SourceFiles
         {
             get;
             private set;
@@ -84,6 +97,15 @@ namespace StyleCopCmd.Core
             if (string.IsNullOrEmpty(location))
             {
                 throw new ArgumentNullException("location");
+            }
+            
+            if (this.Dedupe)
+            {
+                var matches = this.Projects.Where(value => value.Location == location);
+                if (matches.Any())
+                {
+                    return matches.First().Id;
+                }
             }
             
             this.Projects.Add(new Project(this.currentCount, location));
@@ -115,6 +137,15 @@ namespace StyleCopCmd.Core
             if (string.IsNullOrEmpty(path))
             {
                 throw new ArgumentNullException("path");
+            }
+            
+            if (this.Dedupe)
+            {
+                var matches = this.SourceFiles.Where(value => value.ProjectId == project && value.Path == path);
+                if (matches.Any())
+                {
+                    return;   
+                }
             }
             
             this.SourceFiles.Add(new SourceFile(project, path));

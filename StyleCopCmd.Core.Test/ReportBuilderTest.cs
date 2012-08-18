@@ -421,6 +421,24 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
+        /// Removing duplicates during checks
+        /// </summary>
+        [Test]
+        public void DedupeReportTest()
+        {
+            var report = new ReportBuilder()
+                            .WithDedupe()
+                            .WithProjectFiles(new List<string>() { WildCardProject });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(4, result.Count, BasePath);
+            Assert.AreEqual("8 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
+        }
+        
+        /// <summary>
         /// Executes the test.
         /// </summary>
         /// <returns>

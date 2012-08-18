@@ -73,6 +73,7 @@ namespace StyleCopCmd.Console
             bool needHelp = false;
             bool violations = false;
             bool quiet = false;
+            bool dedupe = false;
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Visual studio solution files to check", opt => { solutionFiles.Add(opt); } },
@@ -87,6 +88,7 @@ namespace StyleCopCmd.Console
                 { "v|violations", "Print all violation information instead of the summary", opt => { violations = true; } },
                 { "q|quiet", "Do not print any information to console", opt => { quiet = true; } },
                 { "?|help", "Print the usage information", opt => { needHelp = true; } },
+                { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { dedupe = true; } },
             };
             
             try
@@ -108,6 +110,7 @@ namespace StyleCopCmd.Console
             }
             
             var report = new ReportBuilder()
+                .WithDedupe(dedupe)
                 .WithStyleCopSettingsFile(styleCopSettings)
                 .WithRecursion(recurse)
                 .WithSolutionsFiles(solutionFiles)
