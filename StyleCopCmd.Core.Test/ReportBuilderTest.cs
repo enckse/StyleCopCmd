@@ -70,6 +70,11 @@ namespace StyleCopCmd.Core.Test
         private static readonly string Project = JoinAll(BasePath, TestName, TestName + ".csproj");
         
         /// <summary>
+        /// The project path for wildcards
+        /// </summary>
+        private static readonly string WildCardProject = JoinAll(BasePath, TestName, TestName + "WildCard.csproj");
+        
+        /// <summary>
         /// The directory path for testing
         /// </summary>
         private static readonly string DirectoryPath = JoinAll(BasePath, TestName) + Path.DirectorySeparatorChar;
@@ -390,6 +395,29 @@ namespace StyleCopCmd.Core.Test
             Assert.AreEqual("The class must have a documentation header.", violationList[5]);
             Assert.AreEqual("The class must have a documentation header.", violationList[6]);
             Assert.AreEqual("The file has no header, the header Xml is invalid, or the header is not located at the top of the file.", violationList[7]);
+        }
+        
+        /// <summary>
+        /// Tests the usage of wildcards in the csproj file
+        /// </summary>
+        [Test]
+        public void WildCardTest()
+        {
+            var report = new StyleCopReport().ReportBuilder()
+                            .WithProjectFiles(new List<string>() { WildCardProject });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(10, result.Count, BasePath);
+            Assert.AreEqual("26 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("AssemblyInfo.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassOne.cs"), result[3]);
+            Assert.IsTrue(result[4].EndsWith("ClassOne.cs"), result[4]);
+            Assert.IsTrue(result[5].EndsWith("ClassOne.cs"), result[5]);
+            Assert.IsTrue(result[6].EndsWith("ClassOne.cs"), result[6]);
+            Assert.IsTrue(result[7].EndsWith("ClassTwo.cs"), result[7]);
+            Assert.IsTrue(result[8].EndsWith("ClassTwo.cs"), result[8]);
+            Assert.IsTrue(result[9].EndsWith("ClassTwo.cs"), result[9]);
         }
         
         /// <summary>

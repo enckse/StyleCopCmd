@@ -13,3 +13,4 @@ test-results
 StyleCopViolations.xml
 dll/*
 *TestResult.xml
+*.csproj~

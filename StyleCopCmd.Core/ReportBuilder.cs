@@ -454,7 +454,79 @@ namespace StyleCopCmd.Core
         {
             return string.IsNullOrEmpty(outputXmlFile) ? "StyleCopViolations.xml" : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
         }
-
+        
+        /// <summary>
+        /// Expands the directories that contain wildcards
+        /// </summary>
+        /// <returns>
+        /// The directories that have been expanded.
+        /// </returns>
+        /// <param name='paths'>
+        /// Paths to expand.
+        /// </param>
+        private static IEnumerable<string> ExpandDirectories(string[] paths)
+        {
+            foreach (var path in paths)
+            {
+                // Only expand wildcards
+                if (path.Contains("*"))
+                {
+                    var parts = path.Split(Path.DirectorySeparatorChar);
+                    string basePath = Directory.GetDirectoryRoot(path);
+                    
+                    for (int index = 0; index < parts.Length; index++)
+                    {
+                        string part = parts[index];
+                        
+                        // On expansion, the remaining parts needs to be applied to each expanded directory
+                        IList<string> subParts = new List<string>();
+                        for (int subIndex = index + 1; subIndex < parts.Length; subIndex++)
+                        {
+                            subParts.Add(parts[subIndex]);   
+                        }
+                        
+                        // Subdirectory for any expansions
+                        var subDir = string.Join(Path.DirectorySeparatorChar.ToString(), subParts.ToArray());
+                        if (part.Contains("*"))
+                        {
+                            // Expand all child directories including the current directory
+                            if (part == "**")
+                            {
+                                yield return Path.Combine(basePath, subDir);
+                                foreach (var directory in Directory.GetDirectories(basePath))
+                                {
+                                    yield return Path.Combine(directory, subDir);
+                                }
+                            }
+                            else
+                            {
+                                // Single wildcards, look for any matching files and sub dirs
+                                foreach (var directory in Directory.GetDirectories(basePath, part))
+                                {
+                                    yield return Path.Combine(directory, subDir);
+                                }
+                            
+                                foreach (var file in Directory.GetFiles(basePath, part))
+                                {
+                                    yield return Path.Combine(file, subDir);
+                                }
+                            }
+                            
+                            break;
+                        }
+                        else
+                        {
+                            basePath = Path.Combine(basePath, part);
+                        }
+                    }
+                }
+                else
+                {
+                 yield return path;   
+                }
+            }
+        }
+        
         /// <summary>
         /// Add the directory's source files to the list of
         /// files that StyleCop checks.
@@ -642,10 +714,51 @@ namespace StyleCopCmd.Core
                     Path.GetFullPath(Path.GetDirectoryName(projectFilePath)), 
                     n.Attribute(XName.Get("Include")).Value.Replace(@"\", Path.DirectorySeparatorChar.ToString()));
 
+                if (!File.Exists(fpath) && fpath.Contains("*"))
+                {
+                    // Could be a wildcard selector
+                    this.DoWildCardAdd(fpath, solutionsRow, pr);
+                    continue;
+                }
+                
                 this.AddFile(
                     fpath,
                     solutionsRow,
                     pr);
+            }
+        }
+        
+        /// <summary>
+        /// Do a wildcard-based add of files
+        /// </summary>
+        /// <param name='path'>
+        /// Base file path
+        /// </param>
+        /// <param name='solutionsRow'>
+        /// Solutions row.
+        /// </param>
+        /// <param name='projectRow'>
+        /// Project row
+        /// </param>
+        private void DoWildCardAdd(
+            string path,
+            StyleCopReport.SolutionsRow solutionsRow, 
+            StyleCopReport.ProjectsRow projectRow)
+        {
+            var paths = new string[] { path };
+            do
+            {
+                paths = ExpandDirectories(paths).ToArray();
+            }
+            while (paths.Where(x => x.Contains("*")).Any());
+            
+            // At this point, all wildcards have been expanded
+            foreach (var item in paths)
+            {
+                if (File.Exists(item))
+                {
+                    this.AddFile(item, solutionsRow, projectRow);
+                }
             }
         }
     }
