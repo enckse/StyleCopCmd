@@ -85,7 +85,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithSolutionFilesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithSolutionsFiles(new List<string>() { Solution });
             
             var result = ExecuteTest(report, null);
@@ -102,7 +102,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithMultipleSolutionFilesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithSolutionsFiles(new List<string>() { Solution, Solution });
             
             var result = ExecuteTest(report, null);
@@ -122,7 +122,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithNothingTest()
         {
-            var report = new StyleCopReport().ReportBuilder();          
+            var report = new ReportBuilder();          
             var result = ExecuteTest(report, null);
             Assert.AreEqual(1, result.Count, BasePath);
             Assert.AreEqual("No violations encountered", result[0]);
@@ -134,7 +134,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithProjectFilesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithProjectFiles(new List<string>() { Project });
             
             var result = ExecuteTest(report, null);
@@ -151,7 +151,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithMultipleProjectFilesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithProjectFiles(new List<string>() { Project, Project });
             
             var result = ExecuteTest(report, null);
@@ -171,7 +171,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithDirectoriesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath });
             
             var result = ExecuteTest(report, null);
@@ -186,7 +186,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithMultipleDirectoriesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath, DirectoryPath });
             
             var result = ExecuteTest(report, null);
@@ -202,7 +202,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithFilesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs" });
             
             var result = ExecuteTest(report, null);
@@ -217,7 +217,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithMultipleFilesTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs", DirectoryPath + "SubNamespace" + Path.DirectorySeparatorChar + "ClassTwo.cs" });
             
             var result = ExecuteTest(report, null);
@@ -233,7 +233,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithIgnorePatternsTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithProjectFiles(new List<string>() { Project })
                             .WithIgnorePatterns(new List<string>() { "ClassOne" });
             
@@ -250,7 +250,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithMultiplePatternsTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithProjectFiles(new List<string>() { Project })
                             .WithIgnorePatterns(new List<string>() { "ClassOne", "Info" });
             
@@ -266,7 +266,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithRecursionTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath })
                             .WithRecursion();
             
@@ -284,7 +284,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithProcessorSymbolsTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER" });
             
@@ -300,7 +300,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithMultipleSymbolsTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "SOMECONDITIONAL" });
             
@@ -309,7 +309,7 @@ namespace StyleCopCmd.Core.Test
             Assert.AreEqual("8 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
-            report = new StyleCopReport().ReportBuilder()
+            report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "SOMECONDITIONAL" });
             
@@ -318,7 +318,7 @@ namespace StyleCopCmd.Core.Test
             Assert.AreEqual("5 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
-            report = new StyleCopReport().ReportBuilder()
+            report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "SOMEOTHER", "!SOMECONDITIONAL" });
             
@@ -327,7 +327,7 @@ namespace StyleCopCmd.Core.Test
             Assert.AreEqual("6 violations encountered.", result[0]);
             Assert.IsTrue(result[1].EndsWith("ClassOne.cs"), result[1]);
             
-            report = new StyleCopReport().ReportBuilder()
+            report = new ReportBuilder()
                             .WithDirectories(new List<string>() { DirectoryPath })
                             .WithProcessorSymbols(new List<string>() { "!SOMEOTHER", "!SOMECONDITIONAL" });
             
@@ -343,7 +343,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WithStyleCopSettingsFileTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithSolutionsFiles(new List<string>() { Solution })
                             .WithStyleCopSettingsFile(JoinAll(BasePath, "LocalSettings.Setting"));
             
@@ -368,7 +368,7 @@ namespace StyleCopCmd.Core.Test
                 File.Delete(testReportFull);
             }
             
-            var report = new StyleCopReport().ReportBuilder();
+            var report = new ReportBuilder();
             ExecuteTest(report, testReport);
             Assert.IsTrue(File.Exists(testReportFull));
         }
@@ -380,7 +380,7 @@ namespace StyleCopCmd.Core.Test
         public void ViolationsTest()
         {
             var violationList = new List<string>();
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithSolutionsFiles(new List<string>() { Solution })
                             .WithViolationEventHandler((x, y) => { violationList.Add(((StyleCop.ViolationEventArgs)y).Message); });
             
@@ -403,7 +403,7 @@ namespace StyleCopCmd.Core.Test
         [Test]
         public void WildCardTest()
         {
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                             .WithProjectFiles(new List<string>() { WildCardProject });
             
             var result = ExecuteTest(report, null);

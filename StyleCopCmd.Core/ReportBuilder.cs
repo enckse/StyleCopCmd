@@ -54,22 +54,11 @@ namespace StyleCopCmd.Core
     public class ReportBuilder
     {
         /// <summary>
-        /// Initializes a new instance of the ReportBuilder class.
+        /// Initializes a new instance of the <see cref="StyleCopCmd.Core.ReportBuilder"/> class.
         /// </summary>
-        /// <param name="report">
-        /// The StyleCopReport to build.
-        /// </param>
-        internal ReportBuilder(StyleCopReport report)
+        public ReportBuilder()
         {
-            this.Report = report;
-        }
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="ReportBuilder" /> class from being created.
-        /// </summary>
-        private ReportBuilder()
-        {
-            // Do nothing
+            this.Report = new ReportStore();
         }
 
         /// <summary>
@@ -81,17 +70,19 @@ namespace StyleCopCmd.Core
         /// Occurs when the stylecop processor encounters a violation
         /// </summary>
         public event EventHandler<ViolationEventArgs> ViolationEncountered;
-
+  
         /// <summary>
-        /// Gets or sets the StyleCopReport data set that is used to store the 
-        /// style cop results and write the results to an XML file.
+        /// Gets or sets the underlying memory report store
         /// </summary>
-        private StyleCopReport Report
+        /// <value>
+        /// The report store
+        /// </value>
+        private ReportStore Report
         {
             get;
             set;
         }
-
+        
         /// <summary>
         /// Gets or sets a list of Visual Studio Solution files to check.
         /// Visual Studio 2008 is supported.
@@ -374,9 +365,7 @@ namespace StyleCopCmd.Core
             {
                 foreach (var i in this.ProjectFiles)
                 {
-                    this.AddProjectFile(
-                        i,
-                        null);
+                    this.AddProjectFile(i);
                 }
             }
 
@@ -394,24 +383,21 @@ namespace StyleCopCmd.Core
             {
                 foreach (var i in this.Files)
                 {
-                    this.AddFile(
-                        i,
-                        null,
-                        null);
+                    this.AddFile(i, null);
                 }
             }
 
             // Create a list of code projects from the data set.
             var cps = this.Report.Projects.Select(
                 r => new CodeProject(
-                         r.ID,
+                         r.Id,
                          r.Location,
                          cfg)).ToList();
-
+   
             // Add the source code files to the style cop checker
-            foreach (var f in this.Report.SourceCodeFiles)
+            foreach (var f in this.Report.SourceFiles)
             {
-                var cp = cps.SingleOrDefault(i => i.Key == f.CodeProjectID);
+                var cp = cps.Where(i => i.Key == f.ProjectId).First();
                 scc.Core.Environment.AddSourceCode(
                     cp,
                     f.Path,
@@ -547,21 +533,13 @@ namespace StyleCopCmd.Core
                 "*.cs",
                 recurse);
         
-            var sr = this.Report.Solutions.AddSolutionsRow(
-                path,
-                "Directory");
-
-            var pr = this.Report.Projects.AddProjectsRow(
-                path,
-                "Directory",
-                sr);
+            var pr = this.Report.AddProject(path);
 
             // Add the source files.
             Array.ForEach(
                 files,
                 f => this.AddFile(
                          f,
-                         sr,
                          pr));
         }
 
@@ -572,16 +550,10 @@ namespace StyleCopCmd.Core
         /// <param name="filePath">
         /// The fully-qualified path of the file to add.
         /// </param>
-        /// <param name="solutionsRow">
-        /// The solutions row for this file.
+        /// <param name="project">
+        /// The project id for this file.
         /// </param>
-        /// <param name="projectsRow">
-        /// The projects row for this file.
-        /// </param>
-        private void AddFile(
-            string filePath,
-            StyleCopReport.SolutionsRow solutionsRow,
-            StyleCopReport.ProjectsRow projectsRow)
+        private void AddFile(string filePath, int? project)
         {
             if (this.IgnorePatterns != null)
             {
@@ -595,32 +567,10 @@ namespace StyleCopCmd.Core
                 }
             }
             
-            var sr = solutionsRow ??
-                     this.Report.Solutions.SingleOrDefault(
-                         r => r.Name == "Files") ??
-                     this.Report.Solutions.AddSolutionsRow(
-                         "Files",
-                         "Files");
+            var pr = project.HasValue ? project.Value : ReportStore.FileProject;
 
-            var pr = projectsRow ??
-                     this.Report.Projects.SingleOrDefault(
-                         r => r.Name == "Files") ??
-                     this.Report.Projects.AddProjectsRow(
-                         "Files",
-                         "Files",
-                         sr);
-
-            var ext = Path.GetExtension(
-                filePath).Replace(
-                ".",
-                string.Empty)
-                .ToUpper(CultureInfo.CurrentCulture);
-
-            this.Report.SourceCodeFiles.AddSourceCodeFilesRow(
+            this.Report.AddSourceFile(
                 filePath,
-                File.GetLastWriteTimeUtc(filePath),
-                ext,
-                Path.GetFileName(filePath),
                 pr);
         }
 
@@ -634,11 +584,6 @@ namespace StyleCopCmd.Core
         /// </param>
         private void AddSolutionFile(string solutionFilePath)
         {
-            // Add a solutions row
-            var sr = this.Report.Solutions.AddSolutionsRow(
-                solutionFilePath,
-                Path.GetFileNameWithoutExtension(solutionFilePath));
-
             // Get a list of the CSharp projects in the solutions file
             // and parse the project files.
             var sfin = File.ReadAllText(solutionFilePath);
@@ -654,9 +599,7 @@ namespace StyleCopCmd.Core
                         Path.GetDirectoryName(
                             Path.GetFullPath(solutionFilePath)))
                     + Path.DirectorySeparatorChar.ToString() + mstring;
-                this.AddProjectFile(
-                    ppath,
-                    sr);
+                this.AddProjectFile(ppath);
             }
         }
 
@@ -668,29 +611,10 @@ namespace StyleCopCmd.Core
         /// <param name="projectFilePath">
         /// The fully-qualified path to the project file.
         /// </param>
-        /// <param name="solutionsRow">
-        /// The solutions row this project belongs to. Specify
-        /// null if this project is not a member of a solution.
-        /// </param>
-        private void AddProjectFile(
-            string projectFilePath,
-            StyleCopReport.SolutionsRow solutionsRow)
+        private void AddProjectFile(string projectFilePath)
         {
-            // Get the project's name.
-            var pname = Path.GetFileNameWithoutExtension(projectFilePath);
-
-            if (solutionsRow == null)
-            {
-                solutionsRow = this.Report.Solutions.AddSolutionsRow(
-                    projectFilePath,
-                    "Project - " + pname);
-            }
-
             // Add a new project row.
-            var pr = this.Report.Projects.AddProjectsRow(
-                projectFilePath,
-                pname,
-                solutionsRow);
+            var pr = this.Report.AddProject(projectFilePath);
             
             var pf = XDocument.Load(projectFilePath);
 
@@ -717,13 +641,12 @@ namespace StyleCopCmd.Core
                 if (!File.Exists(fpath) && fpath.Contains("*"))
                 {
                     // Could be a wildcard selector
-                    this.DoWildCardAdd(fpath, solutionsRow, pr);
+                    this.DoWildCardAdd(fpath, pr);
                     continue;
                 }
                 
                 this.AddFile(
                     fpath,
-                    solutionsRow,
                     pr);
             }
         }
@@ -734,16 +657,10 @@ namespace StyleCopCmd.Core
         /// <param name='path'>
         /// Base file path
         /// </param>
-        /// <param name='solutionsRow'>
-        /// Solutions row.
+        /// <param name='project'>
+        /// Project id
         /// </param>
-        /// <param name='projectRow'>
-        /// Project row
-        /// </param>
-        private void DoWildCardAdd(
-            string path,
-            StyleCopReport.SolutionsRow solutionsRow, 
-            StyleCopReport.ProjectsRow projectRow)
+        private void DoWildCardAdd(string path, int project)
         {
             var paths = new string[] { path };
             do
@@ -757,7 +674,7 @@ namespace StyleCopCmd.Core
             {
                 if (File.Exists(item))
                 {
-                    this.AddFile(item, solutionsRow, projectRow);
+                    this.AddFile(item, project);
                 }
             }
         }

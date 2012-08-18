@@ -107,7 +107,7 @@ namespace StyleCopCmd.Console
                 return;
             }
             
-            var report = new StyleCopReport().ReportBuilder()
+            var report = new ReportBuilder()
                 .WithStyleCopSettingsFile(styleCopSettings)
                 .WithRecursion(recurse)
                 .WithSolutionsFiles(solutionFiles)

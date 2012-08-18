@@ -55,26 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ReportBuilder.cs" />
-    <Compile Include="StyleCopReport.Designer.cs">
-      <DependentUpon>StyleCopReport.xsd</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="StyleCopReportExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="StyleCopReport.xsc">
-      <DependentUpon>StyleCopReport.xsd</DependentUpon>
-    </None>
-    <None Include="StyleCopReport.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>StyleCopReport.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>StyleCopCmd.Core</CustomToolNamespace>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="StyleCopReport.xss">
-      <DependentUpon>StyleCopReport.xsd</DependentUpon>
-    </None>
+    <Compile Include="Project.cs" />
+    <Compile Include="SourceFile.cs" />
+    <Compile Include="ReportStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
