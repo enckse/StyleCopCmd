@@ -24,7 +24,7 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
   -r, --recurse              Recursive directory search
   -c, --styleCopSettingsFile=VALUE
                              Use the given StyleCop settings file
-  -o, --outputXmlFile=VALUE  The file the NAnt XML output is written to
+  -o, --outputXmlFile=VALUE  The file the XML output is written to
   -x, --configurationSymbols=VALUE
                              Configuration symbols to pass to StyleCop (ex. 
                                DEBUG, RELEASE)

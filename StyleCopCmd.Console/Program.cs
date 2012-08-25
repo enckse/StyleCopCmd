@@ -83,7 +83,7 @@ namespace StyleCopCmd.Console
                 { "f=|files=", "Files to check", opt => { files.Add(opt); } },
                 { "r|recurse", "Recursive directory search", opt => { recurse = opt != null; } },
                 { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { styleCopSettings = opt; } },
-                { "o=|outputXmlFile=", "The file the NAnt XML output is written to", opt => { outputXml = opt; } },
+                { "o=|outputXmlFile=", "The file the XML output is written to", opt => { outputXml = opt; } },
                 { "x=|configurationSymbols=", "Configuration symbols to pass to StyleCop (ex. DEBUG, RELEASE)", opt => { symbols.Add(opt); } },
                 { "v|violations", "Print all violation information instead of the summary", opt => { violations = true; } },
                 { "q|quiet", "Do not print any information to console", opt => { quiet = true; } },
