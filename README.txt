@@ -12,3 +12,24 @@ When building:
 
 Dependencies:
 Run dll/build.sh to pull down the required dependencies
+
+StyleCopCmd
+Provides an interface for using StyleCop (specifically for Mono on Linux)
+  -s, --solutionFiles=VALUE  Visual studio solution files to check
+  -p, --projectFiles=VALUE   Visual Studio project files to check
+  -i, --ignoreFilePattern=VALUE
+                             Regular expression patterns to ignore files
+  -d, --directories=VALUE    Directories to check for CSharp files
+  -f, --files=VALUE          Files to check
+  -r, --recurse              Recursive directory search
+  -c, --styleCopSettingsFile=VALUE
+                             Use the given StyleCop settings file
+  -o, --outputXmlFile=VALUE  The file the NAnt XML output is written to
+  -x, --configurationSymbols=VALUE
+                             Configuration symbols to pass to StyleCop (ex. 
+                               DEBUG, RELEASE)
+  -v, --violations           Print all violation information instead of the 
+                               summary
+  -q, --quiet                Do not print any information to console
+  -?, --help                 Print the usage information
+  -e, --eliminate            Eliminate checking duplicate files/projects
