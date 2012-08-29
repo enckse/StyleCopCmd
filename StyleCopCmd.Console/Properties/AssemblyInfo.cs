@@ -16,6 +16,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 
-[System.CLSCompliant(true)]
+[assembly: System.CLSCompliant(true)]
 
-[System.Runtime.InteropServices.ComVisible(false)]
+[assembly: System.Runtime.InteropServices.ComVisible(false)]
