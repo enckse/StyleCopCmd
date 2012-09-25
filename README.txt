@@ -33,3 +33,7 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
   -q, --quiet                Do not print any information to console
   -?, --help                 Print the usage information
   -e, --eliminate            Eliminate checking duplicate files/projects
+
+Known Issues
+-----------
+* Spelling checking rules do not work in a Linux environment. This is due to StyleCop using office-based spell checking.

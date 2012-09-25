@@ -433,7 +433,19 @@ namespace StyleCopCmd.Core
             {
                 scc.ViolationEncountered += this.ViolationEncountered;
             }
-
+   
+            // The spell checking relies on office, is will cause issues in linux
+            if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
+            {
+                foreach (var file in Directory.GetFiles(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)))
+                {
+                    if (file.Contains("mssp7en."))
+                    {
+                        throw new InvalidOperationException("The spell check library was found, this platform does not support spell checking rules (e.g. SA1650)");
+                    }
+                }
+            }
+            
             scc.Start(
                 cps,
                 true);
