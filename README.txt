@@ -36,4 +36,4 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
 
 Known Issues
 -----------
-* Spell checking rules do not work in a Linux environment. This is due to StyleCop using office-based spell checking.
+* Spell checking rules do not work in a Linux environment. This is due to StyleCop using office-based spell checking. (Check out LinuxCopExtensions for similar functionality in Linux)
