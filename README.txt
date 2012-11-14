@@ -1,5 +1,11 @@
 This is modified version of the original StyleCopCmd that used more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment
 
+Installing
+----------
+Build from source or download the latest posted build in Downloads. 
+For Windows, run StyleCopCmd.Console.exe from the install location or add to the PATH
+For Linux, run mono StyleCopCmd.Console.exe from the install location (potentially create an alias to handle calling "mono StyleCopCmd" in an executable area)
+
 Usage
 ------
 $ mono StyleCopCmd.Console.exe -s <solution>
