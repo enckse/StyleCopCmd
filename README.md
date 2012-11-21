@@ -2,23 +2,28 @@ This is modified version of the original StyleCopCmd that used more recent versi
 
 Installing
 ----------
-Build from source or download the latest posted build in Downloads. 
-For Windows, run StyleCopCmd.Console.exe from the install location or add to the PATH
-For Linux, run mono StyleCopCmd.Console.exe from the install location (potentially create an alias to handle calling "mono StyleCopCmd" in an executable area)
+* Build from source or download the latest posted build in Downloads. 
+* For Windows, run StyleCopCmd.Console.exe from the install location or add to the PATH
+* For Linux, run mono StyleCopCmd.Console.exe from the install location (potentially create an alias to handle calling "mono StyleCopCmd" in an executable area)
 
 Usage
 ------
-$ mono StyleCopCmd.Console.exe -s <solution>
-$ mono StyleCopCmd.Console.exe -f <file.cs>
-$ mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
+```text
+mono StyleCopCmd.Console.exe -s <solution>
+
+mono StyleCopCmd.Console.exe -f <file.cs>
+
+mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
+```
 
 When building:
+* Run dll/build.sh to pull down the required dependencies
 * Make sure to run StyleCopCmd over the project itself
 (mono StyleCopCmd.Console.exe -s StyleCopCmd.sln)
 
-Dependencies:
-Run dll/build.sh to pull down the required dependencies
-
+Options
+--------
+```text
 StyleCopCmd
 Provides an interface for using StyleCop (specifically for Mono on Linux)
   -s, --solutionFiles=VALUE  Visual studio solution files to check
@@ -39,6 +44,7 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
   -q, --quiet                Do not print any information to console
   -?, --help                 Print the usage information
   -e, --eliminate            Eliminate checking duplicate files/projects
+```
 
 Known Issues
 -----------
