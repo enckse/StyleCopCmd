@@ -44,6 +44,7 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
   -q, --quiet                Do not print any information to console
   -?, --help                 Print the usage information
   -e, --eliminate            Eliminate checking duplicate files/projects
+  -w, --withdebug	     Perform checks with debug output
 ```
 
 Known Issues
