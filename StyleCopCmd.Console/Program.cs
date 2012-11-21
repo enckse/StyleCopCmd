@@ -74,6 +74,7 @@ namespace StyleCopCmd.Console
             bool violations = false;
             bool quiet = false;
             bool dedupe = false;
+            bool withDebug = false;
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Visual studio solution files to check", opt => { solutionFiles.Add(opt); } },
@@ -89,6 +90,7 @@ namespace StyleCopCmd.Console
                 { "q|quiet", "Do not print any information to console", opt => { quiet = true; } },
                 { "?|help", "Print the usage information", opt => { needHelp = true; } },
                 { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { dedupe = true; } },
+                { "w|withdebug", "Perform checks with debug output", opt => { withDebug = true; } },
             };
             
             try
@@ -117,7 +119,8 @@ namespace StyleCopCmd.Console
                 .WithProjectFiles(projectFiles)
                 .WithDirectories(directories)
                 .WithFiles(files)
-                .WithIgnorePatterns(ignorePatterns);
+                .WithIgnorePatterns(ignorePatterns)
+                .WithDebug(withDebug);
             
             if (!quiet)
             {
@@ -130,7 +133,7 @@ namespace StyleCopCmd.Console
                     report = report.WithOutputEventHandler(OutputGenerated);
                 }
             }
-   
+
             report.Create(outputXml);
         }
 

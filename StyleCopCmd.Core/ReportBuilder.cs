@@ -170,6 +170,26 @@ namespace StyleCopCmd.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable debug statements
+        /// </summary>
+        private bool EnableDebug
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Perform the checking with debugging statements enabled
+        /// </summary>
+        /// <param name="enableDebug">True to enable debug statements</param>
+        /// <returns>This ReportBuilder.</returns>
+        public ReportBuilder WithDebug(bool enableDebug)
+        {
+            this.EnableDebug = enableDebug;
+            return this;
+        }
         
         /// <summary>
         /// Enables eliminating the duplicates.
@@ -354,6 +374,8 @@ namespace StyleCopCmd.Core
         /// </param>
         public void Create(string outputXmlFile)
         {
+            this.WriteDebugLine("Setting configuration symbols");
+
             // Create a StyleCop configuration specifying the configuration
             // symbols to use for this report.
             var cfg = new Configuration(
@@ -363,6 +385,8 @@ namespace StyleCopCmd.Core
                     :
                         null);
 
+            this.WriteDebugLine("Creating console for checking");
+            
             // Create a new StyleCop console used to do the check.
             var scc = new StyleCopConsole(
                 this.StyleCopSettingsFile,
@@ -371,6 +395,8 @@ namespace StyleCopCmd.Core
                 this.AddInDirectories,
                 true);
 
+            this.WriteDebugLine("Processing solution files");
+            
             // Process solution files
             if (this.SolutionFiles != null)
             {
@@ -379,6 +405,8 @@ namespace StyleCopCmd.Core
                     this.AddSolutionFile(i);
                 }
             }
+
+            this.WriteDebugLine("Processing project files");
 
             // Process project files
             if (this.ProjectFiles != null)
@@ -389,6 +417,8 @@ namespace StyleCopCmd.Core
                 }
             }
 
+            this.WriteDebugLine("Processing directories");
+            
             // Process directories
             if (this.Directories != null)
             {
@@ -397,6 +427,8 @@ namespace StyleCopCmd.Core
                     this.AddDirectory(i);
                 }
             }
+
+            this.WriteDebugLine("Processing files");
 
             // Process files
             if (this.Files != null)
@@ -407,6 +439,8 @@ namespace StyleCopCmd.Core
                 }
             }
 
+            this.WriteDebugLine("Preparing code projects");
+
             // Create a list of code projects from the data set.
             var cps = this.Report.Projects.Select(
                 r => new CodeProject(
@@ -414,6 +448,8 @@ namespace StyleCopCmd.Core
                          r.Location,
                          cfg)).ToList();
    
+           this.WriteDebugLine("Preparing source code objects");
+
             // Add the source code files to the style cop checker
             foreach (var f in this.Report.SourceFiles)
             {
@@ -434,6 +470,8 @@ namespace StyleCopCmd.Core
                 scc.ViolationEncountered += this.ViolationEncountered;
             }
    
+                this.WriteDebugLine("Validating spell checking situation");
+
             // The spell checking relies on office, is will cause issues in linux
             if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
             {
@@ -446,10 +484,9 @@ namespace StyleCopCmd.Core
                 }
             }
             
-            scc.Start(
-                cps,
-                true);
-
+            this.WriteDebugLine("Starting check");
+            scc.Start(cps, true);
+            this.WriteDebugLine("Checking done");
             if (this.OutputGenerated != null)
             {
                 scc.OutputGenerated -= this.OutputGenerated;
@@ -554,6 +591,7 @@ namespace StyleCopCmd.Core
         /// </param>
         private void AddDirectory(string path)
         {
+            this.WriteDebugLine("Adding directory: " + path);
             var recurse = this.RecursionEnabled
                               ?
                                   SearchOption.AllDirectories
@@ -587,6 +625,7 @@ namespace StyleCopCmd.Core
         /// </param>
         private void AddFile(string filePath, int? project)
         {
+            this.WriteDebugLine("Adding file: " + filePath);
             if (this.IgnorePatterns != null)
             {
                 // Check to see if this file should be ignored.
@@ -616,6 +655,8 @@ namespace StyleCopCmd.Core
         /// </param>
         private void AddSolutionFile(string solutionFilePath)
         {
+            this.WriteDebugLine("Adding solution file: " + solutionFilePath);
+
             // Get a list of the CSharp projects in the solutions file
             // and parse the project files.
             var sfin = File.ReadAllText(solutionFilePath);
@@ -645,6 +686,8 @@ namespace StyleCopCmd.Core
         /// </param>
         private void AddProjectFile(string projectFilePath)
         {
+            this.WriteDebugLine("Adding project file: " + projectFilePath);
+
             // Add a new project row.
             var pr = this.Report.AddProject(projectFilePath);
             
@@ -694,6 +737,7 @@ namespace StyleCopCmd.Core
         /// </param>
         private void DoWildCardAdd(string path, int project)
         {
+            this.WriteDebugLine("Adding wildcard path: " + path);
             var paths = new string[] { path };
             do
             {
@@ -708,6 +752,18 @@ namespace StyleCopCmd.Core
                 {
                     this.AddFile(item, project);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Write a line to the console for debug purposes
+        /// </summary>
+        /// <param name="message">Message to write</param>
+        private void WriteDebugLine(string message)
+        {
+            if (this.EnableDebug)
+            {
+                Console.WriteLine(message);
             }
         }
     }
