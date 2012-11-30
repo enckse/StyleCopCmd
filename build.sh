@@ -18,7 +18,7 @@ cd ..
 xbuild /property:Configuration=$BUILD StyleCopCmd.sln
 
 # Run unit tests
-nunit-console2 StyleCopCmd.Core.Test/bin/Debug/StyleCopCmd.Core.Test.dll -noshadow
+nunit-console2 StyleCopCmd.Core.Test/bin/$BUILD/StyleCopCmd.Core.Test.dll -noshadow
 
 # And check style
 mono StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe -s StyleCopCmd.sln
