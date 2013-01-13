@@ -2,7 +2,7 @@ This is modified version of the original StyleCopCmd that used more recent versi
 
 Installing
 ----------
-* Build from source or download the latest posted build in Downloads. 
+* Build from source. 
 * For Windows, run StyleCopCmd.Console.exe from the install location or add to the PATH
 * For Linux, run mono StyleCopCmd.Console.exe from the install location (potentially create an alias to handle calling "mono StyleCopCmd" in an executable area)
 
