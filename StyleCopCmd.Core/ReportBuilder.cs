@@ -507,7 +507,7 @@ namespace StyleCopCmd.Core
         /// <returns>The path of the violations file.</returns>
         private static string GetViolationsFile(string outputXmlFile)
         {
-            return string.IsNullOrEmpty(outputXmlFile) ? "StyleCopViolations.xml" : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
+            return string.IsNullOrEmpty(outputXmlFile) ? "StyleCop.Violations.xml" : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
         }
         
         /// <summary>
