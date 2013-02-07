@@ -10,7 +10,7 @@ else
 fi
 
 # Pull resources
-cd dll
+cd bin
 ./fetch.sh
 
 # Build

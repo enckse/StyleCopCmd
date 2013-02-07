@@ -65,13 +65,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="StyleCop.CSharp">
-      <HintPath>..\dll\StyleCop.CSharp.dll</HintPath>
+      <HintPath>..\bin\StyleCop.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop.CSharp.Rules">
-      <HintPath>..\dll\StyleCop.CSharp.Rules.dll</HintPath>
+      <HintPath>..\bin\StyleCop.CSharp.Rules.dll</HintPath>
     </Reference>
     <Reference Include="StyleCop">
-      <HintPath>..\dll\StyleCop.dll</HintPath>
+      <HintPath>..\bin\StyleCop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
