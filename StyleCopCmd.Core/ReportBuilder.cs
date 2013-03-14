@@ -53,6 +53,9 @@ namespace StyleCopCmd.Core
     /// </summary>
     public class ReportBuilder
     {
+        /// <summary>Default stylecop violation filename</summary>
+        private const string DefaultFileName = "StyleCop.Violations.xml";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleCopCmd.Core.ReportBuilder"/> class.
         /// </summary>
@@ -507,7 +510,7 @@ namespace StyleCopCmd.Core
         /// <returns>The path of the violations file.</returns>
         private static string GetViolationsFile(string outputXmlFile)
         {
-            return string.IsNullOrEmpty(outputXmlFile) ? "StyleCop.Violations.xml" : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
+            return string.IsNullOrEmpty(outputXmlFile) ? DefaultFileName : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
         }
         
         /// <summary>
