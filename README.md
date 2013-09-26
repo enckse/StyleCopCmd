@@ -1,8 +1,8 @@
-This is modified version of the original StyleCopCmd that used more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment
+This is modified version of the original StyleCopCmd that used more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment (but there is no known reason it shouldn't run elsewhere)
 
 Installing
 ----------
-* Build from source. 
+* Download the latest release or build from source. 
 * For Windows, run StyleCopCmd.Console.exe from the install location or add to the PATH
 * For Linux, run mono StyleCopCmd.Console.exe from the install location (potentially create an alias to handle calling "mono StyleCopCmd" in an executable area)
 
@@ -17,9 +17,7 @@ mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
 ```
 
 When building:
-* Run dll/build.sh to pull down the required dependencies
-* Make sure to run StyleCopCmd over the project itself
-(mono StyleCopCmd.Console.exe -s StyleCopCmd.sln)
+* Run build.sh in the root directory (add release to build in release mode)
 
 Options
 --------
