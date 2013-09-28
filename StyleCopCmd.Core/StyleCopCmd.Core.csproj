@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ReportBuilder.cs" />
+    <Compile Include="ReportSettings.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="SourceFile.cs" />
     <Compile Include="ReportStore.cs" />

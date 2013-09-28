@@ -59,6 +59,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder()
         {
             this.Report = new ReportStore();
+            this.Settings = new ReportSettings();
         }
 
         /// <summary>
@@ -70,115 +71,22 @@ namespace StyleCopCmd.Core
         /// Occurs when the stylecop processor encounters a violation
         /// </summary>
         public event EventHandler<ViolationEventArgs> ViolationEncountered;
-  
+
         /// <summary>
         /// Gets or sets the underlying memory report store
         /// </summary>
         /// <value>
         /// The report store
         /// </value>
-        private ReportStore Report
-        {
-            get;
-            set;
-        }
-        
-        /// <summary>
-        /// Gets or sets a list of Visual Studio Solution files to check.
-        /// Visual Studio 2008 is supported.
-        /// </summary>
-        private IList<string> SolutionFiles
-        {
-            get;
-            set;
-        }
+        private ReportStore Report { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of Visual Studio Project files to check.
-        /// Visual Studio 2008 is supported.
+        /// Gets or sets the underlying report settings
         /// </summary>
-        private IList<string> ProjectFiles
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a list of directories to check.
-        /// </summary>
-        private IList<string> Directories
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a list of files to check.
-        /// </summary>
-        private IList<string> Files
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a list of regular expression patterns used
-        /// to ignore files (if a file name matches any of the patterns, the
-        /// file is not checked).
-        /// </summary>
-        private IList<string> IgnorePatterns
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not directories are 
-        /// recursed.
-        /// </summary>
-        private bool RecursionEnabled
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a list of processor symbols (ex. DEBUG, CODE_ANALYSIS)
-        /// to be used by StyleCop.
-        /// </summary>
-        private IList<string> ProcessorSymbols
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the path to the StyleCop setting file to use.
-        /// </summary>
-        private string StyleCopSettingsFile
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a list of directories used by StyleCop to search for 
-        /// add-ins. Currently not available from the command line
-        /// </summary>
-        private IList<string> AddInDirectories
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to enable debug statements
-        /// </summary>
-        private bool EnableDebug
-        {
-            get;
-            set;
-        }
+        /// <value>
+        /// The report settings
+        /// </value>
+        private ReportSettings Settings { get; set; }
 
         /// <summary>
         /// Perform the checking with debugging statements enabled
@@ -187,7 +95,7 @@ namespace StyleCopCmd.Core
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithDebug(bool enableDebug)
         {
-            this.EnableDebug = enableDebug;
+            this.Settings.EnableDebug = enableDebug;
             return this;
         }
         
@@ -222,7 +130,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithSolutionsFiles(
             IList<string> solutionsFiles)
         {
-            this.SolutionFiles = solutionsFiles;
+            this.Settings.SolutionFiles = solutionsFiles;
             return this;
         }
 
@@ -237,7 +145,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithProjectFiles(
             IList<string> projectFiles)
         {
-            this.ProjectFiles = projectFiles;
+            this.Settings.ProjectFiles = projectFiles;
             return this;
         }
 
@@ -251,7 +159,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithDirectories(
             IList<string> directories)
         {
-            this.Directories = directories;
+            this.Settings.Directories = directories;
             return this;
         }
 
@@ -265,7 +173,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithFiles(
             IList<string> files)
         {
-            this.Files = files;
+            this.Settings.Files = files;
             return this;
         }
 
@@ -280,7 +188,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithIgnorePatterns(
             IList<string> ignorePatterns)
         {
-            this.IgnorePatterns = ignorePatterns;
+            this.Settings.IgnorePatterns = ignorePatterns;
             return this;
         }
 
@@ -302,7 +210,7 @@ namespace StyleCopCmd.Core
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithRecursion(bool withRecursion)
         {
-            this.RecursionEnabled = withRecursion;
+            this.Settings.RecursionEnabled = withRecursion;
             return this;
         }
 
@@ -316,7 +224,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithProcessorSymbols(
             IList<string> processorSymbols)
         {
-            this.ProcessorSymbols = processorSymbols;
+            this.Settings.ProcessorSymbols = processorSymbols;
             return this;
         }
 
@@ -330,7 +238,7 @@ namespace StyleCopCmd.Core
         public ReportBuilder WithStyleCopSettingsFile(
             string styleCopSettingsFile)
         {
-            this.StyleCopSettingsFile = styleCopSettingsFile;
+            this.Settings.StyleCopSettingsFile = styleCopSettingsFile;
             return this;
         }
 
@@ -379,9 +287,9 @@ namespace StyleCopCmd.Core
             // Create a StyleCop configuration specifying the configuration
             // symbols to use for this report.
             var cfg = new Configuration(
-                this.ProcessorSymbols != null
+                this.Settings.ProcessorSymbols != null
                     ?
-                        this.ProcessorSymbols.ToArray()
+                        this.Settings.ProcessorSymbols.ToArray()
                     :
                         null);
 
@@ -389,56 +297,14 @@ namespace StyleCopCmd.Core
             
             // Create a new StyleCop console used to do the check.
             var scc = new StyleCopConsole(
-                this.StyleCopSettingsFile,
+                this.Settings.StyleCopSettingsFile,
                 true,
                 GetViolationsFile(outputXmlFile),
-                this.AddInDirectories,
+                this.Settings.AddInDirectories,
                 true);
 
-            this.WriteDebugLine("Processing solution files");
-            
-            // Process solution files
-            if (this.SolutionFiles != null)
-            {
-                foreach (var i in this.SolutionFiles)
-                {
-                    this.AddSolutionFile(i);
-                }
-            }
-
-            this.WriteDebugLine("Processing project files");
-
-            // Process project files
-            if (this.ProjectFiles != null)
-            {
-                foreach (var i in this.ProjectFiles)
-                {
-                    this.AddProjectFile(i);
-                }
-            }
-
-            this.WriteDebugLine("Processing directories");
-            
-            // Process directories
-            if (this.Directories != null)
-            {
-                foreach (var i in this.Directories)
-                {
-                    this.AddDirectory(i);
-                }
-            }
-
-            this.WriteDebugLine("Processing files");
-
-            // Process files
-            if (this.Files != null)
-            {
-                foreach (var i in this.Files)
-                {
-                    this.AddFile(i, null);
-                }
-            }
-
+            this.WriteDebugLine("Setting files to analyze");
+            this.SetFiles();
             this.WriteDebugLine("Preparing code projects");
 
             // Create a list of code projects from the data set.
@@ -592,7 +458,7 @@ namespace StyleCopCmd.Core
         private void AddDirectory(string path)
         {
             this.WriteDebugLine("Adding directory: " + path);
-            var recurse = this.RecursionEnabled
+            var recurse = this.Settings.RecursionEnabled
                               ?
                                   SearchOption.AllDirectories
                               :
@@ -626,10 +492,10 @@ namespace StyleCopCmd.Core
         private void AddFile(string filePath, int? project)
         {
             this.WriteDebugLine("Adding file: " + filePath);
-            if (this.IgnorePatterns != null)
+            if (this.Settings.IgnorePatterns != null)
             {
                 // Check to see if this file should be ignored.
-                if (this.IgnorePatterns.FirstOrDefault(
+                if (this.Settings.IgnorePatterns.FirstOrDefault(
                         fp => Regex.IsMatch(
                                   Path.GetFileName(filePath),
                                   fp)) != null)
@@ -761,9 +627,31 @@ namespace StyleCopCmd.Core
         /// <param name="message">Message to write</param>
         private void WriteDebugLine(string message)
         {
-            if (this.EnableDebug)
+            this.Settings.Write(message);
+        }
+
+        /// <summary>
+        /// Setting the files for analysis
+        /// </summary>
+        private void SetFiles()
+        {
+            foreach (var file in this.Settings.GetAllFiles())
             {
-                Console.WriteLine(message);
+                switch (file.Type)   
+                {
+                    case ReportSettings.FileType.Solution:
+                        this.AddSolutionFile(file.File);
+                        break;
+                    case ReportSettings.FileType.Project:
+                        this.AddProjectFile(file.File);
+                        break;
+                    case ReportSettings.FileType.Directory:
+                        this.AddDirectory(file.File);
+                        break;
+                    case ReportSettings.FileType.File:
+                        this.AddFile(file.File, null);
+                        break;
+                }
             }
         }
     }
