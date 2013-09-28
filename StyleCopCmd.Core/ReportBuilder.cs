@@ -639,16 +639,16 @@ namespace StyleCopCmd.Core
             {
                 switch (file.Type)   
                 {
-                    case ReportSettings.FileType.Solution:
+                    case FileType.Solution:
                         this.AddSolutionFile(file.File);
                         break;
-                    case ReportSettings.FileType.Project:
+                    case FileType.Project:
                         this.AddProjectFile(file.File);
                         break;
-                    case ReportSettings.FileType.Directory:
+                    case FileType.Directory:
                         this.AddDirectory(file.File);
                         break;
-                    case ReportSettings.FileType.File:
+                    case FileType.File:
                         this.AddFile(file.File, null);
                         break;
                 }
