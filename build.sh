@@ -35,14 +35,35 @@ cd bin
 # Build
 cd ..
 xbuild /property:Configuration=$BUILD StyleCopCmd.sln
+if [ $? -eq 1 ]; then
+	echo "Build failed"
+	exit 1
+fi
 
 # Run unit tests
 nunit-console2 StyleCopCmd.Core.Test/bin/$BUILD/StyleCopCmd.Core.Test.dll -noshadow
+if [ $? -eq 1 ]; then
+	echo "Unit tests failed"
+	exit 1
+fi
 
 # Code analysis
-gendarme StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe
 gendarme StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Core.dll
+if [ $? -eq 1 ]; then
+	echo "Core project has a code analysis issue"
+	exit 1
+fi
+
+gendarme StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe
+if [ $? -eq 1 ]; then
+	echo "Console project has a code analysis issue"
+	exit 1
+fi
 
 # And check style
 mono StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe -s StyleCopCmd.sln
+if [ $? -eq 1 ]; then
+	echo "StyleCop found a violation in the solution"
+	exit 1
+fi
 
