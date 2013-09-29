@@ -127,12 +127,12 @@ namespace StyleCopCmd.Console
                 .WithIgnorePatterns(ignorePatterns)
                 .WithDebug(withDebug);
             
-            report = report.WithViolationEventHandler(HadViolation);
+            EventHandler<StyleCop.ViolationEventArgs> callback = HadViolation;
             if (!quiet)
             {
                 if (violations)
                 {
-                    report = report.WithViolationEventHandler(ViolationEncountered);
+                    callback = ViolationEncountered;
                 }
                 else
                 {
@@ -140,6 +140,7 @@ namespace StyleCopCmd.Console
                 }
             }
 
+            report = report.WithViolationEventHandler(callback);
             report.Create(outputXml);
             if (hadViolation)
             {
@@ -170,6 +171,7 @@ namespace StyleCopCmd.Console
         /// </param>
         private static void ViolationEncountered(object sender, StyleCop.ViolationEventArgs e)
         {
+            HadViolation(sender, e);
             Console.WriteLine(string.Format("File: {0}", e.SourceCode.Path));
             Console.WriteLine(string.Format("Line: {0} -> {1}", e.LineNumber, e.Message));
             Console.WriteLine();
