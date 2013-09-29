@@ -10,7 +10,7 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// A file for analysis
     /// </summary>
-    public class AnalysisFile
+    public sealed class AnalysisFile
     {
         /// <summary>
         /// Gets or sets the full path of the file
