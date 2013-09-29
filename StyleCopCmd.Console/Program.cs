@@ -54,6 +54,11 @@ namespace StyleCopCmd.Console
         private static OptionSet opts = new OptionSet();
 
         /// <summary>
+        /// Indicates if the program execute an analysis with violations
+        /// </summary>
+        private static bool hadViolation;
+
+        /// <summary>
         /// The entry-point method for this application.
         /// </summary>
         /// <param name="args">
@@ -122,6 +127,7 @@ namespace StyleCopCmd.Console
                 .WithIgnorePatterns(ignorePatterns)
                 .WithDebug(withDebug);
             
+            report = report.WithViolationEventHandler(HadViolation);
             if (!quiet)
             {
                 if (violations)
@@ -135,6 +141,10 @@ namespace StyleCopCmd.Console
             }
 
             report.Create(outputXml);
+            if (hadViolation)
+            {
+                Environment.Exit(1);
+            }
         }
 
         /// <summary>
@@ -163,6 +173,20 @@ namespace StyleCopCmd.Console
             Console.WriteLine(string.Format("File: {0}", e.SourceCode.Path));
             Console.WriteLine(string.Format("Line: {0} -> {1}", e.LineNumber, e.Message));
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Indicates for execution if violations were encountered
+        /// </summary>
+        /// <param name='sender'>
+        /// The event sender.
+        /// </param>
+        /// <param name='e'>
+        /// The violation
+        /// </param>
+        private static void HadViolation(object sender, StyleCop.ViolationEventArgs e)
+        {
+            hadViolation = true;
         }
 
         /// <summary>
