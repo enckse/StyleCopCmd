@@ -6,8 +6,13 @@ Installing
 * For Windows, run StyleCopCmd.Console.exe from the install location or add to the PATH
 * For Linux, run mono StyleCopCmd.Console.exe from the install location (potentially create an alias to handle calling "mono StyleCopCmd" in an executable area)
 
+Building
+--------
+* (Linux) Run build.sh in the root directory (add release to build in release mode)
+
 Usage
 ------
+Linux/Mono
 ```text
 mono StyleCopCmd.Console.exe -s <solution>
 
@@ -15,9 +20,6 @@ mono StyleCopCmd.Console.exe -f <file.cs>
 
 mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
 ```
-
-When building:
-* Run build.sh in the root directory (add release to build in release mode)
 
 Options
 --------
