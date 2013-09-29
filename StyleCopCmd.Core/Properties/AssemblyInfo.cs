@@ -9,13 +9,3 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("StyleCopCmd.Core")]
-
-[assembly: AssemblyDescription("")]
-
-[assembly: AssemblyConfiguration("")]
-
-[assembly: AssemblyVersion("1.0.0.0")]
-
-[assembly: System.CLSCompliant(true)]
-
-[assembly: System.Runtime.InteropServices.ComVisible(false)]
