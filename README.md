@@ -29,7 +29,7 @@ Options
 --------
 ```text
 StyleCopCmd
-Provides an interface for using StyleCop (specifically for Mono on Linux)
+Provides a command line interface for using StyleCop
   -s, --solutionFiles=VALUE  Visual studio solution files to check
   -p, --projectFiles=VALUE   Visual Studio project files to check
   -i, --ignoreFilePattern=VALUE

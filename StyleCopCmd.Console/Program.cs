@@ -197,7 +197,7 @@ namespace StyleCopCmd.Console
         private static void PrintUsageAndHelp()
         {
             Console.WriteLine("StyleCopCmd");
-            Console.WriteLine("Provides an interface for using StyleCop (specifically for Mono on Linux)");
+            Console.WriteLine("Provides a command line interface for using StyleCop");
             opts.WriteOptionDescriptions(Console.Out);
         }
     }
