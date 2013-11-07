@@ -67,3 +67,16 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
+# Update the readme
+LINE=$(cat -n README.md | grep "``````text" | tail -1 | cut -f 1)
+head -n $LINE README.md > README.tmp
+mono StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe --help >> README.tmp
+echo "\`\`\`" >> README.tmp
+echo ""
+echo "Updating readme if necessary"
+diff -w README.md README.tmp
+if [ $? -eq 1 ]; then
+	mv README.tmp README.md
+fi
+
+echo "All done"

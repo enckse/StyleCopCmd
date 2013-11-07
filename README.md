@@ -50,4 +50,3 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
   -e, --eliminate            Eliminate checking duplicate files/projects
   -w, --withdebug            Perform checks with debug output
 ```
-
