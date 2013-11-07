@@ -21,6 +21,10 @@ mono StyleCopCmd.Console.exe -f <file.cs>
 mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
 ```
 
+Known Issues
+-----------
+* Spell checking rules do not work in a Linux environment. This is due to StyleCop using office-based spell checking. (Check out LinuxCopExtensions for similar functionality in Linux)
+
 Options
 --------
 ```text
@@ -47,6 +51,3 @@ Provides an interface for using StyleCop (specifically for Mono on Linux)
   -w, --withdebug            Perform checks with debug output
 ```
 
-Known Issues
------------
-* Spell checking rules do not work in a Linux environment. This is due to StyleCop using office-based spell checking. (Check out LinuxCopExtensions for similar functionality in Linux)
