@@ -48,13 +48,13 @@ if [ $? -eq 1 ]; then
 fi
 
 # Code analysis
-gendarme StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Core.dll
+gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Core.dll
 if [ $? -eq 1 ]; then
 	echo "Core project has a code analysis issue"
 	exit 1
 fi
 
-gendarme StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe
+gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$BUILD/StyleCopCmd.Console.exe
 if [ $? -eq 1 ]; then
 	echo "Console project has a code analysis issue"
 	exit 1
