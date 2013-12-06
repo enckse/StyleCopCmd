@@ -8,7 +8,10 @@ Installing
 
 Building
 --------
-* (Linux) Run build.sh in the root directory (add release to build in release mode)
+* Run build.sh (Linux) or build.ps1 (Windows)
+* The Windows script will (or should) pull all referenced items (gendarme, nunit, stylecop, ndesk)
+* For either script, pass 'release' in as the first argument to build in release
+* If scripts are added into the bin folder of the project, the powershell script needs to know NOT to delete those
 
 Usage
 ------
