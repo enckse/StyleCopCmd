@@ -385,17 +385,31 @@ namespace StyleCopCmd.Core
         /// <param name='paths'>
         /// Paths to expand.
         /// </param>
-        private static IEnumerable<string> ExpandDirectories(string[] paths)
+        private IEnumerable<string> ExpandDirectories(string[] paths)
         {
             foreach (var path in paths)
             {
+                this.WriteDebugLine("Expanding wildcard path: " + path);
+
                 // Only expand wildcards
                 if (path.Contains("*"))
                 {
                     var parts = path.Split(Path.DirectorySeparatorChar);
                     string basePath = Directory.GetDirectoryRoot(path);
-                    
-                    for (int index = 0; index < parts.Length; index++)
+
+                    // TODO: Network shares in windows? Will that even work outside of this?
+                    // Supporting wildcard in windows and linux
+                    // Start point in windows needs to be adjust by 1 when the root is a drive (e.g. C:)
+                    var startIndex = 0;
+                    if (basePath.Length >= 2)
+                    {
+                        if (basePath[0] >= 'A' && basePath[0] <= 'Z' && basePath[1] == ':')
+                        {
+                            startIndex = 1;
+                        }
+                    }
+
+                    for (int index = startIndex; index < parts.Length; index++)
                     {
                         string part = parts[index];
                         
@@ -607,13 +621,14 @@ namespace StyleCopCmd.Core
             var paths = new string[] { path };
             do
             {
-                paths = ExpandDirectories(paths).ToArray();
+                paths = this.ExpandDirectories(paths).ToArray();
             }
             while (paths.Where(x => x.Contains("*")).Any());
             
             // At this point, all wildcards have been expanded
             foreach (var item in paths)
             {
+                this.WriteDebugLine("Wild card path expanded to: " + item);
                 if (File.Exists(item))
                 {
                     this.AddFile(item, project);

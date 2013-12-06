@@ -1,12 +1,15 @@
-$gendarme = "gendarme.exe"
-$nunit = "nunit-console.exe"
+
 $msbuild = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe"
 $binFolder = "$pwd\bin"
 $oldREADME = "$pwd\README.md"
 $newREADME = "$pwd\README.tmp"
 $stylecop = "sc"
 $ndesk = "nd"
+$nunit = "nu"
+$gdrm = "gd"
 $buildType = "DEBUG"
+$nunitExe = "$binFolder\nunit-console.exe"
+$gendarmeExe = "$binFolder\gendarme.exe"
 
 function GetAndUnzip($url, $file)
 {
@@ -36,15 +39,27 @@ if ($args -AND $args.Length -gt 0)
 	}
 }
 
+# Avoid deleting the other scripts in this directory (for linux build)
+rm "$binFolder\*" -exclude *.LICENSE,*.sh,*.bat -recurse
+
+# Stylecop itself
 GetAndUnzip "https://nuget.org/api/v2/package/StyleCop.MSBuild" $stylecop
 mv "$binFolder\$stylecop\tools\StyleCop.dll" $binFolder -Force
 mv "$binFolder\$stylecop\tools\StyleCop.CSharp.dll" $binFolder -Force
 mv "$binFolder\$stylecop\tools\StyleCop.CSharp.Rules.dll" $binFolder -Force
+
+# ndesk
 GetAndUnzip "https://nuget.org/api/v2/package/NDesk.Options" $ndesk
 mv "$binFolder\$ndesk\lib\NDesk.Options.dll" $binFolder -Force
 
-# Requires nunit to either be in the bin folder or in the GAC or somewhere in the path for msbuild
-# Maybe handle this later on and pull it down
+# nunit
+GetAndUnzip "http://launchpad.net/nunitv2/trunk/2.6.3/+download/NUnit-2.6.3.zip" $nunit
+mv "$binFolder\$nunit\NUnit-2.6.3\bin\*" $binFolder -Force
+
+# gendarme
+GetAndUnzip "https://github.com/downloads/spouliot/gendarme/gendarme-2.10-bin.zip" $gdrm
+mv "$binFolder\$gdrm\*" $binFolder -Force
+
 & $msbuild /property:Configuration=$buildType StyleCopCmd.sln
 if (-not $?)
 {
@@ -52,21 +67,21 @@ if (-not $?)
 	exit 1
 }
 
-& $nunit StyleCopCmd.Core.Test/bin/$buildType/StyleCopCmd.Core.Test.dll -noshadow
+& $nunitExe StyleCopCmd.Core.Test/bin/$buildType/StyleCopCmd.Core.Test.dll -noshadow
 if (-not $?)
 {
 	echo "Unit tests failed"
 	exit 1
 }
 
-& $gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Core.dll
+& $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Core.dll
 if (-not $?)
 {
 	echo "Core project has a code analysis issue"
 	exit 1
 }
 
-& $gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.dll
+& $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.dll
 if (-not $?)
 {
 	echo "Console project has a code analysis issue"
