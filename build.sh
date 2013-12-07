@@ -1,4 +1,31 @@
 #!/bin/bash
+usage="Usage: $(basename "$0") [-h] [-s] [-r] -- simple build script for StyleCopCmd
+
+where:
+    -h show this help text
+    -s Skip downloading dependencies
+    -r Build in Release mode"
+
+DODOWNLOAD=true
+DORELEASE=false
+while getopts ":rsh" opt; do
+   case $opt in
+	r)
+	DORELEASE=true
+	;;
+	s)
+	DODOWNLOAD=false
+	;;
+	h)
+	echo "$usage"
+	exit
+	;;
+	\?)
+	echo "Unknown argument: -$OPTARG"
+	;;
+    esac
+done
+
 if ! hash xbuild 2>/dev/null; then
 	echo "xbuild is required to use the build script"	
 	exit 1
@@ -20,20 +47,20 @@ if ! hash gendarme 2>/dev/null; then
 fi
 
 # Build type
-BUILD="$(tr [A-Z] [a-z] <<< "$1")"
-if [ "$BUILD" = "release" ]
-then
-      BUILD="Release"
-else
-      BUILD="Debug"
+BUILD="Debug"
+if $DORELEASE ; then
+	BUILD="Release"
 fi
 
 # Pull resources
-cd bin
-./fetch.sh
+if  $DODOWNLOAD ; then
+	cd bin
+	./fetch.sh
+
+	cd ..
+fi
 
 # Build
-cd ..
 xbuild /property:Configuration=$BUILD StyleCopCmd.sln
 if [ $? -eq 1 ]; then
 	echo "Build failed"
