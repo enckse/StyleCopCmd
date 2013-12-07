@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+    Provides a simple powershell interface to build StyleCopCmd in Windows
+.DESCRIPTION
+    Downloads dependencies, builds the solution, runs the unit tests, code analysis, check for violations.
+.PARAMETER release
+    Build the project in RELEASE mode (instead of DEBUG)
+.PARAMETER skipDownload
+    Skip downloading dependencies
+.EXAMPLE
+    .\build.ps1 -release -skipDownload
+    Build the project in RELEASE mode and do not download any dependencies
+#>
+param(
+    [switch]$release,
+    [switch]$skipDownload
+    )
 
 $msbuild = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe"
 $binFolder = "$pwd\bin"
@@ -31,34 +48,34 @@ function GetAndUnzip($url, $file)
 	}
 }
 
-if ($args -AND $args.Length -gt 0)
+if ($release)
 {
-	if ($args[0].ToUpper() -eq "RELEASE")
-	{
-		$buildType = "RELEASE"
-	}
+    $buildType = "RELEASE"
 }
 
-# Avoid deleting the other scripts in this directory (for linux build)
-rm "$binFolder\*" -exclude *.LICENSE,*.sh,*.bat -recurse
+if (-not $skipDownload)
+{
+    # Avoid deleting the other scripts in this directory (for linux build)
+    rm "$binFolder\*" -exclude *.LICENSE,*.sh,*.bat -recurse
 
-# Stylecop itself
-GetAndUnzip "https://nuget.org/api/v2/package/StyleCop.MSBuild" $stylecop
-mv "$binFolder\$stylecop\tools\StyleCop.dll" $binFolder -Force
-mv "$binFolder\$stylecop\tools\StyleCop.CSharp.dll" $binFolder -Force
-mv "$binFolder\$stylecop\tools\StyleCop.CSharp.Rules.dll" $binFolder -Force
+    # Stylecop itself
+    GetAndUnzip "https://nuget.org/api/v2/package/StyleCop.MSBuild" $stylecop
+    mv "$binFolder\$stylecop\tools\StyleCop.dll" $binFolder -Force
+    mv "$binFolder\$stylecop\tools\StyleCop.CSharp.dll" $binFolder -Force
+    mv "$binFolder\$stylecop\tools\StyleCop.CSharp.Rules.dll" $binFolder -Force
 
-# ndesk
-GetAndUnzip "https://nuget.org/api/v2/package/NDesk.Options" $ndesk
-mv "$binFolder\$ndesk\lib\NDesk.Options.dll" $binFolder -Force
+    # ndesk
+    GetAndUnzip "https://nuget.org/api/v2/package/NDesk.Options" $ndesk
+    mv "$binFolder\$ndesk\lib\NDesk.Options.dll" $binFolder -Force
 
-# nunit
-GetAndUnzip "http://launchpad.net/nunitv2/trunk/2.6.3/+download/NUnit-2.6.3.zip" $nunit
-mv "$binFolder\$nunit\NUnit-2.6.3\bin\*" $binFolder -Force
+    # nunit
+    GetAndUnzip "http://launchpad.net/nunitv2/trunk/2.6.3/+download/NUnit-2.6.3.zip" $nunit
+    mv "$binFolder\$nunit\NUnit-2.6.3\bin\*" $binFolder -Force
 
-# gendarme
-GetAndUnzip "https://github.com/downloads/spouliot/gendarme/gendarme-2.10-bin.zip" $gdrm
-mv "$binFolder\$gdrm\*" $binFolder -Force
+    # gendarme
+    GetAndUnzip "https://github.com/downloads/spouliot/gendarme/gendarme-2.10-bin.zip" $gdrm
+    mv "$binFolder\$gdrm\*" $binFolder -Force
+}
 
 & $msbuild /property:Configuration=$buildType StyleCopCmd.sln
 if (-not $?)
@@ -81,7 +98,7 @@ if (-not $?)
 	exit 1
 }
 
-& $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.dll
+& $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe
 if (-not $?)
 {
 	echo "Console project has a code analysis issue"
