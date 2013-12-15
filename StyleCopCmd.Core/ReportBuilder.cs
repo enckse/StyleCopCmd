@@ -385,8 +385,9 @@ namespace StyleCopCmd.Core
         /// <param name='paths'>
         /// Paths to expand.
         /// </param>
-        private IEnumerable<string> ExpandDirectories(string[] paths)
+        private string[] ExpandDirectories(string[] paths)
         {
+            List<string> pathsToReturn = new List<string>();
             foreach (var path in paths)
             {
                 this.WriteDebugLine("Expanding wildcard path: " + path);
@@ -397,9 +398,10 @@ namespace StyleCopCmd.Core
                     var parts = path.Split(Path.DirectorySeparatorChar);
                     string basePath = Directory.GetDirectoryRoot(path);
 
-                    // TODO: Network shares in windows? Will that even work outside of this?
                     // Supporting wildcard in windows and linux
-                    // Start point in windows needs to be adjust by 1 when the root is a drive (e.g. C:)
+                    // Start point in windows needs to be adjusted by 1 when the root is a drive (e.g. C:)
+                    // Windows: This will only work for directories based on directory lettering (no network paths)
+                    // For network paths in Windows map the network path to a drive.
                     var startIndex = 0;
                     if (basePath.Length >= 2)
                     {
@@ -427,10 +429,10 @@ namespace StyleCopCmd.Core
                             // Expand all child directories including the current directory
                             if (part == "**")
                             {
-                                yield return Path.Combine(basePath, subDir);
+                                pathsToReturn.Add(Path.Combine(basePath, subDir));
                                 foreach (var directory in Directory.GetDirectories(basePath))
                                 {
-                                    yield return Path.Combine(directory, subDir);
+                                    pathsToReturn.Add(Path.Combine(directory, subDir));
                                 }
                             }
                             else
@@ -438,12 +440,12 @@ namespace StyleCopCmd.Core
                                 // Single wildcards, look for any matching files and sub dirs
                                 foreach (var directory in Directory.GetDirectories(basePath, part))
                                 {
-                                    yield return Path.Combine(directory, subDir);
+                                    pathsToReturn.Add(Path.Combine(directory, subDir));
                                 }
                             
                                 foreach (var file in Directory.GetFiles(basePath, part))
                                 {
-                                    yield return Path.Combine(file, subDir);
+                                    pathsToReturn.Add(Path.Combine(file, subDir));
                                 }
                             }
                             
@@ -457,9 +459,11 @@ namespace StyleCopCmd.Core
                 }
                 else
                 {
-                 yield return path;   
+                pathsToReturn.Add(path);
                 }
             }
+            
+            return pathsToReturn.ToArray();
         }
         
         /// <summary>
@@ -621,7 +625,7 @@ namespace StyleCopCmd.Core
             var paths = new string[] { path };
             do
             {
-                paths = this.ExpandDirectories(paths).ToArray();
+                paths = this.ExpandDirectories(paths);
             }
             while (paths.Where(x => x.Contains("*")).Any());
             

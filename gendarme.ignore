@@ -1,10 +1,3 @@
 # Handle assembly versions here since a callout to change the file vs assembly version is important
 R: Gendarme.Rules.BadPractice.AvoidAssemblyVersionMismatchRule
 A: *
-
-# NOTE: Willing to ignore disposable complaints on the following enumerator calls
-# If this becomes an issue, rework the calls in report settings and builder accordingly
-R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
-M:  System.Collections.IEnumerator StyleCopCmd.Core.ReportSettings/<GetFiles>d__10::System.Collections.IEnumerable.GetEnumerator()
-M:  System.Collections.IEnumerator StyleCopCmd.Core.ReportSettings/<GetAllFiles>d__0::System.Collections.IEnumerable.GetEnumerator()
-M:  System.Collections.IEnumerator StyleCopCmd.Core.ReportBuilder/<ExpandDirectories>d__7::System.Collections.IEnumerable.GetEnumerator()

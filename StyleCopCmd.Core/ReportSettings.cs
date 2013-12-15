@@ -75,29 +75,16 @@ namespace StyleCopCmd.Core
         /// <returns>The set of all files for analysis with file name and type</returns>
         public IEnumerable<AnalysisFile> GetAllFiles()
         {
+            List<AnalysisFile> files = new List<AnalysisFile>();
             this.Write("Processing solution files");
-            foreach (var solution in GetFiles(this.SolutionFiles, FileType.Solution))
-            {
-                yield return solution;
-            }
-
+            GetFiles(this.SolutionFiles, FileType.Solution, files);
             this.Write("Processing project files");
-            foreach (var proj in GetFiles(this.ProjectFiles, FileType.Project))
-            {
-                yield return proj;
-            }
-
+            GetFiles(this.ProjectFiles, FileType.Project, files);
             this.Write("Processing directories");
-            foreach (var dir in GetFiles(this.Directories, FileType.Directory))
-            {
-                yield return dir;
-            }
-
+            GetFiles(this.Directories, FileType.Directory, files);
             this.Write("Processing files");
-            foreach (var file in GetFiles(this.Files, FileType.File))
-            {
-                yield return file;
-            }
+            GetFiles(this.Files, FileType.File, files);
+            return files;
         }
 
         /// <summary>
@@ -117,8 +104,8 @@ namespace StyleCopCmd.Core
         /// </summary>
         /// <param name="files">File list to get files from</param>
         /// <param name="type">File type to add to any files</param>
-        /// <returns>The set of none empty files in the given set marked with a type</returns>
-        private static IEnumerable<AnalysisFile> GetFiles(IList<string> files, FileType type)
+        /// <param name="addTo">File set to add to</param>
+        private static void GetFiles(IList<string> files, FileType type, IList<AnalysisFile> addTo)
         {
             if (files != null)
             {
@@ -126,7 +113,7 @@ namespace StyleCopCmd.Core
                 {
                     if (!string.IsNullOrEmpty(file))
                     {
-                        yield return new AnalysisFile() { File = file, Type = type };
+                        addTo.Add(new AnalysisFile() { File = file, Type = type });
                     }
                 }
             }
