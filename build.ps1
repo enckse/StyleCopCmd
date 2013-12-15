@@ -56,7 +56,7 @@ if ($release)
 if (-not $skipDownload)
 {
     # Avoid deleting the other scripts in this directory (for linux build)
-    rm "$binFolder\*" -exclude *.LICENSE,*.sh,*.bat -recurse
+    rm "$binFolder\*" -exclude *.LICENSE -recurse
 
     # Stylecop itself
     GetAndUnzip "https://nuget.org/api/v2/package/StyleCop.MSBuild" $stylecop

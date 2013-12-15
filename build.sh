@@ -54,10 +54,19 @@ fi
 
 # Pull resources
 if  $DODOWNLOAD ; then
-	cd bin
-	./fetch.sh
-
-	cd ..
+	if [ -d bin/tmp ]; then
+		rm -r bin/tmp
+	fi
+	mkdir bin/tmp
+	wget -O bin/tmp/sc.zip https://nuget.org/api/v2/package/StyleCop.MSBuild
+	unzip bin/tmp/sc.zip -d bin/tmp
+	mv bin/tmp/tools/StyleCop.dll bin/
+	mv bin/tmp/tools/StyleCop.CSharp.dll bin/
+	mv bin/tmp/tools/StyleCop.CSharp.Rules.dll bin/ 
+	rm -r bin/tmp/*
+	wget -O bin/tmp/ndesk.zip https://nuget.org/api/v2/package/NDesk.Options
+	unzip bin/tmp/ndesk.zip -d bin/tmp
+	mv bin/tmp/lib/NDesk.Options.dll bin/
 fi
 
 # Build
