@@ -80,6 +80,7 @@ namespace StyleCopCmd.Console
             bool quiet = false;
             bool dedupe = false;
             bool withDebug = false;
+            bool allowCaching = false;
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Visual studio solution files to check", opt => { solutionFiles.Add(opt); } },
@@ -95,7 +96,8 @@ namespace StyleCopCmd.Console
                 { "q|quiet", "Do not print any information to console", opt => { quiet = true; } },
                 { "?|help", "Print the usage information", opt => { needHelp = true; } },
                 { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { dedupe = true; } },
-                { "w|withdebug", "Perform checks with debug output", opt => { withDebug = true; } },
+                { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
+                { "a|allowCaching", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
             };
             
             try
@@ -125,7 +127,8 @@ namespace StyleCopCmd.Console
                 .WithDirectories(directories)
                 .WithFiles(files)
                 .WithIgnorePatterns(ignorePatterns)
-                .WithDebug(withDebug);
+                .WithDebug(withDebug)
+                .WithCaching(allowCaching);
             
             EventHandler<StyleCop.ViolationEventArgs> callback = HadViolation;
             if (!quiet)

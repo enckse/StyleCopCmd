@@ -50,5 +50,6 @@ Provides a command line interface for using StyleCop
   -q, --quiet                Do not print any information to console
   -?, --help                 Print the usage information
   -e, --eliminate            Eliminate checking duplicate files/projects
-  -w, --withdebug            Perform checks with debug output
+  -w, --withDebug            Perform checks with debug output
+  -a, --allowCaching         Allows StyleCop to use caching
 ```

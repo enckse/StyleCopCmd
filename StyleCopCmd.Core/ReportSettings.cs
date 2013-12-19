@@ -70,6 +70,11 @@ namespace StyleCopCmd.Core
         public bool EnableDebug { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to allow StyleCop caching
+        /// </summary>
+        public bool AllowCaching { get; set; }
+
+        /// <summary>
         /// Get all files stored in the settings for analysis
         /// </summary>
         /// <returns>The set of all files for analysis with file name and type</returns>
