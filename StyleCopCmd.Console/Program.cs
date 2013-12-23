@@ -72,6 +72,7 @@ namespace StyleCopCmd.Console
             IList<string> directories = new List<string>();
             IList<string> files = new List<string>();
             IList<string> symbols = new List<string>();
+            IList<string> addins = new List<string>();
             string styleCopSettings = null;
             string outputXml = null;
             bool recurse = false;
@@ -97,7 +98,8 @@ namespace StyleCopCmd.Console
                 { "?|help", "Print the usage information", opt => { needHelp = true; } },
                 { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { dedupe = true; } },
                 { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
-                { "a|allowCaching", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
+                { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
+                { "k|keepCache", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
             };
             
             try
@@ -128,7 +130,8 @@ namespace StyleCopCmd.Console
                 .WithFiles(files)
                 .WithIgnorePatterns(ignorePatterns)
                 .WithDebug(withDebug)
-                .WithCaching(allowCaching);
+                .WithCaching(allowCaching)
+                .WithAddins(addins);
             
             EventHandler<StyleCop.ViolationEventArgs> callback = HadViolation;
             if (!quiet)

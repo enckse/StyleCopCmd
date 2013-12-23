@@ -284,6 +284,18 @@ namespace StyleCopCmd.Core
             this.ViolationEncountered = violationHandler;
             return this;
         }
+
+        /// <summary>
+        /// Set optional addin paths to for StyleCop to search
+        /// </summary>
+        /// <param name="addins">Additional addin paths for StyleCop to searchy</param>
+        /// <returns>This ReportBuilder.</returns>
+        public ReportBuilder WithAddins(
+            IList<string> addins)
+        {
+            this.Settings.AddInDirectories = addins;
+            return this;
+        }
     
         /// <summary>
         /// Creates a StyleCop report.
