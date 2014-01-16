@@ -198,7 +198,7 @@ namespace StyleCopCmd.Console
         }
 
         /// <summary>
-        /// Prints this application's usage and help text to StdOut.
+        /// Prints this application's usage and help text to standard out.
         /// </summary>
         private static void PrintUsageAndHelp()
         {

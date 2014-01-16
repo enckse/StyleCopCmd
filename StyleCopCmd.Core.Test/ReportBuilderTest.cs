@@ -97,7 +97,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Withs multiple solution files test.
+        /// With multiple solution files test.
         /// </summary>
         [Test]
         public void WithMultipleSolutionFilesTest()
@@ -146,7 +146,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Withs multiple project files test.
+        /// With multiple project files test.
         /// </summary>
         [Test]
         public void WithMultipleProjectFilesTest()
@@ -181,7 +181,7 @@ namespace StyleCopCmd.Core.Test
         }
   
         /// <summary>
-        /// Withs multiple directories test.
+        /// With multiple directories test.
         /// </summary>
         [Test]
         public void WithMultipleDirectoriesTest()
@@ -212,7 +212,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Withs multiple files test.
+        /// With multiple files test.
         /// </summary>
         [Test]
         public void WithMultipleFilesTest()
@@ -228,7 +228,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Tests the WithIngorePatterns method.
+        /// Tests the WithIgnorePatterns method.
         /// </summary>
         [Test]
         public void WithIgnorePatternsTest()
@@ -245,7 +245,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Withs multiple patterns test.
+        /// With multiple patterns test.
         /// </summary>
         [Test]
         public void WithMultiplePatternsTest()
@@ -295,7 +295,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Withs multiple symbols test.
+        /// With multiple symbols test.
         /// </summary>
         [Test]
         public void WithMultipleSymbolsTest()
@@ -398,7 +398,7 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
-        /// Tests the usage of wildcards in the csproj file
+        /// Tests the usage of wildcards in the project file
         /// </summary>
         [Test]
         public void WildCardTest()
@@ -442,7 +442,7 @@ namespace StyleCopCmd.Core.Test
         /// Executes the test.
         /// </summary>
         /// <returns>
-        /// The output from stylecop event output
+        /// The output from StyleCop event output
         /// </returns>
         /// <param name='builder'>
         /// Input report for testing

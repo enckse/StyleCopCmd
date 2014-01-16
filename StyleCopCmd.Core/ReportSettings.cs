@@ -43,7 +43,7 @@ namespace StyleCopCmd.Core
 
         /// <summary>
         /// Gets or sets a value indicating whether or not directories are 
-        /// recursed.
+        /// recursively searched.
         /// </summary>
         public bool RecursionEnabled { get; set; }
 

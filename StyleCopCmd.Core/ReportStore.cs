@@ -45,10 +45,10 @@ namespace StyleCopCmd.Core
         }
         
         /// <summary>
-        /// Gets or sets a value indicating whether to provide a dedupe on projects and files
+        /// Gets or sets a value indicating whether to provide a duplication check on projects and files
         /// </summary>
         /// <value>
-        /// <c>true</c> if dedupe; otherwise, <c>false</c>.
+        /// <c>true</c> if duplication checking is on; otherwise, <c>false</c>.
         /// </value>
         public bool Dedupe
         {

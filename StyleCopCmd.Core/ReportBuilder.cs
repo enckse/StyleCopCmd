@@ -63,12 +63,12 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Occurs when the stle processor outputs a message.
+        /// Occurs when the style processor outputs a message.
         /// </summary>
         public event EventHandler<OutputEventArgs> OutputGenerated;
 
         /// <summary>
-        /// Occurs when the stylecop processor encounters a violation
+        /// Occurs when the StyleCop processor encounters a violation
         /// </summary>
         public event EventHandler<ViolationEventArgs> ViolationEncountered;
 
@@ -111,7 +111,7 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Enables eliminating the duplicates.
         /// </summary>
-        /// <param name="dedupe">True to enable dedupe of projects/files</param>
+        /// <param name="dedupe">True to enable duplication removal of projects/files</param>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithDedupe(bool dedupe)
         {
@@ -153,7 +153,7 @@ namespace StyleCopCmd.Core
         /// Adds directories to check.
         /// </summary>
         /// <param name="directories">
-        /// A list of fully-qualifieid paths to directories.
+        /// A list of fully-qualified paths to directories.
         /// </param>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithDirectories(
@@ -193,7 +193,7 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Specifies to recurse directories.
+        /// Specifies to recursively search directories.
         /// </summary>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithRecursion()
@@ -202,10 +202,10 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Specifies to recurse directories.
+        /// Specifies to recursively search directories.
         /// </summary>
         /// <param name="withRecursion">
-        /// True to recurse; otherwise false.
+        /// True to recursively search; otherwise false.
         /// </param>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithRecursion(bool withRecursion)
@@ -218,7 +218,7 @@ namespace StyleCopCmd.Core
         /// Adds a list of processor symbols to use when performing the check.
         /// </summary>
         /// <param name="processorSymbols">
-        /// A list of processor symboles to use when performing the check.
+        /// A list of processor symbols to use when performing the check.
         /// </param>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithProcessorSymbols(
@@ -286,9 +286,9 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Set optional addin paths to for StyleCop to search
+        /// Set optional add-in paths to for StyleCop to search
         /// </summary>
-        /// <param name="addins">Additional addin paths for StyleCop to searchy</param>
+        /// <param name="addins">Additional add-in paths for StyleCop to search</param>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithAddins(
             IList<string> addins)
