@@ -309,12 +309,7 @@ namespace StyleCopCmd.Core
 
             // Create a StyleCop configuration specifying the configuration
             // symbols to use for this report.
-            var cfg = new Configuration(
-                this.Settings.ProcessorSymbols != null
-                    ?
-                        this.Settings.ProcessorSymbols.ToArray()
-                    :
-                        null);
+            var cfg = new Configuration(this.Settings.ProcessorSymbols != null ? this.Settings.ProcessorSymbols.ToArray() : null);
 
             this.WriteDebugLine("Creating console for checking");
             
@@ -331,22 +326,14 @@ namespace StyleCopCmd.Core
             this.WriteDebugLine("Preparing code projects");
 
             // Create a list of code projects from the data set.
-            var cps = this.Report.Projects.Select(
-                r => new CodeProject(
-                         r.Id,
-                         r.Location,
-                         cfg)).ToList();
-   
-           this.WriteDebugLine("Preparing source code objects");
+            var cps = this.Report.Projects.Select(r => new CodeProject(r.Id, r.Location, cfg)).ToList();
+            this.WriteDebugLine("Preparing source code objects");
 
             // Add the source code files to the style cop checker
             foreach (var f in this.Report.SourceFiles)
             {
                 var cp = cps.Where(i => i.Key == f.ProjectId).First();
-                scc.Core.Environment.AddSourceCode(
-                    cp,
-                    f.Path,
-                    null);
+                scc.Core.Environment.AddSourceCode(cp, f.Path, null);
             }
             
             if (this.OutputGenerated != null)
@@ -359,7 +346,7 @@ namespace StyleCopCmd.Core
                 scc.ViolationEncountered += this.ViolationEncountered;
             }
    
-                this.WriteDebugLine("Validating spell checking situation");
+            this.WriteDebugLine("Validating spell checking situation");
 
             // The spell checking relies on office, is will cause issues in linux
             if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
@@ -385,6 +372,8 @@ namespace StyleCopCmd.Core
             {
                 scc.ViolationEncountered -= this.ViolationEncountered;
             }
+
+            this.WriteDebugLine("All done");
         }
 
         /// <summary>
@@ -499,25 +488,14 @@ namespace StyleCopCmd.Core
         private void AddDirectory(string path)
         {
             this.WriteDebugLine("Adding directory: " + path);
-            var recurse = this.Settings.RecursionEnabled
-                              ?
-                                  SearchOption.AllDirectories
-                              :
+            var recurse = this.Settings.RecursionEnabled ? SearchOption.AllDirectories :
                                   SearchOption.TopDirectoryOnly;
 
-            var files = Directory.GetFiles(
-                path,
-                "*.cs",
-                recurse);
-        
+            var files = Directory.GetFiles(path, "*.cs", recurse);
             var pr = this.Report.AddProject(path);
 
             // Add the source files.
-            Array.ForEach(
-                files,
-                f => this.AddFile(
-                         f,
-                         pr));
+            Array.ForEach(files, f => this.AddFile(f, pr));
         }
 
         /// <summary>
@@ -536,20 +514,14 @@ namespace StyleCopCmd.Core
             if (this.Settings.IgnorePatterns != null)
             {
                 // Check to see if this file should be ignored.
-                if (this.Settings.IgnorePatterns.FirstOrDefault(
-                        fp => Regex.IsMatch(
-                                  Path.GetFileName(filePath),
-                                  fp)) != null)
+                if (this.Settings.IgnorePatterns.FirstOrDefault(fp => Regex.IsMatch(Path.GetFileName(filePath), fp)) != null)
                 {
                     return;
                 }
             }
             
             var pr = project.HasValue ? project.Value : ReportStore.FileProject;
-
-            this.Report.AddSourceFile(
-                Path.GetFullPath(filePath),
-                pr);
+            this.Report.AddSourceFile(Path.GetFullPath(filePath), pr);
         }
 
         /// <summary>
