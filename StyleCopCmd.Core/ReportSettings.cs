@@ -65,9 +65,9 @@ namespace StyleCopCmd.Core
         public IList<string> AddInDirectories { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to enable debug statements
-        /// </summary>
-        public bool EnableDebug { get; set; }
+        /// Gets or sets the action to use when debugging is enabled
+        /// </summary>    
+        public System.Action<string> DebugAction { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow StyleCop caching
@@ -98,9 +98,9 @@ namespace StyleCopCmd.Core
         /// <param name="message">Message to write</param>
         internal void Write(string message)
         {
-            if (this.EnableDebug)
+            if (this.DebugAction != null)
             {
-                System.Console.WriteLine(message);
+                this.DebugAction(message);
             }
         }
 

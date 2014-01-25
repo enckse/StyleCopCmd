@@ -419,6 +419,21 @@ namespace StyleCopCmd.Core.Test
             Assert.IsTrue(result[8].EndsWith("ClassTwo.cs"), result[8]);
             Assert.IsTrue(result[9].EndsWith("ClassTwo.cs"), result[9]);
         }
+
+        /// <summary>
+        /// Checking the debug settings
+        /// </summary>
+        [Test]
+        public void DebugTesting()
+        {
+            var list = new List<string>();
+            var report = new ReportBuilder()
+                            .WithProjectFiles(new List<string>() { WildCardProject })
+                            .WithDebug(x => { list.Add(x); });
+            
+            ExecuteTest(report, null);
+            Assert.IsTrue(list.Count > 0);
+        }
         
         /// <summary>
         /// Removing duplicates during checks

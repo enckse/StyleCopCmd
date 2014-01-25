@@ -120,6 +120,12 @@ namespace StyleCopCmd.Console
                 return;
             }
             
+            Action<string> debugAction = null;
+            if (withDebug)
+            {
+                debugAction = x => { Console.WriteLine(x); };
+            }
+
             var report = new ReportBuilder()
                 .WithDedupe(dedupe)
                 .WithStyleCopSettingsFile(styleCopSettings)
@@ -129,7 +135,7 @@ namespace StyleCopCmd.Console
                 .WithDirectories(directories)
                 .WithFiles(files)
                 .WithIgnorePatterns(ignorePatterns)
-                .WithDebug(withDebug)
+                .WithDebug(debugAction)
                 .WithCaching(allowCaching)
                 .WithAddins(addins);
             

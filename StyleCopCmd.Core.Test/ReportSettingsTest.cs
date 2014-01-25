@@ -33,7 +33,7 @@ namespace StyleCopCmd.Core.Test
             Assert.IsNull(settings.ProcessorSymbols);
             Assert.IsNull(settings.AddInDirectories);
             Assert.IsFalse(settings.RecursionEnabled);
-            Assert.IsFalse(settings.EnableDebug);
+            Assert.IsNull(settings.DebugAction);
             Assert.IsFalse(settings.AllowCaching);
             Assert.IsNull(settings.StyleCopSettingsFile);
 
@@ -45,9 +45,9 @@ namespace StyleCopCmd.Core.Test
             settings.ProcessorSymbols = new List<string>() { "sym" };
             settings.AddInDirectories = new List<string>() { "addin", "addin" };
             settings.RecursionEnabled = true;
-            settings.EnableDebug = true;
             settings.StyleCopSettingsFile = "Settings.File";
             settings.AllowCaching = true;
+            settings.DebugAction = x => { };
 
             Assert.IsNotNull(settings.SolutionFiles);
             Assert.AreEqual(1, settings.SolutionFiles.Count);
@@ -64,7 +64,7 @@ namespace StyleCopCmd.Core.Test
             Assert.IsNotNull(settings.AddInDirectories);
             Assert.AreEqual(2, settings.AddInDirectories.Count);
             Assert.IsTrue(settings.RecursionEnabled);
-            Assert.IsTrue(settings.EnableDebug);
+            Assert.IsNotNull(settings.DebugAction);
             Assert.AreEqual("Settings.File", settings.StyleCopSettingsFile);
             Assert.IsTrue(settings.AllowCaching);
         }

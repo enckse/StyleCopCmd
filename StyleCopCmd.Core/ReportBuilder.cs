@@ -91,11 +91,11 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Perform the checking with debugging statements enabled
         /// </summary>
-        /// <param name="enableDebug">True to enable debug statements</param>
+        /// <param name="debugAction">Debug action to use</param>
         /// <returns>This ReportBuilder.</returns>
-        public ReportBuilder WithDebug(bool enableDebug)
+        public ReportBuilder WithDebug(Action<string> debugAction)
         {
-            this.Settings.EnableDebug = enableDebug;
+            this.Settings.DebugAction = debugAction;
             return this;
         }
         
