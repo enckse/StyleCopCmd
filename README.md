@@ -8,7 +8,7 @@ Installing
 
 Building
 --------
-* Run build.sh (Linux) or build.ps1 (Windows)
+* Run make (Linux) or build.ps1 (Windows)
 * The Windows script will (or should) pull all referenced items (gendarme, nunit, stylecop, ndesk)
 * If scripts are added into the bin folder of the project, the powershell script needs to know NOT to delete those
 
