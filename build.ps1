@@ -7,15 +7,30 @@
     Build the project in RELEASE mode (instead of DEBUG)
 .PARAMETER skipDownload
     Skip downloading dependencies
+.PARAMETER skipBuild
+    Skip building
+.PARAMETER skipTest
+    Skip testing
+.PARAMETER skipAnalyze
+    Skip the analysis steps
 .EXAMPLE
     .\build.ps1 -release -skipDownload
     Build the project in RELEASE mode and do not download any dependencies
 #>
 param(
     [switch]$release,
-    [switch]$skipDownload
+    [switch]$skipDownload,
+    [switch]$skipBuild,
+    [switch]$skipTest,
+    [switch]$skipAnalyze
     )
 
+if ($skipDownload -AND $skipBuild -AND $skipTest -AND $skipAnalyze)
+{
+    Write-Host -foregroundcolor "RED" "Invalid build settings";
+    exit
+}
+    
 $msbuild = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe"
 $binFolder = "$pwd\bin"
 $oldREADME = "$pwd\README.md"
@@ -77,51 +92,46 @@ if (-not $skipDownload)
     mv "$binFolder\$gdrm\*" $binFolder -Force
 }
 
-& $msbuild /property:Configuration=$buildType StyleCopCmd.sln
-if (-not $?)
+if (-not $skipBuild)
 {
-	echo "Build failed"
-	exit 1
+    & $msbuild /property:Configuration=$buildType StyleCopCmd.sln
+    if (-not $?)
+    {
+        echo "Build failed"
+        exit 1
+    }
 }
 
-& $nunitExe StyleCopCmd.Core.Test/bin/$buildType/StyleCopCmd.Core.Test.dll -noshadow
-if (-not $?)
+if (-not $skipTest)
 {
-	echo "Unit tests failed"
-	exit 1
+    & $nunitExe StyleCopCmd.Core.Test/bin/$buildType/StyleCopCmd.Core.Test.dll -noshadow
+    if (-not $?)
+    {
+        echo "Unit tests failed"
+        exit 1
+    }
 }
 
-& $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Core.dll
-if (-not $?)
+if (-not $skipAnalyze)
 {
-	echo "Core project has a code analysis issue"
-	exit 1
-}
+    & $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Core.dll
+    if (-not $?)
+    {
+        echo "Core project has a code analysis issue"
+        exit 1
+    }
 
-& $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe
-if (-not $?)
-{
-	echo "Console project has a code analysis issue"
-	exit 1
-}
+    & $gendarmeExe --ignore gendarme.ignore StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe
+    if (-not $?)
+    {
+        echo "Console project has a code analysis issue"
+        exit 1
+    }
 
-& "StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe" -s StyleCopCmd.sln
-if (-not $?)
-{
-	echo "StyleCop found a violation in the solution"
-	exit 1
+    & "StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe" -s StyleCopCmd.sln
+    if (-not $?)
+    {
+        echo "StyleCop found a violation in the solution"
+        exit 1
+    }
 }
-
-$lines = [System.IO.File]::ReadAllText($oldREADME)
-$lastIndex = $lines.LastIndexOf("``````text")
-echo $lines.substring(0, $lastIndex + 7) > $newREADME
-& "StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe" -h >> $newREADME
-echo "``````" >> $newREADME
-$compared = compare-object $oldREADME $newREADME
-echo "Updating readme if necessary"
-if ($compared.Count -gt 0)
-{
-	mv $newREADME $oldREADME -Force
-}
-
-echo "Done"
