@@ -126,7 +126,7 @@ if (-not $skipAnalyze)
         exit 1
     }
 
-    & "StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe" -s StyleCopCmd.sln
+    & "StyleCopCmd.Console/bin/$buildType/StyleCopCmd.Console.exe" -s StyleCopCmd.sln -t
     if (-not $?)
     {
         echo "StyleCop found a violation in the solution"

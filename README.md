@@ -32,8 +32,8 @@ Options
 ```text
 StyleCopCmd
 Provides a command line interface for using StyleCop
-  -s, --solutionFiles=VALUE  Solution files (.sln) to check
-  -p, --projectFiles=VALUE   Project (.csproj) files to check
+  -s, --solutionFiles=VALUE  Solution files to check (.sln)
+  -p, --projectFiles=VALUE   Project files to check (.csproj)
   -i, --ignoreFilePattern=VALUE
                              Regular expression patterns to ignore files
   -d, --directories=VALUE    Directories to check for files (.cs)

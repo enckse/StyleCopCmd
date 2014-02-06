@@ -85,8 +85,8 @@ namespace StyleCopCmd.Console
             bool terminate = false;
             opts = new OptionSet()
             {
-                { "s=|solutionFiles=", "Solution files (.sln) to check", opt => { solutionFiles.Add(opt); } },
-                { "p=|projectFiles=", "Project (.csproj) files to check", opt => { projectFiles.Add(opt); } },
+                { "s=|solutionFiles=", "Solution files to check (.sln)", opt => { solutionFiles.Add(opt); } },
+                { "p=|projectFiles=", "Project files to check (.csproj)", opt => { projectFiles.Add(opt); } },
                 { "i=|ignoreFilePattern=", "Regular expression patterns to ignore files", opt => { ignorePatterns.Add(opt); } },
                 { "d=|directories=", "Directories to check for files (.cs)", opt => { directories.Add(opt); } },
                 { "f=|files=", "Files to check (.cs)", opt => { files.Add(opt); } },
