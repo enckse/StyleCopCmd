@@ -25,7 +25,7 @@ test:
 analyze:
 	gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Core.dll
 	gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe
-	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -t
 
 clean:
 	rm -rf bin/*.dll
