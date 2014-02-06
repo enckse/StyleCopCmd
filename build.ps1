@@ -33,8 +33,6 @@ if ($skipDownload -AND $skipBuild -AND $skipTest -AND $skipAnalyze)
     
 $msbuild = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe"
 $binFolder = "$pwd\bin"
-$oldREADME = "$pwd\README.md"
-$newREADME = "$pwd\README.tmp"
 $stylecop = "sc"
 $ndesk = "nd"
 $nunit = "nu"
