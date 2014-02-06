@@ -82,13 +82,14 @@ namespace StyleCopCmd.Console
             bool dedupe = false;
             bool withDebug = false;
             bool allowCaching = false;
+            bool terminate = false;
             opts = new OptionSet()
             {
-                { "s=|solutionFiles=", "Visual studio solution files to check", opt => { solutionFiles.Add(opt); } },
-                { "p=|projectFiles=", "Visual Studio project files to check", opt => { projectFiles.Add(opt); } },
+                { "s=|solutionFiles=", "Solution files (.sln) to check", opt => { solutionFiles.Add(opt); } },
+                { "p=|projectFiles=", "Project (.csproj) files to check", opt => { projectFiles.Add(opt); } },
                 { "i=|ignoreFilePattern=", "Regular expression patterns to ignore files", opt => { ignorePatterns.Add(opt); } },
-                { "d=|directories=", "Directories to check for CSharp files", opt => { directories.Add(opt); } },
-                { "f=|files=", "Files to check", opt => { files.Add(opt); } },
+                { "d=|directories=", "Directories to check for files (.cs)", opt => { directories.Add(opt); } },
+                { "f=|files=", "Files to check (.cs)", opt => { files.Add(opt); } },
                 { "r|recurse", "Recursive directory search", opt => { recurse = opt != null; } },
                 { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { styleCopSettings = opt; } },
                 { "o=|outputXmlFile=", "The file the XML output is written to", opt => { outputXml = opt; } },
@@ -100,6 +101,7 @@ namespace StyleCopCmd.Console
                 { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
                 { "k|keepCache", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
+                { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } }
             };
             
             try
@@ -154,7 +156,7 @@ namespace StyleCopCmd.Console
 
             report = report.WithViolationEventHandler(callback);
             report.Create(outputXml);
-            if (hadViolation)
+            if (hadViolation && terminate)
             {
                 Environment.Exit(1);
             }

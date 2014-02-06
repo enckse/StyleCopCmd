@@ -32,12 +32,12 @@ Options
 ```text
 StyleCopCmd
 Provides a command line interface for using StyleCop
-  -s, --solutionFiles=VALUE  Visual studio solution files to check
-  -p, --projectFiles=VALUE   Visual Studio project files to check
+  -s, --solutionFiles=VALUE  Solution files (.sln) to check
+  -p, --projectFiles=VALUE   Project (.csproj) files to check
   -i, --ignoreFilePattern=VALUE
                              Regular expression patterns to ignore files
-  -d, --directories=VALUE    Directories to check for CSharp files
-  -f, --files=VALUE          Files to check
+  -d, --directories=VALUE    Directories to check for files (.cs)
+  -f, --files=VALUE          Files to check (.cs)
   -r, --recurse              Recursive directory search
   -c, --styleCopSettingsFile=VALUE
                              Use the given StyleCop settings file
@@ -53,4 +53,5 @@ Provides a command line interface for using StyleCop
   -w, --withDebug            Perform checks with debug output
   -a, --addIns=VALUE         Addin paths to search
   -k, --keepCache            Allows StyleCop to use caching
+  -t, --terminate            Report a non-zero exit code on violation
 ```
