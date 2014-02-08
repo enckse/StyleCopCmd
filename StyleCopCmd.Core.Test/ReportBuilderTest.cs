@@ -38,6 +38,7 @@
  ******************************************************************************/
 namespace StyleCopCmd.Core.Test
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -79,6 +80,11 @@ namespace StyleCopCmd.Core.Test
         /// </summary>
         private static readonly string DirectoryPath = JoinAll(BasePath, TestName) + Path.DirectorySeparatorChar;
         
+        /// <summary>
+        /// Testing runner types to use to look for consistency where possible
+        /// </summary>
+        private static readonly HashSet<Type> RunnerTypes = GetRunnerTypes();
+
         /// <summary>
         /// Tests the WithSolutionFiles method.
         /// </summary>
@@ -468,8 +474,20 @@ namespace StyleCopCmd.Core.Test
         private static IList<string> ExecuteTest(ReportBuilder builder, string outputFile)
         {
             var outputList = new List<string>();
-            builder.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
-            builder.Create(outputFile);
+            foreach (var type in RunnerTypes)
+            {
+                switch (type.Name)
+                {
+                    case "ConsoleRunner":
+                        builder.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
+                        builder.Create(outputFile);
+                        break;
+                    default:
+                        Assert.Fail("Unknown type for testing: " + type.Name);
+                        break;
+                }
+            }
+
             return outputList.OrderBy(value => value).ToList();
         }
         
@@ -527,6 +545,31 @@ namespace StyleCopCmd.Core.Test
                 new string[] { d.FullName, "StyleCopCmd.Core.Test", "data", TestName });
 
             return r;
+        }
+
+        /// <summary>
+        /// Gets the subclass types of RunnerBase for testing
+        /// </summary>
+        /// <returns>
+        /// Subclass set
+        /// </returns>
+        private static HashSet<Type> GetRunnerTypes()
+        {
+            HashSet<Type> types = new HashSet<Type>();
+            foreach (var type in System.Reflection.Assembly.GetAssembly(typeof(RunnerBase)).GetTypes())
+            {
+                if (type.IsSubclassOf(typeof(RunnerBase)))
+                {
+                    types.Add(type);
+                }
+            }
+
+            if (types.Count == 0)
+            {
+                throw new ArgumentException("No runner derived classes found");
+            }
+            
+            return types;
         }
     }
 }

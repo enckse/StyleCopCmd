@@ -45,7 +45,7 @@ namespace StyleCopCmd.Core.Test
             report.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
             report.Create(null);
             var result = outputList.OrderBy(value => value).ToList();
-            Assert.AreEqual(18, result.Count, "StyleCopCmd.sln");
+            Assert.AreEqual(22, result.Count, "StyleCopCmd.sln");
             Assert.AreEqual("No violations encountered", result[0]);
         }
     }

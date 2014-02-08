@@ -45,7 +45,6 @@ namespace StyleCopCmd.Core
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
-    using System.Xml.Xsl;
     using StyleCop;
 
     /// <summary>
@@ -305,22 +304,33 @@ namespace StyleCopCmd.Core
         /// </param>
         public void Create(string outputXmlFile)
         {
+            this.Create(new ConsoleRunner(), new RunnerOptions() { OutputFile = GetViolationsFile(outputXmlFile) });
+        }
+
+        /// <summary>
+        /// Creates a StyleCop report.
+        /// </summary>
+        /// <param name="runner">Runner to use</param>
+        /// <param name="runnerSettings">
+        /// Runner settings to execute the actual StyleCop report/analysis
+        /// </param>
+        public void Create(RunnerBase runner, RunnerOptions runnerSettings)
+        {
+            if (runner == null)
+            {
+                throw new ArgumentNullException("runner");
+            }
+
+            if (runnerSettings == null)
+            {
+                throw new ArgumentNullException("runnerSettings");
+            }
+
+            runner.Set(this.Settings);
             this.WriteDebugLine("Setting configuration symbols");
-
-            // Create a StyleCop configuration specifying the configuration
-            // symbols to use for this report.
-            var cfg = new Configuration(this.Settings.ProcessorSymbols != null ? this.Settings.ProcessorSymbols.ToArray() : null);
-
+            var cfg = runner.Configure();
             this.WriteDebugLine("Creating console for checking");
-            
-            // Create a new StyleCop console used to do the check.
-            var scc = new StyleCopConsole(
-                this.Settings.StyleCopSettingsFile,
-                true,
-                GetViolationsFile(outputXmlFile),
-                this.Settings.AddInDirectories,
-                true);
-
+            runner.Initialize(runnerSettings);
             this.WriteDebugLine("Setting files to analyze");
             this.SetFiles();
             this.WriteDebugLine("Preparing code projects");
@@ -333,19 +343,9 @@ namespace StyleCopCmd.Core
             foreach (var f in this.Report.SourceFiles)
             {
                 var cp = cps.Where(i => i.Key == f.ProjectId).First();
-                scc.Core.Environment.AddSourceCode(cp, f.Path, null);
+                runner.AddFile(cp, f.Path);
             }
             
-            if (this.OutputGenerated != null)
-            {
-                scc.OutputGenerated += this.OutputGenerated;
-            }
-            
-            if (this.ViolationEncountered != null)
-            {
-                scc.ViolationEncountered += this.ViolationEncountered;
-            }
-   
             this.WriteDebugLine("Validating spell checking situation");
 
             // The spell checking relies on office, is will cause issues in linux
@@ -361,19 +361,8 @@ namespace StyleCopCmd.Core
             }
             
             this.WriteDebugLine("Starting check");
-            scc.Start(cps, !this.Settings.AllowCaching);
+            runner.Start(cps, this.OutputGenerated, this.ViolationEncountered);
             this.WriteDebugLine("Checking done");
-            if (this.OutputGenerated != null)
-            {
-                scc.OutputGenerated -= this.OutputGenerated;
-            }
-            
-            if (this.ViolationEncountered != null)
-            {
-                scc.ViolationEncountered -= this.ViolationEncountered;
-            }
-
-            this.WriteDebugLine("All done");
         }
 
         /// <summary>
