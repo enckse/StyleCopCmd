@@ -349,7 +349,7 @@ namespace StyleCopCmd.Core
             this.WriteDebugLine("Validating spell checking situation");
 
             // The spell checking relies on office, is will cause issues in linux
-            if (System.Environment.OSVersion.Platform == System.PlatformID.Unix)
+            if (System.Environment.OSVersion.Platform == System.PlatformID.Unix || System.Environment.OSVersion.Platform == System.PlatformID.MacOSX)
             {
                 foreach (var file in Directory.GetFiles(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)))
                 {
