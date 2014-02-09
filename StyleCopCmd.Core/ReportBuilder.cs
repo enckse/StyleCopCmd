@@ -310,11 +310,12 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Creates a StyleCop report.
         /// </summary>
+        /// <typeparam name="T">StyleCop runner type</typeparam>
         /// <param name="runner">Runner to use</param>
         /// <param name="runnerSettings">
         /// Runner settings to execute the actual StyleCop report/analysis
         /// </param>
-        public void Create(RunnerBase runner, RunnerOptions runnerSettings)
+        public void Create<T>(RunnerBase<T> runner, RunnerOptions runnerSettings) where T : StyleCopRunner
         {
             if (runner == null)
             {

@@ -16,7 +16,7 @@ namespace StyleCopCmd.Core
     /// Mock runner implementation and tests for RunnerBase
     /// </summary>
     [TestFixture]
-    public class MockRunner : RunnerBase
+    public class MockRunner : RunnerBase<StyleCopRunnerMock>
     {
         /// <summary>
         /// Enable overriding the configuration call
@@ -146,8 +146,18 @@ namespace StyleCopCmd.Core
             }
 
             inst.Initialize(new RunnerOptions());
+            try
+            {
+                inst.Start(null, null, null);
+                Assert.Fail("Projects not set");
+            }
+            catch (ArgumentNullException error)
+            {
+                Assert.IsTrue(error.Message.Contains("projects"));
+            }
+
             Assert.IsFalse(inst.runCalled);
-            inst.Start(null, null, null);
+            inst.Start(new List<CodeProject>(), null, null);
             Assert.IsTrue(inst.runCalled);
         }
 
@@ -198,9 +208,10 @@ namespace StyleCopCmd.Core
         }
 
         /// <inheritdoc />
-        protected override void InitInstance(RunnerOptions options)
+        protected override StyleCopRunner InitInstance(RunnerOptions options)
         {
             this.initializeCalled = true;
+            return new StyleCopRunnerMock();
         }
 
         /// <inheritdoc />
@@ -210,7 +221,7 @@ namespace StyleCopCmd.Core
         }
 
         /// <inheritdoc />
-        protected override void Run(IList<CodeProject> projects, EventHandler<OutputEventArgs> outputGenerated, EventHandler<ViolationEventArgs> violation)
+        protected override void Run(IList<CodeProject> projects)
         {
             this.runCalled = true;
         }

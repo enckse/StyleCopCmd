@@ -15,7 +15,9 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Runner base class used to perform reports/analysis
     /// </summary>
-    public abstract class RunnerBase
+    /// <typeparam name="T">StyleCop runner type</typeparam>
+    public abstract class RunnerBase<T> 
+        where T : StyleCopRunner
     {
         /// <summary>
         /// Indicates if the initialize steps have been properly called
@@ -31,6 +33,11 @@ namespace StyleCopCmd.Core
         /// Gets the report settings
         /// </summary>
         protected ReportSettings Settings { get; private set; }
+
+        /// <summary>
+        /// Gets the operating console for analysis
+        /// </summary>
+        protected T Console { get; private set; }
 
         /// <summary>
         /// Set the reporting settings
@@ -87,7 +94,31 @@ namespace StyleCopCmd.Core
                 throw new InvalidOperationException("Instance is not initialized");
             }
 
-            this.Run(projects, outputGenerated, violation);
+            if (projects == null)
+            {
+                throw new ArgumentNullException("projects");
+            }
+
+            if (outputGenerated != null)
+            {
+                this.Console.OutputGenerated += outputGenerated;
+            }
+            
+            if (violation != null)
+            {
+                this.Console.ViolationEncountered += violation;
+            }
+   
+            this.Run(projects);
+            if (outputGenerated != null)
+            {
+                this.Console.OutputGenerated -= outputGenerated;
+            }
+            
+            if (violation != null)
+            {
+                this.Console.ViolationEncountered -= violation;
+            }
         }
 
         /// <summary>
@@ -107,7 +138,7 @@ namespace StyleCopCmd.Core
                 return;
             }
 
-            this.InitInstance(options);
+            this.Console = (T)this.InitInstance(options);
             this.initialized = true;
         }
 
@@ -115,22 +146,34 @@ namespace StyleCopCmd.Core
         /// Initializes the instance with the given options
         /// </summary>
         /// <param name="options">Analysis options</param>
-        protected abstract void InitInstance(RunnerOptions options);
+        /// <returns>Analysis runner</returns>
+        protected abstract StyleCopRunner InitInstance(RunnerOptions options);
 
         /// <summary>
         /// Add a source file for analysis
         /// </summary>
         /// <param name="project">Code project to add</param>
         /// <param name="path">Path to the file</param>
-        protected abstract void AddSource(CodeProject project, string path);
+        protected virtual void AddSource(CodeProject project, string path)
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException("project");
+            }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            this.Console.Core.Environment.AddSourceCode(project, path, null);
+        }
 
         /// <summary>
         /// Run the analysis
         /// </summary>
         /// <param name="projects">Projects to analyze</param>
-        /// <param name="outputGenerated">Events to call when style cop generates an output</param>
-        /// <param name="violation">Events to call when style cop generates violations</param>
-        protected abstract void Run(IList<CodeProject> projects, EventHandler<OutputEventArgs> outputGenerated, EventHandler<ViolationEventArgs> violation);
+        protected abstract void Run(IList<CodeProject> projects);
 
         /// <summary>
         /// Checks if the settings have been properly set or throws an exception if they have not been set

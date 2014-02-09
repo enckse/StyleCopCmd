@@ -80,6 +80,7 @@
     <Compile Include="ReportSettingsTest.cs" />
     <Compile Include="StyleCopTest.cs" />
     <Compile Include="MockRunner.cs" />
+    <Compile Include="StyleCopRunnerMock.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StyleCopCmd.Core\StyleCopCmd.Core.csproj">
