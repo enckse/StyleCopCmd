@@ -103,7 +103,7 @@ namespace StyleCopCmd.Console
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
                 { "k|keepCache", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
                 { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
-                { "m|memoryLimited", "Switches internal analyzers to use an analyzer that will only output to file (good for large projects)", opt => { memoryLimit = true; } }
+                { "m|memoryLimited", "Switches to an analyzer that will only output to file (good for large projects)", opt => { memoryLimit = true; } }
             };
             
             try
