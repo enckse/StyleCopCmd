@@ -83,6 +83,7 @@ namespace StyleCopCmd.Console
             bool withDebug = false;
             bool allowCaching = false;
             bool terminate = false;
+            bool memoryLimit = false;
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Solution files to check (.sln)", opt => { solutionFiles.Add(opt); } },
@@ -101,7 +102,8 @@ namespace StyleCopCmd.Console
                 { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
                 { "k|keepCache", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
-                { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } }
+                { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
+                { "m|memoryLimited", "Switches internal analyzers to use an analyzer that will only output to file (good for large projects)", opt => { memoryLimit = true; } }
             };
             
             try
@@ -155,7 +157,15 @@ namespace StyleCopCmd.Console
             }
 
             report = report.WithViolationEventHandler(callback);
-            report.Create(outputXml);
+            if (memoryLimit)
+            {
+                report.CreateXmlOnly(outputXml);
+            }
+            else
+            {
+                report.Create(outputXml);
+            }
+
             if (hadViolation && terminate)
             {
                 Environment.Exit(1);

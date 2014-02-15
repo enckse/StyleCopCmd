@@ -72,6 +72,22 @@ namespace StyleCopCmd.Core
         public event EventHandler<ViolationEventArgs> ViolationEncountered;
 
         /// <summary>
+        /// Output file analyzer types - driven from output files
+        /// </summary>
+        private enum OutputFile
+        {
+            /// <summary>
+            /// Standard console-backed analyzer
+            /// </summary>
+            Console,
+
+            /// <summary>
+            /// XML-only writer
+            /// </summary>
+            Xml
+        }
+
+        /// <summary>
         /// Gets or sets the underlying memory report store
         /// </summary>
         /// <value>
@@ -304,7 +320,18 @@ namespace StyleCopCmd.Core
         /// </param>
         public void Create(string outputXmlFile)
         {
-            this.Create(new ConsoleRunner(), new RunnerOptions() { OutputFile = GetViolationsFile(outputXmlFile) });
+            this.Create(outputXmlFile, OutputFile.Console);
+        }
+
+        /// <summary>
+        /// Creates a StyleCop report with XML output only
+        /// </summary>
+        /// <param name="outputXmlFile">
+        /// The fully-qualified path to write the output of the report to.
+        /// </param>
+        public void CreateXmlOnly(string outputXmlFile)
+        {
+            this.Create(outputXmlFile, OutputFile.Xml);
         }
 
         /// <summary>
@@ -376,6 +403,29 @@ namespace StyleCopCmd.Core
         private static string GetViolationsFile(string outputXmlFile)
         {
             return string.IsNullOrEmpty(outputXmlFile) ? null : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
+        }
+
+        /// <summary>
+        /// Creates a StyleCop report backed by a file
+        /// </summary>
+        /// <param name="outputXmlFile">
+        /// The fully-qualified path to write the output of the report to.
+        /// </param>
+        /// <param name="analyzeType">
+        /// Analyzer type
+        /// </param>
+        private void Create(string outputXmlFile, OutputFile analyzeType)
+        {
+            var options = new RunnerOptions() { OutputFile = GetViolationsFile(outputXmlFile) };
+            switch (analyzeType)
+            {
+                case OutputFile.Console:
+                    this.Create(new ConsoleRunner(), options);
+                    break;
+                case OutputFile.Xml:
+                    this.Create(new XmlRunner(), options);
+                    break;
+            }
         }
         
         /// <summary>

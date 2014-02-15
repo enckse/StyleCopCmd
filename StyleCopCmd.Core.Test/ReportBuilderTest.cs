@@ -455,6 +455,23 @@ namespace StyleCopCmd.Core.Test
         }
         
         /// <summary>
+        /// XML output
+        /// </summary>
+        [Test]
+        public void XmlWriterTest()
+        {
+            var report = new ReportBuilder()
+                            .WithFiles(new List<string>() { DirectoryPath + "ClassOne.cs", DirectoryPath + "SubNamespace" + Path.DirectorySeparatorChar + "ClassTwo.cs" });
+            
+            var result = new List<string>();
+            report.WithOutputEventHandler((x, y) => { result.Add(((StyleCop.OutputEventArgs)y).Output); });
+            report.CreateXmlOnly(null);
+
+            // Make sure this doesn't report ANYTHING out
+            Assert.AreEqual(0, result.Count, BasePath);
+        }
+        
+        /// <summary>
         /// Executes the test.
         /// </summary>
         /// <returns>
