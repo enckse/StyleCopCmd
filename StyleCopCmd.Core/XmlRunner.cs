@@ -14,16 +14,14 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// XML runner implementation
     /// </summary>
-    public sealed class XmlRunner : RunnerBase<StyleCopXmlRunner>
+    public sealed class XmlRunner : RunnerBase, IFileRunner
     {
         /// <inheritdoc />
-        protected override StyleCopRunner InitInstance(RunnerOptions options)
-        {
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
+        public string OutputFile { get; set; }
 
+        /// <inheritdoc />
+        protected override StyleCopRunner InitInstance()
+        {
             if (this.Settings.AllowCaching)
             {
                 throw new ArgumentException("Caching is not available using the XML-only runner");
@@ -31,14 +29,14 @@ namespace StyleCopCmd.Core
 
             return new StyleCopXmlRunner(
                 this.Settings.StyleCopSettingsFile,
-                options.OutputFile,
+                this.OutputFile,
                 this.Settings.AddInDirectories);
         }
 
         /// <inheritdoc />
         protected override void Run(IList<CodeProject> projects)
         {
-            this.Console.Start(projects);
+            ((StyleCopXmlRunner)this.Console).Start(projects);
         }
     }
 }

@@ -465,7 +465,7 @@ namespace StyleCopCmd.Core.Test
             
             var result = new List<string>();
             report.WithOutputEventHandler((x, y) => { result.Add(((StyleCop.OutputEventArgs)y).Output); });
-            report.CreateXmlOnly(null);
+            report.Create<XmlRunner>(null);
 
             // Make sure this doesn't report ANYTHING out
             Assert.AreEqual(0, result.Count, BasePath);

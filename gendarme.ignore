@@ -2,12 +2,14 @@
 R: Gendarme.Rules.BadPractice.AvoidAssemblyVersionMismatchRule
 A: *
 
-# StyleCop derived types can ignore some rules
+# StyleCop derived types can ignore some rules about locking
 R: Gendarme.Rules.Concurrency.DoNotLockOnThisOrTypesRule
 M: System.Void StyleCopCmd.Core.StyleCopXmlRunner::Violation(System.Object,StyleCop.ViolationEventArgs)
 
-R: Genardme.Rules.Performance.AvoidMethodWithLargeMaximumStackSizeRule
-M: *
-
+# and disposing
 R: Gendarme.Rules.Design.TypesWithDisposableFieldsShouldBeDisposableRule
 T: StyleCopCmd.Core.StyleCopXmlRunner
+
+# Getting a generic type warning when the type is new(), IFileRunner and RunnerBase
+R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
+M: System.Void StyleCopCmd.Core.ReportBuilder::Create(System.String)

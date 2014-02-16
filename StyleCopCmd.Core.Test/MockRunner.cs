@@ -5,7 +5,7 @@
 //  Copyright (c) All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace StyleCopCmd.Core
+namespace StyleCopCmd.Core.Test
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace StyleCopCmd.Core
     /// Mock runner implementation and tests for RunnerBase
     /// </summary>
     [TestFixture]
-    public class MockRunner : RunnerBase<StyleCopRunnerMock>
+    public class MockRunner : RunnerBase
     {
         /// <summary>
         /// Enable overriding the configuration call
@@ -111,7 +111,7 @@ namespace StyleCopCmd.Core
                 Assert.IsTrue(error.Message.Contains("Instance is not initialized"));
             }
 
-            inst.Initialize(new RunnerOptions());
+            inst.Initialize();
             Assert.IsFalse(inst.sourceCalled);
             inst.AddFile(null, null);
             Assert.IsTrue(inst.sourceCalled);
@@ -145,7 +145,7 @@ namespace StyleCopCmd.Core
                 Assert.IsTrue(error.Message.Contains("Instance is not initialized"));
             }
 
-            inst.Initialize(new RunnerOptions());
+            inst.Initialize();
             try
             {
                 inst.Start(null, null, null);
@@ -168,29 +168,9 @@ namespace StyleCopCmd.Core
         public void InitializeTest()
         {
             var inst = new MockRunner();
-            try
-            {
-                inst.Initialize(null);
-                Assert.Fail("No settings were given");
-            }
-            catch (InvalidOperationException error)
-            {
-                Assert.IsTrue(error.Message.Contains("No settings"));
-            }
-
             inst.Set(new ReportSettings());
-            try
-            {
-                inst.Initialize(null);
-                Assert.Fail("No options were given");
-            }
-            catch (ArgumentNullException error)
-            {
-                Assert.IsTrue(error.Message.Contains("options"));
-            }
-
             Assert.IsFalse(inst.initializeCalled);
-            inst.Initialize(new RunnerOptions());
+            inst.Initialize();
             Assert.IsTrue(inst.initializeCalled);
         }
 
@@ -208,7 +188,7 @@ namespace StyleCopCmd.Core
         }
 
         /// <inheritdoc />
-        protected override StyleCopRunner InitInstance(RunnerOptions options)
+        protected override StyleCopRunner InitInstance()
         {
             this.initializeCalled = true;
             return new StyleCopRunnerMock();

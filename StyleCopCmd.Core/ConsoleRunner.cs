@@ -14,20 +14,18 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Console runner implementation
     /// </summary>
-    public sealed class ConsoleRunner : RunnerBase<StyleCopConsole>
+    public sealed class ConsoleRunner : RunnerBase, IFileRunner
     {
         /// <inheritdoc />
-        protected override StyleCopRunner InitInstance(RunnerOptions options)
-        {
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
+        public string OutputFile { get; set; }
 
+        /// <inheritdoc />
+        protected override StyleCopRunner InitInstance()
+        {
             return new StyleCopConsole(
                 this.Settings.StyleCopSettingsFile,
                 true,
-                options.OutputFile,
+                this.OutputFile,
                 this.Settings.AddInDirectories,
                 true);
         }
@@ -35,7 +33,7 @@ namespace StyleCopCmd.Core
         /// <inheritdoc />
         protected override void Run(IList<CodeProject> projects)
         {
-            this.Console.Start(projects, !this.Settings.AllowCaching);
+            ((StyleCopConsole)this.Console).Start(projects, !this.Settings.AllowCaching);
         }
     }
 }

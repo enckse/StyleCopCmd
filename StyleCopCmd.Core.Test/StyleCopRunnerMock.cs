@@ -5,7 +5,7 @@
 //  Copyright (c) All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace StyleCopCmd.Core
+namespace StyleCopCmd.Core.Test
 {
     using StyleCop;
 

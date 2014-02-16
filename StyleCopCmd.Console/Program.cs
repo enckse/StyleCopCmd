@@ -159,7 +159,7 @@ namespace StyleCopCmd.Console
             report = report.WithViolationEventHandler(callback);
             if (memoryLimit)
             {
-                report.CreateXmlOnly(outputXml);
+                report.Create<XmlRunner>(outputXml);
             }
             else
             {

@@ -15,9 +15,7 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Runner base class used to perform reports/analysis
     /// </summary>
-    /// <typeparam name="T">StyleCop runner type</typeparam>
-    public abstract class RunnerBase<T> 
-        where T : StyleCopRunner
+    public abstract class RunnerBase
     {
         /// <summary>
         /// Indicates if the initialize steps have been properly called
@@ -37,7 +35,7 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Gets the operating console for analysis
         /// </summary>
-        protected T Console { get; private set; }
+        protected StyleCopRunner Console { get; private set; }
 
         /// <summary>
         /// Set the reporting settings
@@ -124,30 +122,23 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Initializes the instance for analysis
         /// </summary>
-        /// <param name="options">Analysis options</param>
-        public void Initialize(RunnerOptions options)
+        public void Initialize()
         {
             this.CheckSettings();
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
-
             if (this.initialized)
             {
                 return;
             }
 
-            this.Console = (T)this.InitInstance(options);
+            this.Console = this.InitInstance();
             this.initialized = true;
         }
 
         /// <summary>
         /// Initializes the instance with the given options
         /// </summary>
-        /// <param name="options">Analysis options</param>
         /// <returns>Analysis runner</returns>
-        protected abstract StyleCopRunner InitInstance(RunnerOptions options);
+        protected abstract StyleCopRunner InitInstance();
 
         /// <summary>
         /// Add a source file for analysis

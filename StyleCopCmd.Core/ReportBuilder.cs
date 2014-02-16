@@ -72,22 +72,6 @@ namespace StyleCopCmd.Core
         public event EventHandler<ViolationEventArgs> ViolationEncountered;
 
         /// <summary>
-        /// Output file analyzer types - driven from output files
-        /// </summary>
-        private enum OutputFile
-        {
-            /// <summary>
-            /// Standard console-backed analyzer
-            /// </summary>
-            Console,
-
-            /// <summary>
-            /// XML-only writer
-            /// </summary>
-            Xml
-        }
-
-        /// <summary>
         /// Gets or sets the underlying memory report store
         /// </summary>
         /// <value>
@@ -320,45 +304,39 @@ namespace StyleCopCmd.Core
         /// </param>
         public void Create(string outputXmlFile)
         {
-            this.Create(outputXmlFile, OutputFile.Console);
+            this.Create<ConsoleRunner>(outputXmlFile);
         }
 
         /// <summary>
-        /// Creates a StyleCop report with XML output only
+        /// Creates a StyleCop report backed by a file
         /// </summary>
+        /// <typeparam name="T">The output file-backed runner</typeparam>
         /// <param name="outputXmlFile">
         /// The fully-qualified path to write the output of the report to.
         /// </param>
-        public void CreateXmlOnly(string outputXmlFile)
+        public void Create<T>(string outputXmlFile) where T : RunnerBase, IFileRunner, new()
         {
-            this.Create(outputXmlFile, OutputFile.Xml);
+            var inst = new T();
+            inst.OutputFile = GetViolationsFile(outputXmlFile);
+            this.Create(inst);
         }
 
         /// <summary>
         /// Creates a StyleCop report.
         /// </summary>
-        /// <typeparam name="T">StyleCop runner type</typeparam>
         /// <param name="runner">Runner to use</param>
-        /// <param name="runnerSettings">
-        /// Runner settings to execute the actual StyleCop report/analysis
-        /// </param>
-        public void Create<T>(RunnerBase<T> runner, RunnerOptions runnerSettings) where T : StyleCopRunner
+        public void Create(RunnerBase runner)
         {
             if (runner == null)
             {
                 throw new ArgumentNullException("runner");
             }
 
-            if (runnerSettings == null)
-            {
-                throw new ArgumentNullException("runnerSettings");
-            }
-
             runner.Set(this.Settings);
             this.WriteDebugLine("Setting configuration symbols");
             var cfg = runner.Configure();
             this.WriteDebugLine("Creating console for checking");
-            runner.Initialize(runnerSettings);
+            runner.Initialize();
             this.WriteDebugLine("Setting files to analyze");
             this.SetFiles();
             this.WriteDebugLine("Preparing code projects");
@@ -403,29 +381,6 @@ namespace StyleCopCmd.Core
         private static string GetViolationsFile(string outputXmlFile)
         {
             return string.IsNullOrEmpty(outputXmlFile) ? null : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
-        }
-
-        /// <summary>
-        /// Creates a StyleCop report backed by a file
-        /// </summary>
-        /// <param name="outputXmlFile">
-        /// The fully-qualified path to write the output of the report to.
-        /// </param>
-        /// <param name="analyzeType">
-        /// Analyzer type
-        /// </param>
-        private void Create(string outputXmlFile, OutputFile analyzeType)
-        {
-            var options = new RunnerOptions() { OutputFile = GetViolationsFile(outputXmlFile) };
-            switch (analyzeType)
-            {
-                case OutputFile.Console:
-                    this.Create(new ConsoleRunner(), options);
-                    break;
-                case OutputFile.Xml:
-                    this.Create(new XmlRunner(), options);
-                    break;
-            }
         }
         
         /// <summary>
