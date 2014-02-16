@@ -61,12 +61,10 @@ namespace StyleCopCmd.Core
         /// Start processing
         /// </summary>
         /// <param name="projects">Projects to analyze</param>
-        /// <param name="fullAnalyze">True to perform a full analysis</param>
         /// <returns>Indicates if errors were encountered</returns>
-        public bool Start(IList<CodeProject> projects, bool fullAnalyze)
+        public bool Start(IList<CodeProject> projects)
         {
             Param.RequireNotNull(projects, "projects");
-            Param.Ignore(fullAnalyze);
 
             bool error = false;
             string errorMessage = null;
@@ -112,15 +110,7 @@ namespace StyleCopCmd.Core
                 {
                     this.write = outputStream;
                     outputStream.WriteLine("<StyleCopViolations>");
-                    if (fullAnalyze)
-                    {
-                        this.Core.FullAnalyze(projects);
-                    }
-                    else
-                    {
-                        this.Core.Analyze(projects);
-                    }
-
+                    this.Core.FullAnalyze(projects);
                     outputStream.WriteLine("</StyleCopViolations>");
                 }
             }

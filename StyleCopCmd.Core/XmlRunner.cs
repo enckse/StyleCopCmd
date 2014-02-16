@@ -24,6 +24,11 @@ namespace StyleCopCmd.Core
                 throw new ArgumentNullException("options");
             }
 
+            if (this.Settings.AllowCaching)
+            {
+                throw new ArgumentException("Caching is not available using the XML-only runner");
+            }
+
             return new StyleCopXmlRunner(
                 this.Settings.StyleCopSettingsFile,
                 options.OutputFile,
@@ -33,7 +38,7 @@ namespace StyleCopCmd.Core
         /// <inheritdoc />
         protected override void Run(IList<CodeProject> projects)
         {
-            this.Console.Start(projects, !this.Settings.AllowCaching);
+            this.Console.Start(projects);
         }
     }
 }
