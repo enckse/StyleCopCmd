@@ -53,7 +53,7 @@ namespace StyleCopCmd.Core
             this.Core = new StyleCopCore(null, null);
             this.CaptureViolations = false;
             this.Core.Initialize(addInPaths, true);
-            this.Core.WriteResultsCache = true;
+            this.Core.WriteResultsCache = false;
             this.method = typeof(StyleCopRunner).GetMethod("CreateSafeSectionName", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
         }
 
