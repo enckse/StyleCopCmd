@@ -54,6 +54,9 @@ Provides a command line interface for using StyleCop
   -a, --addIns=VALUE         Addin paths to search
   -k, --keepCache            Allows StyleCop to use caching
   -t, --terminate            Report a non-zero exit code on violation
-  -m, --memoryLimited        Switches to an analyzer that will only output to 
-                               file (good for large projects)
+  -g, --generator=VALUE      Specify a generator engine for the analysis.
+                                Console - the default generator with caching 
+                               and full console reporting available.
+                                Xml - A generator that only outputs the result 
+                               file. Good for large projects.
 ```
