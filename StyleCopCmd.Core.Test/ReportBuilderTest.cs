@@ -467,8 +467,9 @@ namespace StyleCopCmd.Core.Test
             report.WithOutputEventHandler((x, y) => { result.Add(((StyleCop.OutputEventArgs)y).Output); });
             report.Create<XmlRunner>(null);
 
-            // Make sure this doesn't report ANYTHING out
-            Assert.AreEqual(0, result.Count, BasePath);
+            // Only 1 item should be reported
+            Assert.AreEqual(1, result.Count, BasePath);
+            Assert.AreEqual("Violations were encountered.", result[0]);
         }
         
         /// <summary>
@@ -487,7 +488,7 @@ namespace StyleCopCmd.Core.Test
         {
             var outputList = new List<string>();
             builder.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
-            builder.Create(outputFile);
+            builder.Create<ConsoleRunner>(outputFile);
             return outputList.OrderBy(value => value).ToList();
         }
         

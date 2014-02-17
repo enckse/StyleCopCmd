@@ -59,6 +59,27 @@ namespace StyleCopCmd.Console
         private static bool hadViolation;
 
         /// <summary>
+        /// Available generators
+        /// </summary>
+        private enum Generator
+        {
+            /// <summary>
+            /// Default generator (currently console runner)
+            /// </summary>
+            Default,
+
+            /// <summary>
+            /// Maps to the console runner
+            /// </summary>
+            Console,
+
+            /// <summary>
+            /// XML runner (output only, no reporting)
+            /// </summary>
+            Xml
+        }
+
+        /// <summary>
         /// The entry-point method for this application.
         /// </summary>
         /// <param name="args">
@@ -83,7 +104,23 @@ namespace StyleCopCmd.Console
             bool withDebug = false;
             bool allowCaching = false;
             bool terminate = false;
-            bool memoryLimit = false;
+            string generator = null;
+
+            var generatorHelp = new System.Text.StringBuilder();
+            generatorHelp.AppendLine("Specify a generator engine for the analysis.");
+            foreach (var name in Enum.GetNames(typeof(Generator)))
+            {
+                switch (name)
+                {
+                    case "Xml":
+                        generatorHelp.AppendLine(" Xml - A generator that only outputs the result file. Good for large projects.");
+                        break;
+                    case "Console":
+                        generatorHelp.AppendLine(" Console - the default generator with caching and full console reporting available.");
+                        break;
+                }
+            }
+
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Solution files to check (.sln)", opt => { solutionFiles.Add(opt); } },
@@ -103,7 +140,7 @@ namespace StyleCopCmd.Console
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
                 { "k|keepCache", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
                 { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
-                { "m|memoryLimited", "Switches to an analyzer that will only output to file (good for large projects)", opt => { memoryLimit = true; } }
+                { "g=|generator", generatorHelp.ToString(), opt => { generator = opt; } }
             };
             
             try
@@ -142,33 +179,72 @@ namespace StyleCopCmd.Console
                 .WithDebug(debugAction)
                 .WithCaching(allowCaching)
                 .WithAddins(addins);
-            
-            EventHandler<StyleCop.ViolationEventArgs> callback = HadViolation;
-            if (!quiet)
-            {
-                if (violations)
-                {
-                    callback = ViolationEncountered;
-                }
-                else
-                {
-                    report = report.WithOutputEventHandler(OutputGenerated);
-                }
-            }
 
-            report = report.WithViolationEventHandler(callback);
-            if (memoryLimit)
-            {
-                report.Create<XmlRunner>(outputXml);
-            }
-            else
-            {
-                report.Create(outputXml);
-            }
-
+            RunReport(report, generator, outputXml, quiet, allowCaching, violations);
             if (hadViolation && terminate)
             {
                 Environment.Exit(1);
+            }
+        }
+
+        /// <summary>
+        /// Run the report (validates settings against the generator given)
+        /// </summary>
+        /// <param name="report">The report object to perform the analysis</param>
+        /// <param name="generator">Generator type given</param>
+        /// <param name="outputXml">Output XML file name/path</param>
+        /// <param name="quiet">Indicates if any console output should be available</param>
+        /// <param name="allowCaching">Enables the underlying generator to cache results</param>
+        /// <param name="violations">True to report each violation encountered</param>
+        private static void RunReport(ReportBuilder report, string generator, string outputXml, bool quiet, bool allowCaching, bool violations)
+        {
+            var generatorType = Generator.Default;
+            if (generator != null)
+            {
+                generatorType = (Generator)Enum.Parse(typeof(Generator), generator, true);
+            }
+
+            switch (generatorType)
+            {
+                case Generator.Xml:
+                    if (allowCaching || violations)
+                    {
+                        hadViolation = true;
+                        Console.WriteLine("The XML generator does not allow for the -a and -v options");
+                    }
+                    else
+                    {
+                        report = report.WithOutputEventHandler(
+                            (x, y) => 
+                                { 
+                                    hadViolation = true; 
+                                    if (!quiet)
+                                    {
+                                        OutputGenerated(x, y);
+                                    }  
+                                });     
+
+                        report.Create<XmlRunner>(outputXml);
+                    }
+
+                    break;
+                default:
+                    EventHandler<StyleCop.ViolationEventArgs> callback = HadViolation;
+                    if (!quiet)
+                    {
+                        if (violations)
+                        {
+                            callback = ViolationEncountered;
+                        }
+                        else
+                        {
+                            report = report.WithOutputEventHandler(OutputGenerated);
+                        }
+                    }
+
+                    report = report.WithViolationEventHandler(callback);
+                    report.Create<ConsoleRunner>(outputXml);
+                    break;
             }
         }
 

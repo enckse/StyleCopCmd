@@ -22,11 +22,6 @@ namespace StyleCopCmd.Core
         /// <inheritdoc />
         protected override StyleCopRunner InitInstance()
         {
-            if (this.Settings.AllowCaching)
-            {
-                throw new ArgumentException("Caching is not available using the XML-only runner");
-            }
-
             return new StyleCopXmlRunner(
                 this.Settings.StyleCopSettingsFile,
                 this.OutputFile,

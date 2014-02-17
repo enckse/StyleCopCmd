@@ -297,17 +297,6 @@ namespace StyleCopCmd.Core
         }
     
         /// <summary>
-        /// Creates a StyleCop report.
-        /// </summary>
-        /// <param name="outputXmlFile">
-        /// The fully-qualified path to write the output of the report to.
-        /// </param>
-        public void Create(string outputXmlFile)
-        {
-            this.Create<ConsoleRunner>(outputXmlFile);
-        }
-
-        /// <summary>
         /// Creates a StyleCop report backed by a file
         /// </summary>
         /// <typeparam name="T">The output file-backed runner</typeparam>
@@ -369,6 +358,18 @@ namespace StyleCopCmd.Core
             this.WriteDebugLine("Starting check");
             runner.Start(cps, this.OutputGenerated, this.ViolationEncountered);
             this.WriteDebugLine("Checking done");
+        }
+
+        /// <summary>
+        /// Creates a StyleCop report.
+        /// </summary>
+        /// <param name="outputXmlFile">
+        /// The fully-qualified path to write the output of the report to.
+        /// </param>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use Create<ConsoleRunner>(string outputXmlFile) instead.")]
+        public void Create(string outputXmlFile)
+        {
+            this.Create<ConsoleRunner>(outputXmlFile);
         }
 
         /// <summary>

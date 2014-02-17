@@ -28,8 +28,15 @@ namespace StyleCopCmd.Core
         /// <summary>File writer used to output the results</summary>
         private System.IO.StreamWriter write = null;
 
+        /// <summary>Indicates if the generation call has been made for the first violation encountered</summary>
+        private volatile bool violationReported = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleCopXmlRunner" /> class.
+        /// <remarks>
+        /// Attach to the OutputGenerated event to get an indication once any violations are encountered.
+        /// Only 1 event will be triggered on the first violation
+        /// </remarks>
         /// </summary>
         /// <param name="settings">Settings file</param>
         /// <param name="outputFileName">Output file</param>
@@ -175,6 +182,12 @@ namespace StyleCopCmd.Core
             {
                 if (this.write != null)
                 {
+                    if (!this.violationReported)
+                    {
+                        this.OnOutputGenerated(new OutputEventArgs("Violations were encountered."));
+                        this.violationReported = true;
+                    }
+
                     var violation = new XElement("Violation");
                     if (e.Element != null)
                     {
