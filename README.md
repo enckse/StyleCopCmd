@@ -21,6 +21,8 @@ mono StyleCopCmd.Console.exe -s <solution>
 mono StyleCopCmd.Console.exe -f <file.cs>
 
 mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
+
+mono StyleCopCmd.Console.exe -p <proj.csproj> -g=Console -l AllowCaching=false,WriteCache=false
 ```
 
 Known Issues
