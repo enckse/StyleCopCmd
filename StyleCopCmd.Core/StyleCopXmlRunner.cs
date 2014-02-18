@@ -116,9 +116,15 @@ namespace StyleCopCmd.Core
                 using (var outputStream = new System.IO.StreamWriter(this.outputFile))
                 {
                     this.write = outputStream;
-                    outputStream.WriteLine("<StyleCopViolations>");
                     this.Core.FullAnalyze(projects);
-                    outputStream.WriteLine("</StyleCopViolations>");
+                    if (this.violationReported)
+                    {
+                        outputStream.WriteLine("</StyleCopViolations>");
+                    }
+                    else
+                    {
+                        outputStream.WriteLine("<StyleCopViolations />");
+                    }
                 }
             }
             catch (System.IO.IOException ioex)
@@ -184,6 +190,7 @@ namespace StyleCopCmd.Core
                 {
                     if (!this.violationReported)
                     {
+                        this.write.WriteLine("<StyleCopViolations>");
                         this.OnOutputGenerated(new OutputEventArgs("Violations were encountered."));
                         this.violationReported = true;
                     }
