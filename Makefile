@@ -32,3 +32,6 @@ clean:
 	rm -rf StyleCopCmd.Console/bin
 	rm -rf StyleCopCmd.Core/bin
 	rm -rf StyleCopCmd.Core.Test/bin
+
+release:
+	zip -j StyleCopCmd-maj.min.rev.zip StyleCopCmd.Console/bin/$(buildType)/*.dll StyleCopCmd.Console/bin/$(buildType)/*.exe
