@@ -34,7 +34,7 @@ namespace StyleCopCmd.Core.Test
             Assert.IsNull(settings.AddInDirectories);
             Assert.IsFalse(settings.RecursionEnabled);
             Assert.IsNull(settings.DebugAction);
-            Assert.IsFalse(settings.AllowCaching);
+            Assert.IsNull(settings.OptionalValues);
             Assert.IsNull(settings.StyleCopSettingsFile);
 
             settings.SolutionFiles = new List<string>() { "solutions" };
@@ -46,8 +46,8 @@ namespace StyleCopCmd.Core.Test
             settings.AddInDirectories = new List<string>() { "addin", "addin" };
             settings.RecursionEnabled = true;
             settings.StyleCopSettingsFile = "Settings.File";
-            settings.AllowCaching = true;
             settings.DebugAction = x => { };
+            settings.OptionalValues = new Dictionary<string, object>();
 
             Assert.IsNotNull(settings.SolutionFiles);
             Assert.AreEqual(1, settings.SolutionFiles.Count);
@@ -66,7 +66,7 @@ namespace StyleCopCmd.Core.Test
             Assert.IsTrue(settings.RecursionEnabled);
             Assert.IsNotNull(settings.DebugAction);
             Assert.AreEqual("Settings.File", settings.StyleCopSettingsFile);
-            Assert.IsTrue(settings.AllowCaching);
+            Assert.IsNotNull(settings.OptionalValues);
         }
 
         /// <summary>

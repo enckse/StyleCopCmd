@@ -52,11 +52,14 @@ Provides a command line interface for using StyleCop
   -e, --eliminate            Eliminate checking duplicate files/projects
   -w, --withDebug            Perform checks with debug output
   -a, --addIns=VALUE         Addin paths to search
-  -k, --keepCache            Allows StyleCop to use caching
   -t, --terminate            Report a non-zero exit code on violation
   -g, --generator=VALUE      Specify a generator engine for the analysis.
                                 Console - the default generator with caching 
                                and full console reporting available.
                                 Xml - A generator that only outputs the result 
-                               file. Good for large projects.
+                               file. Good for large projects. Sets -n as true.
+                               
+  -l, --list                 Include a set of optional parameters. Known 
+                               optional parameters include: AllowCachin-
+                               g,WriteCache
 ```

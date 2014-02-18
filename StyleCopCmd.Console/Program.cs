@@ -40,6 +40,7 @@ namespace StyleCopCmd.Console
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Core;
     using NDesk.Options;
 
@@ -48,6 +49,9 @@ namespace StyleCopCmd.Console
     /// </summary>
     public static class Program
     {
+        /// <summary>Optional list of parameter name</summary>
+        private const string ListParameter = "list";
+
         /// <summary>
         /// The command-line options for this application.
         /// </summary>
@@ -102,25 +106,11 @@ namespace StyleCopCmd.Console
             bool quiet = false;
             bool dedupe = false;
             bool withDebug = false;
-            bool allowCaching = false;
             bool terminate = false;
             string generator = null;
+            string currentOp = null;
 
-            var generatorHelp = new System.Text.StringBuilder();
-            generatorHelp.AppendLine("Specify a generator engine for the analysis.");
-            foreach (var name in Enum.GetNames(typeof(Generator)))
-            {
-                switch (name)
-                {
-                    case "Xml":
-                        generatorHelp.AppendLine(" Xml - A generator that only outputs the result file. Good for large projects.");
-                        break;
-                    case "Console":
-                        generatorHelp.AppendLine(" Console - the default generator with caching and full console reporting available.");
-                        break;
-                }
-            }
-
+            var optionals = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
             opts = new OptionSet()
             {
                 { "s=|solutionFiles=", "Solution files to check (.sln)", opt => { solutionFiles.Add(opt); } },
@@ -138,9 +128,18 @@ namespace StyleCopCmd.Console
                 { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { dedupe = true; } },
                 { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
-                { "k|keepCache", "Allows StyleCop to use caching", opt => { allowCaching = true; } },
                 { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
-                { "g=|generator", generatorHelp.ToString(), opt => { generator = opt; } }
+                { "g=|generator", GetGeneratorHelp(), opt => { generator = opt; } },
+                { "l|list", "Include a set of optional parameters. Known optional parameters include: " + string.Join(",", Enum.GetNames(typeof(Optional))), opt => { currentOp = ListParameter; } },
+                { "<>", opt =>
+                    {
+                        if (currentOp != null && currentOp == ListParameter)
+                        {
+                            string[] values = opt.Split(new char[] { ':', '=' }, 2);
+                            optionals[values[0]] = values[1];
+                        }
+                    }
+                }
             };
             
             try
@@ -177,14 +176,42 @@ namespace StyleCopCmd.Console
                 .WithFiles(files)
                 .WithIgnorePatterns(ignorePatterns)
                 .WithDebug(debugAction)
-                .WithCaching(allowCaching)
                 .WithAddins(addins);
 
-            RunReport(report, generator, outputXml, quiet, allowCaching, violations);
+            foreach (var opt in optionals)
+            {
+                report = report.AddOptional(opt.Key, opt.Value);
+            }
+
+            RunReport(report, generator, outputXml, quiet, violations);
             if (hadViolation && terminate)
             {
                 Environment.Exit(1);
             }
+        }
+
+        /// <summary>
+        /// Generate the help text about the generator types
+        /// </summary>
+        /// <returns>The help for the generator option</returns>
+        private static string GetGeneratorHelp()
+        {
+            var generatorHelp = new System.Text.StringBuilder();
+            generatorHelp.AppendLine("Specify a generator engine for the analysis.");
+            foreach (var name in Enum.GetNames(typeof(Generator)))
+            {
+                switch (name)
+                {
+                    case "Xml":
+                        generatorHelp.AppendLine(" Xml - A generator that only outputs the result file. Good for large projects. Sets -n as true.");
+                        break;
+                    case "Console":
+                        generatorHelp.AppendLine(" Console - the default generator with caching and full console reporting available.");
+                        break;
+                }
+            }
+
+            return generatorHelp.ToString();
         }
 
         /// <summary>
@@ -194,9 +221,8 @@ namespace StyleCopCmd.Console
         /// <param name="generator">Generator type given</param>
         /// <param name="outputXml">Output XML file name/path</param>
         /// <param name="quiet">Indicates if any console output should be available</param>
-        /// <param name="allowCaching">Enables the underlying generator to cache results</param>
         /// <param name="violations">True to report each violation encountered</param>
-        private static void RunReport(ReportBuilder report, string generator, string outputXml, bool quiet, bool allowCaching, bool violations)
+        private static void RunReport(ReportBuilder report, string generator, string outputXml, bool quiet, bool violations)
         {
             var generatorType = Generator.Default;
             if (generator != null)
@@ -207,25 +233,17 @@ namespace StyleCopCmd.Console
             switch (generatorType)
             {
                 case Generator.Xml:
-                    if (allowCaching || violations)
-                    {
-                        hadViolation = true;
-                        Console.WriteLine("The XML generator does not allow for the -a and -v options");
-                    }
-                    else
-                    {
-                        report = report.WithOutputEventHandler(
-                            (x, y) => 
-                                { 
-                                    hadViolation = true; 
-                                    if (!quiet)
-                                    {
-                                        OutputGenerated(x, y);
-                                    }  
-                                });     
+                    report = report.WithOutputEventHandler(
+                        (x, y) => 
+                            { 
+                                hadViolation = true; 
+                                if (!quiet)
+                                {
+                                    OutputGenerated(x, y);
+                                }  
+                            });     
 
-                        report.Create<XmlRunner>(outputXml);
-                    }
+                    report.Create<XmlRunner>(outputXml);
 
                     break;
                 default:

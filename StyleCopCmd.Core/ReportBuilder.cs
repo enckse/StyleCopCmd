@@ -242,13 +242,23 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Enables StyleCop caching (otherwise perform a full analyze)
+        /// Adds an optional parameter to the settings
         /// </summary>
-        /// <param name="allowCaching">True to allow caching, false is full analyze</param>
+        /// <param name="key">
+        /// Optional key setting name
+        /// </param>
+        /// <param name="value">
+        /// Value to store
+        /// </param>
         /// <returns>This ReportBuilder.</returns>
-        public ReportBuilder WithCaching(bool allowCaching)
+        public ReportBuilder AddOptional(string key, object value)
         {
-            this.Settings.AllowCaching = allowCaching;
+            if (this.Settings.OptionalValues == null)
+            {
+                this.Settings.OptionalValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            }
+
+            this.Settings.OptionalValues[key] = value;
             return this;
         }
 
@@ -358,18 +368,6 @@ namespace StyleCopCmd.Core
             this.WriteDebugLine("Starting check");
             runner.Start(cps, this.OutputGenerated, this.ViolationEncountered);
             this.WriteDebugLine("Checking done");
-        }
-
-        /// <summary>
-        /// Creates a StyleCop report.
-        /// </summary>
-        /// <param name="outputXmlFile">
-        /// The fully-qualified path to write the output of the report to.
-        /// </param>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use Create<ConsoleRunner>(string outputXmlFile) instead.")]
-        public void Create(string outputXmlFile)
-        {
-            this.Create<ConsoleRunner>(outputXmlFile);
         }
 
         /// <summary>

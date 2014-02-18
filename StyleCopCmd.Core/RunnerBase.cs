@@ -135,6 +135,27 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
+        /// Get an optional settings value
+        /// </summary>
+        /// <typeparam name="T">Parameter type</typeparam>
+        /// <param name="key">Key to look for</param>
+        /// <param name="defaultValue">Default value if the key is not found or invalid</param>
+        /// <returns>The value as set (if set) or the default value</returns>
+        protected T GetOptional<T>(string key, T defaultValue)
+        {
+            if (this.Settings.OptionalValues != null && this.Settings.OptionalValues.ContainsKey(key))
+            {
+                var val = this.Settings.OptionalValues[key];
+                if (val != null)
+                {
+                    return (T)Convert.ChangeType(val, typeof(T));
+                }
+            }
+
+            return defaultValue;
+        }
+
+        /// <summary>
         /// Initializes the instance with the given options
         /// </summary>
         /// <returns>Analysis runner</returns>

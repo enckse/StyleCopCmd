@@ -24,7 +24,7 @@ namespace StyleCopCmd.Core
         {
             return new StyleCopConsole(
                 this.Settings.StyleCopSettingsFile,
-                true,
+                this.GetOptional<bool>(Optional.WriteCache.ToString(), true),
                 this.OutputFile,
                 this.Settings.AddInDirectories,
                 true);
@@ -33,7 +33,7 @@ namespace StyleCopCmd.Core
         /// <inheritdoc />
         protected override void Run(IList<CodeProject> projects)
         {
-            ((StyleCopConsole)this.Console).Start(projects, !this.Settings.AllowCaching);
+            ((StyleCopConsole)this.Console).Start(projects, !this.GetOptional<bool>(Optional.AllowCaching.ToString(), false));
         }
     }
 }

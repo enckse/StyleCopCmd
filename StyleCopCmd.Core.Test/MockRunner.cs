@@ -174,6 +174,38 @@ namespace StyleCopCmd.Core.Test
             Assert.IsTrue(inst.initializeCalled);
         }
 
+        /// <summary>
+        /// Getting a settings optional values
+        /// </summary>
+        [Test]
+        public void GetValues()
+        {
+            var inst = new MockRunner();
+            var settings = new ReportSettings();
+            inst.Set(settings);
+            var val = inst.Get<int>("test", 0);
+            Assert.AreEqual(0, val);
+            settings.OptionalValues = new Dictionary<string, object>();
+            val = inst.Get<int>("test", 0);
+            Assert.AreEqual(0, val);
+            settings.OptionalValues["test"] = 1;
+            val = inst.Get<int>("test", 0);
+            Assert.AreEqual(1, val);
+            settings.OptionalValues["test"] = null;
+            val = inst.Get<int>("test", 0);
+            Assert.AreEqual(0, val);
+            try
+            {
+                settings.OptionalValues["test"] = "fail";
+                inst.Get<int>("test", 0);
+                Assert.Fail("Should have failed on convert");
+            }
+            catch (FormatException error)
+            {
+                Assert.AreEqual("Input string was not in the correct format", error.Message);
+            }
+        }
+
         /// <inheritdoc />
         public override Configuration Configure()
         {
@@ -185,6 +217,18 @@ namespace StyleCopCmd.Core.Test
             {
                 return base.Configure();
             }
+        }
+
+        /// <summary>
+        /// Make the underlying call public
+        /// </summary>
+        /// <typeparam name="T">Value type</typeparam>
+        /// <param name="key">Key to get</param>
+        /// <param name="defaultVal">Default value to use</param>
+        /// <returns>The found value or default value</returns>
+        internal T Get<T>(string key, T defaultVal)
+        {
+            return this.GetOptional<T>(key, defaultVal);
         }
 
         /// <inheritdoc />

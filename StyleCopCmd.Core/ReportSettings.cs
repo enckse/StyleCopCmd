@@ -15,6 +15,11 @@ namespace StyleCopCmd.Core
     public class ReportSettings
     {
         /// <summary>
+        /// Gets or sets the set of optional values
+        /// </summary>
+        public IDictionary<string, object> OptionalValues { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of Visual Studio Solution files to check.
         /// </summary>
         public IList<string> SolutionFiles { get; set; }
@@ -68,11 +73,6 @@ namespace StyleCopCmd.Core
         /// Gets or sets the action to use when debugging is enabled
         /// </summary>    
         public System.Action<string> DebugAction { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to allow StyleCop caching
-        /// </summary>
-        public bool AllowCaching { get; set; }
 
         /// <summary>
         /// Get all files stored in the settings for analysis
