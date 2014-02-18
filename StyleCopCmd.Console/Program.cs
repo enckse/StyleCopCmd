@@ -130,7 +130,7 @@ namespace StyleCopCmd.Console
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
                 { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
                 { "g=|generator", GetGeneratorHelp(), opt => { generator = opt; } },
-                { "l|list", "Include a set of optional parameters. Known optional parameters include: " + string.Join(",", Enum.GetNames(typeof(Optional))), opt => { currentOp = ListParameter; } },
+                { "l|list", "Include a set of optional parameters (key=value or key:value). Known optional parameters include: " + string.Join(", ", Enum.GetNames(typeof(Optional))), opt => { currentOp = ListParameter; } },
                 { "<>", opt =>
                     {
                         if (currentOp != null && currentOp == ListParameter)
@@ -196,22 +196,22 @@ namespace StyleCopCmd.Console
         /// <returns>The help for the generator option</returns>
         private static string GetGeneratorHelp()
         {
-            var generatorHelp = new System.Text.StringBuilder();
-            generatorHelp.AppendLine("Specify a generator engine for the analysis.");
+            var output = new string[3];
+            output[0] = "Specify a generator engine for the analysis.";
             foreach (var name in Enum.GetNames(typeof(Generator)))
             {
                 switch (name)
                 {
                     case "Xml":
-                        generatorHelp.AppendLine(" Xml - A generator that only outputs the result file. Good for large projects. Sets -n as true.");
+                        output[2] = " Xml - A generator that only outputs the results file. Good for large projects.";
                         break;
                     case "Console":
-                        generatorHelp.AppendLine(" Console - the default generator with caching and full console reporting available.");
+                        output[1] = " Console - the default generator with caching and full console reporting available.";
                         break;
                 }
             }
 
-            return generatorHelp.ToString();
+            return string.Join(Environment.NewLine, output);
         }
 
         /// <summary>

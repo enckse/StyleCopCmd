@@ -22,7 +22,7 @@ mono StyleCopCmd.Console.exe -f <file.cs>
 
 mono StyleCopCmd.Console.exe -p <proj.csproj> -p <proj.csproj>
 
-mono StyleCopCmd.Console.exe -p <proj.csproj> -g=Console -l AllowCaching=false,WriteCache=false
+mono StyleCopCmd.Console.exe -p <proj.csproj> -g=Console -l AllowCaching=false WriteCache=false
 ```
 
 Known Issues
@@ -58,10 +58,9 @@ Provides a command line interface for using StyleCop
   -g, --generator=VALUE      Specify a generator engine for the analysis.
                                 Console - the default generator with caching 
                                and full console reporting available.
-                                Xml - A generator that only outputs the result 
-                               file. Good for large projects. Sets -n as true.
-                               
-  -l, --list                 Include a set of optional parameters. Known 
-                               optional parameters include: AllowCachin-
-                               g,WriteCache
+                                Xml - A generator that only outputs the results 
+                               file. Good for large projects.
+  -l, --list                 Include a set of optional parameters (key=value 
+                               or key:value). Known optional parameters 
+                               include: AllowCaching, WriteCache
 ```
