@@ -1,5 +1,9 @@
 buildType=Release
+version:= `cat StyleCopCmd.Core/Properties/CommonAssemblyInfo.cs | grep "AssemblyFileVersion"| cut -f2 -d '"' | cut -f1,2,3 -d '.' | awk '{print $0}'`
+
 all: clean download rebuild
+
+release: clean download rebuild test analyze integration package
 
 rebuild: build test analyze
 
@@ -33,5 +37,23 @@ clean:
 	rm -rf StyleCopCmd.Core/bin
 	rm -rf StyleCopCmd.Core.Test/bin
 
-release:
-	zip -j StyleCopCmd-maj.min.rev.zip StyleCopCmd.Console/bin/$(buildType)/*.dll StyleCopCmd.Console/bin/$(buildType)/*.exe
+
+integration:
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -v -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -g=Xml -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -d . -r -i ClassOne.cs -i ClassTwo.cs -i AssemblyInfo.cs -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -d . -r -i ClassOne.cs -i ClassTwo.cs -i AssemblyInfo.cs -v -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -d . -r -i ClassOne.cs -i ClassTwo.cs -i AssemblyInfo.cs -g=Xml -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Core/StyleCopCmd.Core.csproj -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Core/StyleCopCmd.Core.csproj -v -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Core/StyleCopCmd.Core.csproj -g=Xml -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Core.Test/StyleCopCmd.Core.Test.csproj -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Core.Test/StyleCopCmd.Core.Test.csproj -v -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Core.Test/StyleCopCmd.Core.Test.csproj -g=Xml -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -v -t
+	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -g=Xml -t
+
+package:
+	zip -j StyleCopCmd-$(version).zip StyleCopCmd.Console/bin/$(buildType)/*.dll StyleCopCmd.Console/bin/$(buildType)/*.exe
