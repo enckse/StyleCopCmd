@@ -110,3 +110,4 @@ UpgradeLog*.XML
 # Additional ignores
 *.pidb
 *.userprefs
+*.zip
