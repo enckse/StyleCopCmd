@@ -465,7 +465,7 @@ namespace StyleCopCmd.Core
                 }
                 else
                 {
-                pathsToReturn.Add(path);
+                    pathsToReturn.Add(path);
                 }
             }
             

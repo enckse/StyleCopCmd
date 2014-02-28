@@ -163,6 +163,7 @@ namespace StyleCopCmd.Console
             Action<string> debugAction = null;
             if (withDebug)
             {
+                PrintAssemblyInformation();
                 debugAction = x => { Console.WriteLine(x); };
             }
 
@@ -307,6 +308,26 @@ namespace StyleCopCmd.Console
         private static void HadViolation(object sender, StyleCop.ViolationEventArgs e)
         {
             hadViolation = true;
+        }
+
+        /// <summary>
+        /// Prints assembly information for the console and core
+        /// </summary>
+        private static void PrintAssemblyInformation()
+        {
+            PrintAssemblyInfoForType(typeof(Program));
+            PrintAssemblyInfoForType(typeof(ReportBuilder));
+        }
+
+        /// <summary>
+        /// Prints assembly information for a given type
+        /// </summary>
+        /// <param name='type'>Type to get the assembly for</param>
+        private static void PrintAssemblyInfoForType(Type type)
+        {
+            var assembly = System.Reflection.Assembly.GetAssembly(type);
+            var fileInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            Console.WriteLine(string.Format("{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion));
         }
 
         /// <summary>
