@@ -81,13 +81,13 @@ namespace StyleCopCmd.Core
         public IEnumerable<AnalysisFile> GetAllFiles()
         {
             List<AnalysisFile> files = new List<AnalysisFile>();
-            this.Write("Processing solution files");
+            this.Write(typeof(ReportSettings), "Processing solution files");
             GetFiles(this.SolutionFiles, FileType.Solution, files);
-            this.Write("Processing project files");
+            this.Write(typeof(ReportSettings), "Processing project files");
             GetFiles(this.ProjectFiles, FileType.Project, files);
-            this.Write("Processing directories");
+            this.Write(typeof(ReportSettings), "Processing directories");
             GetFiles(this.Directories, FileType.Directory, files);
-            this.Write("Processing files");
+            this.Write(typeof(ReportSettings), "Processing files");
             GetFiles(this.Files, FileType.File, files);
             return files;
         }
@@ -95,12 +95,13 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Write a debug message (if enabled)
         /// </summary>
+        /// <param name="type">Type writing the message</param>
         /// <param name="message">Message to write</param>
-        internal void Write(string message)
+        internal void Write(System.Type type, string message)
         {
             if (this.DebugAction != null)
             {
-                this.DebugAction(message);
+                this.DebugAction(string.Format("{0} -> {1}", type, message));
             }
         }
 

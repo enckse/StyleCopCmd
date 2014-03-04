@@ -674,7 +674,7 @@ namespace StyleCopCmd.Core
         /// <param name="message">Message to write</param>
         private void WriteDebugLine(string message)
         {
-            this.Settings.Write(message);
+            this.Settings.Write(typeof(ReportBuilder), message);
         }
 
         /// <summary>

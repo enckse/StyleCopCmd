@@ -75,7 +75,7 @@ namespace StyleCopCmd.Core
                 throw new InvalidOperationException("Instance is not initialized");
             }
 
-            this.Settings.Write("Adding project with path " + path ?? string.Empty);
+            this.WriteDebugLine("Adding project with path " + path ?? string.Empty);
             this.AddSource(project, path);
         }
 
@@ -100,27 +100,27 @@ namespace StyleCopCmd.Core
 
             if (outputGenerated != null)
             {
-                this.Settings.Write("Attaching output events");
+                this.WriteDebugLine("Attaching output events");
                 this.Console.OutputGenerated += outputGenerated;
             }
             
             if (violation != null)
             {
-                this.Settings.Write("Attaching violation events");
+                this.WriteDebugLine("Attaching violation events");
                 this.Console.ViolationEncountered += violation;
             }
 
-            this.Settings.Write("Running analysis");
+            this.WriteDebugLine("Running analysis");
             this.Run(projects);
             if (outputGenerated != null)
             {
-                this.Settings.Write("Removing output events");
+                this.WriteDebugLine("Removing output events");
                 this.Console.OutputGenerated -= outputGenerated;
             }
             
             if (violation != null)
             {
-                this.Settings.Write("Removing violation events");
+                this.WriteDebugLine("Removing violation events");
                 this.Console.ViolationEncountered -= violation;
             }
         }
@@ -133,11 +133,11 @@ namespace StyleCopCmd.Core
             this.CheckSettings();
             if (this.initialized)
             {
-                this.Settings.Write("Already initialized");
+                this.WriteDebugLine("Already initialized");
                 return;
             }
 
-            this.Settings.Write("Initializing");
+            this.WriteDebugLine("Initializing");
             this.Console = this.InitInstance();
             this.initialized = true;
         }
@@ -151,19 +151,19 @@ namespace StyleCopCmd.Core
         /// <returns>The value as set (if set) or the default value</returns>
         protected T GetOptional<T>(string key, T defaultValue)
         {
-            this.Settings.Write("Checking for optional value " + key ?? string.Empty);
+            this.WriteDebugLine("Checking for optional value " + key ?? string.Empty);
             if (this.Settings.OptionalValues != null && this.Settings.OptionalValues.ContainsKey(key))
             {
-                this.Settings.Write("Setting found");
+                this.WriteDebugLine("Setting found");
                 var val = this.Settings.OptionalValues[key];
                 if (val != null)
                 {
-                    this.Settings.Write("Value is viable");
+                    this.WriteDebugLine("Value is viable");
                     return (T)Convert.ChangeType(val, typeof(T));
                 }
             }
 
-            this.Settings.Write("Using default optional value for key");
+            this.WriteDebugLine("Using default optional value for key");
             return defaultValue;
         }
 
@@ -190,8 +190,17 @@ namespace StyleCopCmd.Core
                 throw new ArgumentNullException("path");
             }
 
-            this.Settings.Write("Path being added to core environment");
+            this.WriteDebugLine("Path being added to core environment");
             this.Console.Core.Environment.AddSourceCode(project, path, null);
+        }
+
+        /// <summary>
+        /// Write out a debug line
+        /// </summary>
+        /// <param name="message">Message to write</param>
+        protected virtual void WriteDebugLine(string message)
+        {
+            this.Settings.Write(this.GetType(), message);
         }
 
         /// <summary>
