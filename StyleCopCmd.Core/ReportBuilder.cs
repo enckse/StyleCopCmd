@@ -88,6 +88,33 @@ namespace StyleCopCmd.Core
         private ReportSettings Settings { get; set; }
 
         /// <summary>
+        /// Prints file/assembly information to the output action (assuming it is set)
+        /// </summary>
+        /// <param name="outputAction">Output action to write to</param>
+        /// <param name="externalTypes">Additional types to print output for</param>
+        public static void PrintFileInformation(Action<string> outputAction, params Type[] externalTypes)
+        {
+            // Nothing to output to
+            if (outputAction == null)
+            {
+                return;
+            }
+
+            if (externalTypes != null && externalTypes.Any())
+            {
+                foreach (var type in externalTypes)
+                {
+                    outputAction(GetAssemblyInfoForType(type));
+                }
+            }
+
+            outputAction(GetAssemblyInfoForType(typeof(ReportBuilder)));
+            outputAction(GetAssemblyInfoForType(typeof(StyleCop.StyleCopRunner)));
+            outputAction(GetAssemblyInfoForType(typeof(StyleCop.CSharp.CsParser)));
+            outputAction(GetAssemblyInfoForType(typeof(StyleCop.CSharp.DocumentationRules)));
+        }
+
+        /// <summary>
         /// Perform the checking with debugging statements enabled
         /// </summary>
         /// <param name="debugAction">Debug action to use</param>
@@ -381,7 +408,19 @@ namespace StyleCopCmd.Core
         {
             return string.IsNullOrEmpty(outputXmlFile) ? null : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
         }
-        
+
+        /// <summary>
+        /// Prints assembly information for a given type
+        /// </summary>
+        /// <param name='type'>Type to get the assembly for</param>
+        /// <returns>Simple assembly and version information string</returns>
+        private static string GetAssemblyInfoForType(Type type)
+        {
+            var assembly = System.Reflection.Assembly.GetAssembly(type);
+            var fileInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            return string.Format("{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion);
+        }
+
         /// <summary>
         /// Expands the directories that contain wildcards
         /// </summary>

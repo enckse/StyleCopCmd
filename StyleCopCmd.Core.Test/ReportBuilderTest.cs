@@ -471,6 +471,22 @@ namespace StyleCopCmd.Core.Test
             Assert.AreEqual(1, result.Count, BasePath);
             Assert.AreEqual("Violations were encountered.", result[0]);
         }
+
+        /// <summary>
+        /// Getting version output information
+        /// </summary>
+        [Test]
+        public void GetVersionInfo()
+        {
+            var result = new List<string>();
+            ReportBuilder.PrintFileInformation(x => { result.Add(x); }, this.GetType());
+            Assert.AreEqual(5, result.Count, "Should be 4 internals + 1 given");
+            Assert.AreEqual(1, result.Where(x => x.StartsWith("StyleCop ")).Count());
+            Assert.AreEqual(1, result.Where(x => x.StartsWith("StyleCop.CSharp ")).Count());
+            Assert.AreEqual(1, result.Where(x => x.StartsWith("StyleCop.CSharp.Rules ")).Count());
+            Assert.AreEqual(1, result.Where(x => x.StartsWith("StyleCopCmd.Core ")).Count());
+            Assert.AreEqual(1, result.Where(x => x.StartsWith("StyleCopCmd.Core.Test ")).Count());
+        }
         
         /// <summary>
         /// Executes the test.

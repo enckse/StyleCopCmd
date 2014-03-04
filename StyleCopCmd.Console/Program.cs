@@ -163,8 +163,8 @@ namespace StyleCopCmd.Console
             Action<string> debugAction = null;
             if (withDebug)
             {
-                PrintAssemblyInformation();
                 debugAction = x => { Console.WriteLine(x); };
+                PrintVersion(debugAction);
             }
 
             var report = new ReportBuilder()
@@ -311,23 +311,12 @@ namespace StyleCopCmd.Console
         }
 
         /// <summary>
-        /// Prints assembly information for the console and core
+        /// Print version information out
         /// </summary>
-        private static void PrintAssemblyInformation()
+        /// <param name='action'>Output action</param>
+        private static void PrintVersion(Action<string> action)
         {
-            PrintAssemblyInfoForType(typeof(Program));
-            PrintAssemblyInfoForType(typeof(ReportBuilder));
-        }
-
-        /// <summary>
-        /// Prints assembly information for a given type
-        /// </summary>
-        /// <param name='type'>Type to get the assembly for</param>
-        private static void PrintAssemblyInfoForType(Type type)
-        {
-            var assembly = System.Reflection.Assembly.GetAssembly(type);
-            var fileInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            Console.WriteLine(string.Format("{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion));
+            ReportBuilder.PrintFileInformation(action, typeof(Program), typeof(OptionSet));
         }
 
         /// <summary>
