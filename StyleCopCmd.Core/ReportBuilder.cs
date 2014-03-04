@@ -442,6 +442,7 @@ namespace StyleCopCmd.Core
                 {
                     var parts = path.Split(Path.DirectorySeparatorChar);
                     string basePath = Directory.GetDirectoryRoot(path);
+                    this.WriteDebugLine("Using base path for wildcard path: " + basePath);
 
                     // Supporting wildcard in windows and linux
                     // Start point in windows needs to be adjusted by 1 when the root is a drive (e.g. C:)
@@ -459,6 +460,7 @@ namespace StyleCopCmd.Core
                     for (int index = startIndex; index < parts.Length; index++)
                     {
                         string part = parts[index];
+                        this.WriteDebugLine("Current part: " + part);
                         
                         // On expansion, the remaining parts needs to be applied to each expanded directory
                         IList<string> subParts = new List<string>();
@@ -471,9 +473,12 @@ namespace StyleCopCmd.Core
                         var subDir = string.Join(Path.DirectorySeparatorChar.ToString(), subParts.ToArray());
                         if (part.Contains("*"))
                         {
+                            this.WriteDebugLine("Path contains a wildcard");
+
                             // Expand all child directories including the current directory
                             if (part == "**")
                             {
+                                this.WriteDebugLine("Path contains a double wildcard");
                                 pathsToReturn.Add(Path.Combine(basePath, subDir));
                                 foreach (var directory in Directory.GetDirectories(basePath))
                                 {
@@ -482,6 +487,8 @@ namespace StyleCopCmd.Core
                             }
                             else
                             {
+                                this.WriteDebugLine("Path contains only a single wildcard");
+
                                 // Single wildcards, look for any matching files and sub dirs
                                 foreach (var directory in Directory.GetDirectories(basePath, part))
                                 {
@@ -499,6 +506,7 @@ namespace StyleCopCmd.Core
                         else
                         {
                             basePath = Path.Combine(basePath, part);
+                            this.WriteDebugLine("New base path: " + basePath);
                         }
                     }
                 }
@@ -549,6 +557,7 @@ namespace StyleCopCmd.Core
                 // Check to see if this file should be ignored.
                 if (this.Settings.IgnorePatterns.FirstOrDefault(fp => Regex.IsMatch(Path.GetFileName(filePath), fp)) != null)
                 {
+                    this.WriteDebugLine("File is being ignored");
                     return;
                 }
             }
