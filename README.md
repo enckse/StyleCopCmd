@@ -55,6 +55,8 @@ Provides a command line interface for using StyleCop
   -w, --withDebug            Perform checks with debug output
   -a, --addIns=VALUE         Addin paths to search
   -t, --terminate            Report a non-zero exit code on violation
+  -u, --unloadProjects=VALUE Regular expressions to unload/ignore projects in 
+                               a solution
   -g, --generator=VALUE      Specify a generator engine for the analysis.
                                 Console - the default generator with caching 
                                and full console reporting available.

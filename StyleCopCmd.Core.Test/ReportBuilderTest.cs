@@ -96,6 +96,45 @@ namespace StyleCopCmd.Core.Test
             Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
             Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
         }
+
+        /// <summary>
+        /// Solution loading but unloading a project
+        /// </summary>
+        [Test]
+        public void WithProjectUnload()
+        {
+            var report = new ReportBuilder()
+                            .WithSolutionsFiles(new List<string>() { Solution })
+                            .WithProjectUnloads(new List<string>() { TestName });
+            
+            var result = ExecuteTest(report, null);
+            Assert.AreEqual(1, result.Count, BasePath);
+            Assert.AreEqual("No violations encountered", result[0]);
+
+            // Now with an unload that doesn't match
+            report = new ReportBuilder()
+                            .WithSolutionsFiles(new List<string>() { Solution })
+                            .WithProjectUnloads(new List<string>() { "non-matching-regex" });
+
+            result = ExecuteTest(report, null);
+            Assert.AreEqual(4, result.Count, BasePath);
+            Assert.AreEqual("8 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
+
+            // Doesn't work against projects (or anything but solutions)
+            report = new ReportBuilder()
+                            .WithProjectFiles(new List<string>() { Project })
+                            .WithProjectUnloads(new List<string>() { TestName });
+            
+            result = ExecuteTest(report, null);
+            Assert.AreEqual(4, result.Count, BasePath);
+            Assert.AreEqual("8 violations encountered.", result[0]);
+            Assert.IsTrue(result[1].EndsWith("AssemblyInfo.cs"), result[1]);
+            Assert.IsTrue(result[2].EndsWith("ClassOne.cs"), result[2]);
+            Assert.IsTrue(result[3].EndsWith("ClassTwo.cs"), result[3]);
+        }
         
         /// <summary>
         /// With multiple solution files test.

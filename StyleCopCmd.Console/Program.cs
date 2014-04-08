@@ -98,6 +98,7 @@ namespace StyleCopCmd.Console
             IList<string> files = new List<string>();
             IList<string> symbols = new List<string>();
             IList<string> addins = new List<string>();
+            IList<string> projectUnloads = new List<string>();
             string styleCopSettings = null;
             string outputXml = null;
             bool recurse = false;
@@ -129,8 +130,9 @@ namespace StyleCopCmd.Console
                 { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
                 { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
                 { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
+                { "u|unloadProjects=", "Regular expressions to unload/ignore projects in a solution", opt => { projectUnloads.Add(opt); } },
                 { "g=|generator", GetGeneratorHelp(), opt => { generator = opt; } },
-                { "l|list", "Include a set of optional parameters (key=value or key:value). Known optional parameters include: " + string.Join(", ", Enum.GetNames(typeof(Optional))), opt => { currentOp = ListParameter; } },
+                { "l|list", GetOptionalHelp(), opt => { currentOp = ListParameter; } },
                 { "<>", opt =>
                     {
                         if (currentOp != null && currentOp == ListParameter)
@@ -177,7 +179,8 @@ namespace StyleCopCmd.Console
                 .WithFiles(files)
                 .WithIgnorePatterns(ignorePatterns)
                 .WithDebug(debugAction)
-                .WithAddins(addins);
+                .WithAddins(addins)
+                .WithProjectUnloads(projectUnloads);
 
             foreach (var opt in optionals)
             {
@@ -189,6 +192,15 @@ namespace StyleCopCmd.Console
             {
                 Environment.Exit(1);
             }
+        }
+
+        /// <summary>
+        /// Generate the help for the optional parameters
+        /// </summary>
+        /// <returns>The help for the optional parameters</returns>
+        private static string GetOptionalHelp()
+        {
+            return "Include a set of optional parameters (key=value or key:value). Known optional parameters include: " + string.Join(", ", Enum.GetNames(typeof(Optional)));
         }
 
         /// <summary>

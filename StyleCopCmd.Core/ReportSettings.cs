@@ -75,6 +75,11 @@ namespace StyleCopCmd.Core
         public System.Action<string> DebugAction { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of project regex values that will be ignore when loading via a solution
+        /// </summary>
+        public IList<string> ProjectUnloads { get; set; }
+
+        /// <summary>
         /// Get all files stored in the settings for analysis
         /// </summary>
         /// <returns>The set of all files for analysis with file name and type</returns>

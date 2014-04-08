@@ -146,8 +146,7 @@ namespace StyleCopCmd.Core
         }
         
         /// <summary>
-        /// Adds Visual Studio Solution files to check. Visual Studio 2008
-        /// is supported.
+        /// Adds Visual Studio Solution files to check.
         /// </summary>
         /// <param name="solutionsFiles">
         /// A list of fully-qualified paths to Visual Studio solutions files.
@@ -161,8 +160,20 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Adds Visual Studio Project files to check. Visual Studio 2008
-        /// is supported.
+        /// Set of regex values to test to unload the projects (skip) when reading a solution
+        /// </summary>
+        /// <param name="unloads">
+        /// List of unload regex patterns to use
+        /// </param>
+        /// <returns>This ReportBuilder.</returns>
+        public ReportBuilder WithProjectUnloads(IList<string> unloads)
+        {
+            this.Settings.ProjectUnloads = unloads;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds Visual Studio Project files to check.
         /// </summary>
         /// <param name="projectFiles">
         /// A list of fully-qualified paths to Visual Studio project files.
@@ -593,6 +604,16 @@ namespace StyleCopCmd.Core
                         Path.GetDirectoryName(
                             Path.GetFullPath(solutionFilePath)))
                     + Path.DirectorySeparatorChar.ToString() + mstring;
+
+                if (this.Settings.ProjectUnloads != null)
+                {
+                    // Ignore any projects matching the unload request
+                    if (this.Settings.ProjectUnloads.Where(x => Regex.IsMatch(ppath, x)).Any())
+                    {
+                        continue;
+                    }
+                }
+
                 this.AddProjectFile(ppath);
             }
         }
