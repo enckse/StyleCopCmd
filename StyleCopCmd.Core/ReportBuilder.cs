@@ -160,10 +160,10 @@ namespace StyleCopCmd.Core
         }
 
         /// <summary>
-        /// Set of regex values to test to unload the projects (skip) when reading a solution
+        /// Set of regular expression values to test to unload the projects (skip) when reading a solution
         /// </summary>
         /// <param name="unloads">
-        /// List of unload regex patterns to use
+        /// List of unload regular expression patterns to use
         /// </param>
         /// <returns>This ReportBuilder.</returns>
         public ReportBuilder WithProjectUnloads(IList<string> unloads)
