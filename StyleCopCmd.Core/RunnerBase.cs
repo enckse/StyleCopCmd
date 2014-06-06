@@ -28,9 +28,9 @@ namespace StyleCopCmd.Core
         private bool hasSet = false;
 
         /// <summary>
-        /// Gets the report settings
+        /// Write output (e.g. console) using this action
         /// </summary>
-        protected ReportSettings Settings { get; private set; }
+        private Action<Type, string> writeOutputTo;
 
         /// <summary>
         /// Gets the operating console for analysis
@@ -38,17 +38,42 @@ namespace StyleCopCmd.Core
         protected StyleCopRunner Console { get; private set; }
 
         /// <summary>
+        /// Gets the given processor symbols to execute with
+        /// </summary>
+        protected IList<string> Symbols { get; private set; }
+        
+        /// <summary>
+        /// Gets the optional values loaded into the context for the runner
+        /// </summary>
+        protected IDictionary<string, object> Optionals { get; private set; }
+        
+        /// <summary>
+        /// Gets the addin paths for the runner to use
+        /// </summary>
+        protected IList<string> AddIns { get; private set; }
+
+        /// <summary>
+        /// Gets the settings file to use for the runner
+        /// </summary>
+        protected string SettingsFile { get; private set; }
+
+        /// <summary>
         /// Set the reporting settings
         /// </summary>
-        /// <param name="settings">Analysis settings</param>
-        public void Set(ReportSettings settings)
+        /// <param name="processorSymbols">Processor symbols to include</param>
+        /// <param name="optValues">Optional values for the runner</param>
+        /// <param name="addInDirs">Add-in directories</param>
+        /// <param name="settingsFile">Settings file</param>
+        /// <param name="writeTo">Output writer</param>
+        public void Set(IList<string> processorSymbols, IDictionary<string, object> optValues, IList<string> addInDirs, string settingsFile, Action<Type, string> writeTo)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException("settings");
-            }
+            this.Symbols = processorSymbols != null ? processorSymbols.ToList() : null;
 
-            this.Settings = settings;
+            // Deep clone the array, even if the values are shallow
+            this.Optionals = optValues != null ? optValues.ToDictionary(key => key.Key, val => val.Value, StringComparer.OrdinalIgnoreCase) : null;
+            this.AddIns = addInDirs != null ? addInDirs.ToList() : null;
+            this.SettingsFile = settingsFile;
+            this.writeOutputTo = writeTo;
             this.hasSet = true;
         }
 
@@ -59,7 +84,7 @@ namespace StyleCopCmd.Core
         public virtual Configuration Configure()
         {
             this.CheckSettings();
-            return new Configuration(this.Settings.ProcessorSymbols != null ? this.Settings.ProcessorSymbols.ToArray() : null);
+            return new Configuration(this.Symbols != null ? this.Symbols.ToArray() : null);
         }
 
         /// <summary>
@@ -152,10 +177,10 @@ namespace StyleCopCmd.Core
         protected T GetOptional<T>(string key, T defaultValue)
         {
             this.WriteDebugLine("Checking for optional value " + key ?? string.Empty);
-            if (this.Settings.OptionalValues != null && this.Settings.OptionalValues.ContainsKey(key))
+            if (this.Optionals != null && this.Optionals.ContainsKey(key))
             {
                 this.WriteDebugLine("Setting found");
-                var val = this.Settings.OptionalValues[key];
+                var val = this.Optionals[key];
                 if (val != null)
                 {
                     this.WriteDebugLine("Value is viable");
@@ -200,7 +225,10 @@ namespace StyleCopCmd.Core
         /// <param name="message">Message to write</param>
         protected virtual void WriteDebugLine(string message)
         {
-            this.Settings.Write(this.GetType(), message);
+            if (this.writeOutputTo != null)
+            {
+                this.writeOutputTo(this.GetType(), message);
+            }
         }
 
         /// <summary>

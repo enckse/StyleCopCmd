@@ -39,26 +39,6 @@ namespace StyleCopCmd.Core.Test
         private bool runCalled = false;
 
         /// <summary>
-        /// Tests calling set on the runner
-        /// </summary>
-        [Test]
-        public void SetTest()
-        {
-            var inst = new MockRunner();
-            try
-            {
-                inst.Set(null);
-                Assert.Fail("No settings were given");
-            }
-            catch (ArgumentNullException error)
-            {
-                Assert.IsTrue(error.Message.Contains("settings"));
-            }
-
-            inst.Set(new ReportSettings());
-        }
-
-        /// <summary>
         /// Tests calling configure on the runner
         /// </summary>
         [Test]
@@ -75,7 +55,7 @@ namespace StyleCopCmd.Core.Test
                 Assert.IsTrue(error.Message.Contains("No settings"));
             }
 
-            inst.Set(new ReportSettings());
+            inst.Set(null, null, null, null, null);
             var cfg = inst.Configure();
             Assert.IsNotNull(cfg);
             inst.overrideConfig = true;
@@ -100,7 +80,7 @@ namespace StyleCopCmd.Core.Test
                 Assert.IsTrue(error.Message.Contains("No settings"));
             }
 
-            inst.Set(new ReportSettings());
+            inst.Set(null, null, null, null, null);
             try
             {
                 inst.AddFile(null, null);
@@ -134,7 +114,7 @@ namespace StyleCopCmd.Core.Test
                 Assert.IsTrue(error.Message.Contains("No settings"));
             }
 
-            inst.Set(new ReportSettings());
+            inst.Set(null, null, null, null, null);
             try
             {
                 inst.Start(null, null, null);
@@ -168,7 +148,7 @@ namespace StyleCopCmd.Core.Test
         public void InitializeTest()
         {
             var inst = new MockRunner();
-            inst.Set(new ReportSettings());
+            inst.Set(null, null, null, null, null);
             Assert.IsFalse(inst.initializeCalled);
             inst.Initialize();
             Assert.IsTrue(inst.initializeCalled);
@@ -181,22 +161,27 @@ namespace StyleCopCmd.Core.Test
         public void GetValues()
         {
             var inst = new MockRunner();
-            var settings = new ReportSettings();
-            inst.Set(settings);
+            inst.Set(null, null, null, null, null);
             var val = inst.Get<int>("test", 0);
             Assert.AreEqual(0, val);
-            settings.OptionalValues = new Dictionary<string, object>();
+            var dict = new Dictionary<string, object>();
+            inst.Set(null, dict, null, null, null);
             val = inst.Get<int>("test", 0);
             Assert.AreEqual(0, val);
-            settings.OptionalValues["test"] = 1;
+            dict["test"] = 1;
+            val = inst.Get<int>("test", 0);
+            Assert.AreEqual(0, val);
+
+            dict = new Dictionary<string, object>();
+            dict["test"] = 1;
+            inst.Set(null, dict, null, null, null);
             val = inst.Get<int>("test", 0);
             Assert.AreEqual(1, val);
-            settings.OptionalValues["test"] = null;
-            val = inst.Get<int>("test", 0);
-            Assert.AreEqual(0, val);
             try
             {
-                settings.OptionalValues["test"] = "fail";
+                dict = new Dictionary<string, object>();
+                dict["test"] = "fail";
+                inst.Set(null, dict, null, null, null);
                 inst.Get<int>("test", 0);
                 Assert.Fail("Should have failed on convert");
             }

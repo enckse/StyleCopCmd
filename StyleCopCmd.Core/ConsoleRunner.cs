@@ -23,10 +23,10 @@ namespace StyleCopCmd.Core
         protected override StyleCopRunner InitInstance()
         {
             return new StyleCopConsole(
-                this.Settings.StyleCopSettingsFile,
+                this.SettingsFile,
                 this.GetOptional<bool>(Optional.WriteCache.ToString(), true),
                 this.OutputFile,
-                this.Settings.AddInDirectories,
+                this.AddIns,
                 true);
         }
 

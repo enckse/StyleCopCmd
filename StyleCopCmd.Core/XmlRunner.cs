@@ -23,9 +23,9 @@ namespace StyleCopCmd.Core
         protected override StyleCopRunner InitInstance()
         {
             return new StyleCopXmlRunner(
-                this.Settings.StyleCopSettingsFile,
+                this.SettingsFile,
                 this.OutputFile,
-                this.Settings.AddInDirectories);
+                this.AddIns);
         }
 
         /// <inheritdoc />

@@ -12,78 +12,78 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Report analysis settings
     /// </summary>
-    public class ReportSettings
+    internal sealed class ReportSettings
     {
         /// <summary>
         /// Gets or sets the set of optional values
         /// </summary>
-        public IDictionary<string, object> OptionalValues { get; set; }
+        internal IDictionary<string, object> OptionalValues { get; set; }
 
         /// <summary>
         /// Gets or sets a list of Visual Studio Solution files to check.
         /// </summary>
-        public IList<string> SolutionFiles { get; set; }
+        internal IList<string> SolutionFiles { get; set; }
 
         /// <summary>
         /// Gets or sets a list of Visual Studio Project files to check.
         /// </summary>
-        public IList<string> ProjectFiles { get; set; }
+        internal IList<string> ProjectFiles { get; set; }
 
         /// <summary>
         /// Gets or sets a list of directories to check.
         /// </summary>
-        public IList<string> Directories { get; set; }
+        internal IList<string> Directories { get; set; }
 
         /// <summary>
         /// Gets or sets a list of files to check.
         /// </summary>
-        public IList<string> Files { get; set; }
+        internal IList<string> Files { get; set; }
 
         /// <summary>
         /// Gets or sets a list of regular expression patterns used
         /// to ignore files (if a file name matches any of the patterns, the
         /// file is not checked).
         /// </summary>
-        public IList<string> IgnorePatterns { get; set; }
+        internal IList<string> IgnorePatterns { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not directories are 
         /// recursively searched.
         /// </summary>
-        public bool RecursionEnabled { get; set; }
+        internal bool RecursionEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a list of processor symbols (ex. DEBUG, CODE_ANALYSIS)
         /// to be used by StyleCop.
         /// </summary>
-        public IList<string> ProcessorSymbols { get; set; }
+        internal IList<string> ProcessorSymbols { get; set; }
 
         /// <summary>
         /// Gets or sets the path to the StyleCop setting file to use.
         /// </summary>
-        public string StyleCopSettingsFile { get; set; }
+        internal string StyleCopSettingsFile { get; set; }
 
         /// <summary>
         /// Gets or sets a list of directories used by StyleCop to search for 
         /// add-ins. Currently not available from the command line
         /// </summary>
-        public IList<string> AddInDirectories { get; set; }
+        internal IList<string> AddInDirectories { get; set; }
 
         /// <summary>
         /// Gets or sets the action to use when debugging is enabled
         /// </summary>    
-        public System.Action<string> DebugAction { get; set; }
+        internal System.Action<string> DebugAction { get; set; }
 
         /// <summary>
         /// Gets or sets a list of project regular expression values that will be ignore when loading via a solution
         /// </summary>
-        public IList<string> ProjectUnloads { get; set; }
+        internal IList<string> ProjectUnloads { get; set; }
 
         /// <summary>
         /// Get all files stored in the settings for analysis
         /// </summary>
         /// <returns>The set of all files for analysis with file name and type</returns>
-        public IEnumerable<AnalysisFile> GetAllFiles()
+        internal IEnumerable<AnalysisFile> GetAllFiles()
         {
             List<AnalysisFile> files = new List<AnalysisFile>();
             this.Write(typeof(ReportSettings), "Processing solution files");

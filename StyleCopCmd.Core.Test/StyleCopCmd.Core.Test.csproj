@@ -77,7 +77,6 @@
   <ItemGroup>
     <Compile Include="ReportBuilderTest.cs" />
     <Compile Include="ReportStoreTest.cs" />
-    <Compile Include="ReportSettingsTest.cs" />
     <Compile Include="MockRunner.cs" />
     <Compile Include="StyleCopRunnerMock.cs" />
   </ItemGroup>

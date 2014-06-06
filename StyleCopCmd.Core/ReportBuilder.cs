@@ -369,7 +369,13 @@ namespace StyleCopCmd.Core
                 throw new ArgumentNullException("runner");
             }
 
-            runner.Set(this.Settings);
+            runner.Set(
+                this.Settings.ProcessorSymbols,
+                this.Settings.OptionalValues,
+                this.Settings.AddInDirectories,
+                this.Settings.StyleCopSettingsFile,
+                this.Settings.Write);
+
             this.WriteDebugLine("Setting configuration symbols");
             var cfg = runner.Configure();
             this.WriteDebugLine("Creating console for checking");
