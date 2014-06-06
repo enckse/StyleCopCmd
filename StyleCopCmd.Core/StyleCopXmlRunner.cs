@@ -145,7 +145,7 @@ namespace StyleCopCmd.Core
 
             if (error)
             {           
-                this.OnOutputGenerated(new OutputEventArgs(string.Format("Analysis error: {0}", errorMessage)));
+                this.OnOutputGenerated(new OutputEventArgs(string.Format(CultureInfo.CurrentCulture, "Analysis error: {0}", errorMessage)));
             }
 
             return !error;

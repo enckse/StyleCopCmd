@@ -106,7 +106,7 @@ namespace StyleCopCmd.Core
         {
             if (this.DebugAction != null)
             {
-                this.DebugAction(string.Format("{0} -> {1}", type, message));
+                this.DebugAction(string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0} -> {1}", type, message));
             }
         }
 

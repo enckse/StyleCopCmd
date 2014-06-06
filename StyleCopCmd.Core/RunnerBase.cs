@@ -184,7 +184,7 @@ namespace StyleCopCmd.Core
                 if (val != null)
                 {
                     this.WriteDebugLine("Value is viable");
-                    return (T)Convert.ChangeType(val, typeof(T));
+                    return (T)Convert.ChangeType(val, typeof(T), System.Globalization.CultureInfo.CurrentCulture);
                 }
             }
 

@@ -303,8 +303,8 @@ namespace StyleCopCmd.Console
         private static void ViolationEncountered(object sender, StyleCop.ViolationEventArgs e)
         {
             HadViolation(sender, e);
-            Console.WriteLine(string.Format("File: {0}", e.SourceCode.Path));
-            Console.WriteLine(string.Format("Line: {0} -> {1}", e.LineNumber, e.Message));
+            Console.WriteLine(string.Format(System.Globalization.CultureInfo.CurrentCulture, "File: {0}", e.SourceCode.Path));
+            Console.WriteLine(string.Format(System.Globalization.CultureInfo.CurrentCulture, "Line: {0} -> {1}", e.LineNumber, e.Message));
             Console.WriteLine();
         }
 

@@ -435,7 +435,7 @@ namespace StyleCopCmd.Core
         {
             var assembly = System.Reflection.Assembly.GetAssembly(type);
             var fileInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            return string.Format("{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion);
+            return string.Format(CultureInfo.CurrentCulture, "{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion);
         }
 
         /// <summary>
