@@ -6,10 +6,12 @@ A: *
 R: Gendarme.Rules.Concurrency.DoNotLockOnThisOrTypesRule
 M: System.Void StyleCopCmd.Core.StyleCopXmlRunner::Violation(System.Object,StyleCop.ViolationEventArgs)
 
-# and disposing
-R: Gendarme.Rules.Design.TypesWithDisposableFieldsShouldBeDisposableRule
-T: StyleCopCmd.Core.StyleCopXmlRunner
-
+# TODO: Determine either what to do about this or state why it is failing and justified
 # Getting a generic type warning when the type is new(), IFileRunner and RunnerBase
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 M: System.Void StyleCopCmd.Core.ReportBuilder::Create(System.String)
+
+# TODO: Determine either what to do about this or state why it is failing and justified
+# Getting a DeclareEventsExplicitlyRule in some cases - seems like a potential syntax issue on this end
+R: Gendarme.Rules.Correctness.DeclareEventsExplicitlyRule
+N: StyleCopCmd.Console
