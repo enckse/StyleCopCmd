@@ -144,9 +144,16 @@ namespace StyleCopCmd.Console
                 }
             };
             
+            Action<string> debugAction = null;
             try
             {
                 opts.Parse(args);
+                if (withDebug)
+                {
+                    debugAction = x => { Console.WriteLine(x); };
+                    PrintVersion(debugAction);
+                }
+
                 needHelp = needHelp || (solutionFiles.Count == 0 && projectFiles.Count == 0 && directories.Count == 0 && files.Count == 0);
             }
             catch (OptionException error)
@@ -162,13 +169,6 @@ namespace StyleCopCmd.Console
                 return;
             }
             
-            Action<string> debugAction = null;
-            if (withDebug)
-            {
-                debugAction = x => { Console.WriteLine(x); };
-                PrintVersion(debugAction);
-            }
-
             var report = new ReportBuilder()
                 .WithDedupe(dedupe)
                 .WithStyleCopSettingsFile(styleCopSettings)
