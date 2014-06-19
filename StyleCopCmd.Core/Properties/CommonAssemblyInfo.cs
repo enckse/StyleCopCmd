@@ -18,4 +18,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: System.Runtime.InteropServices.ComVisible(false)]
 
-[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyFileVersion("1.3.1.0")]
