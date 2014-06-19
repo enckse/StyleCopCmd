@@ -328,7 +328,10 @@ namespace StyleCopCmd.Console
         /// <param name='action'>Output action</param>
         private static void PrintVersion(Action<string> action)
         {
+            action(string.Empty);
+            action("Version Information:");
             ReportBuilder.PrintFileInformation(action, typeof(Program), typeof(OptionSet));
+            action(string.Empty);
         }
 
         /// <summary>
