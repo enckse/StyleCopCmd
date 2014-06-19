@@ -1,4 +1,4 @@
-This is modified version of the original StyleCopCmd that used more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment (but there is no known reason it shouldn't run elsewhere)
+This is a (highly) modified version of the original StyleCopCmd that uses more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment (but there is no known reason it shouldn't run elsewhere)
 
 Installing
 ----------
