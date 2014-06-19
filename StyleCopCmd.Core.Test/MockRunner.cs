@@ -191,6 +191,16 @@ namespace StyleCopCmd.Core.Test
             }
         }
 
+        /// <summary>Test the safe-section reflective call</summary>
+        [Test]
+        public void SafeSection()
+        {
+            // Note: This isn't so much a unit test as it is an indicator if this call ever needs to be changed inline
+            // If this does fail the name may have changed in StyleCopRunner (in the StyleCop source) or maybe is gone
+            // Either case the XmlRunner should continue to function but the Xml could be invalid
+            Assert.IsNotNull(typeof(StyleCopRunner).GetMethod("CreateSafeSectionName", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic));
+        }
+
         /// <inheritdoc />
         public override Configuration Configure()
         {
