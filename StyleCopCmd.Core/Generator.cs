@@ -1,12 +1,9 @@
 //------------------------------------------------------------------------------
 // <copyright 
-//  file="Generator.cs" 
-//  company="Schley Andrew Kutz">
-//  Copyright (c) Schley Andrew Kutz. All rights reserved.
+//  file="FileRunner.cs" 
+//  company="enckse">
+//  Copyright (c) All rights reserved.
 // </copyright>
-// <authors>
-//   <author>Schley Andrew Kutz</author>
-// </authors>
 //------------------------------------------------------------------------------
 namespace StyleCopCmd.Core
 {
