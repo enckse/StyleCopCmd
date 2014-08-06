@@ -14,11 +14,8 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// XML runner implementation
     /// </summary>
-    public sealed class XmlRunner : RunnerBase, IFileRunner
+    public sealed class XmlRunner : FileRunner
     {
-        /// <inheritdoc />
-        public string OutputFile { get; set; }
-
         /// <inheritdoc />
         protected override StyleCopRunner InitInstance()
         {

@@ -14,11 +14,8 @@ namespace StyleCopCmd.Core
     /// <summary>
     /// Console runner implementation
     /// </summary>
-    public sealed class ConsoleRunner : RunnerBase, IFileRunner
+    public sealed class ConsoleRunner : FileRunner
     {
-        /// <inheritdoc />
-        public string OutputFile { get; set; }
-
         /// <inheritdoc />
         protected override StyleCopRunner InitInstance()
         {

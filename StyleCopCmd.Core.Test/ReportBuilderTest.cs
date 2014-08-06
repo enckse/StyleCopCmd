@@ -504,7 +504,7 @@ namespace StyleCopCmd.Core.Test
             
             var result = new List<string>();
             report.WithOutputEventHandler((x, y) => { result.Add(((StyleCop.OutputEventArgs)y).Output); });
-            report.Create<XmlRunner>(null);
+            report.Create(Generator.Xml, null);
 
             // Only 1 item should be reported
             Assert.AreEqual(1, result.Count, BasePath);
@@ -543,7 +543,7 @@ namespace StyleCopCmd.Core.Test
         {
             var outputList = new List<string>();
             builder.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
-            builder.Create<ConsoleRunner>(outputFile);
+            builder.Create(Generator.Console, outputFile);
             return outputList.OrderBy(value => value).ToList();
         }
         

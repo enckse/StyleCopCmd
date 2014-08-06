@@ -347,15 +347,27 @@ namespace StyleCopCmd.Core
         /// <summary>
         /// Creates a StyleCop report backed by a file
         /// </summary>
-        /// <typeparam name="T">The output file-backed runner</typeparam>
+        /// <param name="generator">
+        /// A defined generator value to use to create the output report
+        /// </param>
         /// <param name="outputXmlFile">
         /// The fully-qualified path to write the output of the report to.
         /// </param>
-        public void Create<T>(string outputXmlFile) where T : RunnerBase, IFileRunner, new()
+        public void Create(Generator generator, string outputXmlFile)
         {
-            var inst = new T();
-            inst.OutputFile = GetViolationsFile(outputXmlFile);
-            this.Create(inst);
+            FileRunner runner = null;
+            switch (generator)
+            {
+                case Generator.Xml:
+                    runner = new XmlRunner();
+                    break;
+                default:
+                    runner = new ConsoleRunner();
+                    break;
+            }
+
+            runner.OutputFile = GetViolationsFile(outputXmlFile);
+            this.Create(runner);
         }
 
         /// <summary>

@@ -63,27 +63,6 @@ namespace StyleCopCmd.Console
         private static bool hadViolation;
 
         /// <summary>
-        /// Available generators
-        /// </summary>
-        private enum Generator
-        {
-            /// <summary>
-            /// Default generator (currently console runner)
-            /// </summary>
-            Default,
-
-            /// <summary>
-            /// Maps to the console runner
-            /// </summary>
-            Console,
-
-            /// <summary>
-            /// XML runner (output only, no reporting)
-            /// </summary>
-            Xml
-        }
-
-        /// <summary>
         /// The entry-point method for this application.
         /// </summary>
         /// <param name="args">
@@ -256,7 +235,7 @@ namespace StyleCopCmd.Console
                                 }  
                             });     
 
-                    report.Create<XmlRunner>(outputXml);
+                    report.Create(generatorType, outputXml);
 
                     break;
                 default:
@@ -274,7 +253,7 @@ namespace StyleCopCmd.Console
                     }
 
                     report = report.WithViolationEventHandler(callback);
-                    report.Create<ConsoleRunner>(outputXml);
+                    report.Create(generatorType, outputXml);
                     break;
             }
         }
