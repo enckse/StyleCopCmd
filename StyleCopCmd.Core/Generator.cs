@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // <copyright 
-//  file="FileRunner.cs" 
+//  file="Generator.cs" 
 //  company="enckse">
 //  Copyright (c) All rights reserved.
 // </copyright>

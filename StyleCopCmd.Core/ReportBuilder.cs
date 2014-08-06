@@ -366,8 +366,7 @@ namespace StyleCopCmd.Core
                     break;
             }
 
-            runner.OutputFile = GetViolationsFile(outputXmlFile);
-            this.Create(runner);
+            this.Create(runner, outputXmlFile);
         }
 
         /// <summary>
@@ -376,9 +375,51 @@ namespace StyleCopCmd.Core
         /// <param name="runner">Runner to use</param>
         public void Create(RunnerBase runner)
         {
+            this.Create(runner, null);
+        }
+
+        /// <summary>
+        /// Gets the path of the violations file to use.
+        /// </summary>
+        /// <param name="outputXmlFile">
+        /// The output XML file.
+        /// </param>
+        /// <returns>The path of the violations file.</returns>
+        private static string GetViolationsFile(string outputXmlFile)
+        {
+            return string.IsNullOrEmpty(outputXmlFile) ? null : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
+        }
+
+        /// <summary>
+        /// Prints assembly information for a given type
+        /// </summary>
+        /// <param name='type'>Type to get the assembly for</param>
+        /// <returns>Simple assembly and version information string</returns>
+        private static string GetAssemblyInfoForType(Type type)
+        {
+            var assembly = System.Reflection.Assembly.GetAssembly(type);
+            var fileInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            return string.Format(CultureInfo.CurrentCulture, "{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion);
+        }
+
+        /// <summary>
+        /// Creates a StyleCop report.
+        /// </summary>
+        /// <param name="runner">Runner to use</param>
+        /// <param name="outputXmlFile">
+        /// The fully-qualified path to write the output of the report to.
+        /// </param>
+        private void Create(RunnerBase runner, string outputXmlFile)
+        {
             if (runner == null)
             {
                 throw new ArgumentNullException("runner");
+            }
+
+            FileRunner fileRunner = runner as FileRunner;
+            if (fileRunner != null)
+            {
+                fileRunner.OutputFile = GetViolationsFile(outputXmlFile);
             }
 
             runner.Set(
@@ -424,30 +465,6 @@ namespace StyleCopCmd.Core
             this.WriteDebugLine("Starting check");
             runner.Start(cps, this.OutputGenerated, this.ViolationEncountered);
             this.WriteDebugLine("Checking done");
-        }
-
-        /// <summary>
-        /// Gets the path of the violations file to use.
-        /// </summary>
-        /// <param name="outputXmlFile">
-        /// The output XML file.
-        /// </param>
-        /// <returns>The path of the violations file.</returns>
-        private static string GetViolationsFile(string outputXmlFile)
-        {
-            return string.IsNullOrEmpty(outputXmlFile) ? null : string.Format(CultureInfo.CurrentCulture, "{0}.xml", Path.GetFileNameWithoutExtension(outputXmlFile));            
-        }
-
-        /// <summary>
-        /// Prints assembly information for a given type
-        /// </summary>
-        /// <param name='type'>Type to get the assembly for</param>
-        /// <returns>Simple assembly and version information string</returns>
-        private static string GetAssemblyInfoForType(Type type)
-        {
-            var assembly = System.Reflection.Assembly.GetAssembly(type);
-            var fileInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            return string.Format(CultureInfo.CurrentCulture, "{0} - {1}", assembly.GetName().Name, fileInfo.FileVersion);
         }
 
         /// <summary>
