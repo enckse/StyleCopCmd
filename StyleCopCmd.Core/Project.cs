@@ -7,8 +7,6 @@
 //------------------------------------------------------------------------------
 namespace StyleCopCmd.Core
 {
-    using System;
- 
     /// <summary>
     /// Representation of a project in memory
     /// </summary>

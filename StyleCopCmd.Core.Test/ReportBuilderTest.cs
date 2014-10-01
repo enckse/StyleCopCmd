@@ -38,7 +38,6 @@
  ******************************************************************************/
 namespace StyleCopCmd.Core.Test
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -409,7 +408,7 @@ namespace StyleCopCmd.Core.Test
             }
             
             var report = new ReportBuilder();
-            ExecuteTest(report, testReport);
+            ExecuteTest(report, testReport + ".xml");
             Assert.IsTrue(File.Exists(testReportFull));
         }
         
@@ -504,7 +503,8 @@ namespace StyleCopCmd.Core.Test
             
             var result = new List<string>();
             report.WithOutputEventHandler((x, y) => { result.Add(((StyleCop.OutputEventArgs)y).Output); });
-            report.Create(Generator.Xml, null);
+            var runner = new XmlRunner();
+            report.Create(runner);
 
             // Only 1 item should be reported
             Assert.AreEqual(1, result.Count, BasePath);
@@ -543,7 +543,9 @@ namespace StyleCopCmd.Core.Test
         {
             var outputList = new List<string>();
             builder.WithOutputEventHandler((x, y) => { outputList.Add(((StyleCop.OutputEventArgs)y).Output); });
-            builder.Create(Generator.Console, outputFile);
+            var runner = new ConsoleRunner();
+            runner.OutputFile = outputFile;
+            builder.Create(runner);
             return outputList.OrderBy(value => value).ToList();
         }
         

@@ -40,7 +40,6 @@ namespace StyleCopCmd.Console
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Core;
     using NDesk.Options;
 
@@ -61,6 +60,27 @@ namespace StyleCopCmd.Console
         /// Indicates if the program execute an analysis with violations
         /// </summary>
         private static bool hadViolation;
+
+        /// <summary>
+        /// Available generators
+        /// </summary>
+        private enum Generator
+        {
+            /// <summary>
+            /// Default generator (currently console runner)
+            /// </summary>
+            Default,
+
+            /// <summary>
+            /// Maps to the console runner
+            /// </summary>
+            Console,
+
+            /// <summary>
+            /// XML runner (output only, no reporting)
+            /// </summary>
+            Xml
+        }
 
         /// <summary>
         /// The entry-point method for this application.
@@ -222,6 +242,7 @@ namespace StyleCopCmd.Console
                 generatorType = (Generator)Enum.Parse(typeof(Generator), generator, true);
             }
 
+            FileRunner runner;
             switch (generatorType)
             {
                 case Generator.Xml:
@@ -235,8 +256,7 @@ namespace StyleCopCmd.Console
                                 }  
                             });     
 
-                    report.Create(generatorType, outputXml);
-
+                    runner = new XmlRunner();
                     break;
                 default:
                     EventHandler<StyleCop.ViolationEventArgs> callback = HadViolation;
@@ -253,9 +273,12 @@ namespace StyleCopCmd.Console
                     }
 
                     report = report.WithViolationEventHandler(callback);
-                    report.Create(generatorType, outputXml);
+                    runner = new ConsoleRunner();
                     break;
             }
+
+            runner.OutputFile = string.IsNullOrEmpty(outputXml) ? null : string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0}.xml", System.IO.Path.GetFileNameWithoutExtension(outputXml));
+            report.Create(runner);
         }
 
         /// <summary>

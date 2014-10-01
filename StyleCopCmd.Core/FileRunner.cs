@@ -7,8 +7,6 @@
 //------------------------------------------------------------------------------
 namespace StyleCopCmd.Core
 {
-    using StyleCop;
-
     /// <summary>A runner that uses a file can use this type to set the output file name</summary>
     public abstract class FileRunner : RunnerBase
     {

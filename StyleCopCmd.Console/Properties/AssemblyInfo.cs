@@ -6,6 +6,5 @@
 // </copyright>
 //------------------------------------------------------------------------------
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("StyleCopCmd.Console")]
