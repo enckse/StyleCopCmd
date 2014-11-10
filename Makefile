@@ -3,7 +3,9 @@ version:= `cat StyleCopCmd.Core/Properties/CommonAssemblyInfo.cs | grep "Assembl
 
 all: clean download rebuild
 
-release: clean download rebuild test analyze integration package
+ci: clean download rebuild test analyze integration
+
+release: ci package
 
 rebuild: build test analyze
 
@@ -36,7 +38,6 @@ clean:
 	rm -rf StyleCopCmd.Console/bin
 	rm -rf StyleCopCmd.Core/bin
 	rm -rf StyleCopCmd.Core.Test/bin
-
 
 integration:
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -t
