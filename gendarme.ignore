@@ -10,8 +10,3 @@ M: System.Void StyleCopCmd.Core.StyleCopXmlRunner::Violation(System.Object,Style
 R: Gendarme.Rules.Design.TypesWithDisposableFieldsShouldBeDisposableRule
 T: StyleCopCmd.Core.StyleCopXmlRunner
 
-# TODO: Determine either what to do about this or state why it is failing and justified
-# Getting a DeclareEventsExplicitlyRule in some cases - seems like a potential syntax issue on this end
-R: Gendarme.Rules.Correctness.DeclareEventsExplicitlyRule
-N: StyleCopCmd.Console
-
