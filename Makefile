@@ -1,15 +1,19 @@
 buildType=Release
 version:= `cat StyleCopCmd.Core/Properties/CommonAssemblyInfo.cs | grep "AssemblyFileVersion"| cut -f2 -d '"' | cut -f1,2,3 -d '.' | awk '{print $0}'`
 
-all: clean download rebuild
+all: download build
 
-ci: clean download rebuild test analyze integration
+ci: download build integration
 
 release: ci package
 
-rebuild: build test analyze
+clean:
+	rm -rf bin/*.dll
+	rm -rf StyleCopCmd.Console/bin
+	rm -rf StyleCopCmd.Core/bin
+	rm -rf StyleCopCmd.Core.Test/bin
 
-download:
+download: clean
 	mkdir -p bin/tmp
 	rm -rf bin/tmp/*
 	wget -O bin/tmp/sc.zip https://nuget.org/api/v2/package/StyleCop.MSBuild
@@ -28,18 +32,12 @@ build:
 test:
 	nunit-console2 StyleCopCmd.Core.Test/bin/$(buildType)/StyleCopCmd.Core.Test.dll -noshadow
 
-analyze:
+analyze: test
 	gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Core.dll
 	gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -t
 
-clean:
-	rm -rf bin/*.dll
-	rm -rf StyleCopCmd.Console/bin
-	rm -rf StyleCopCmd.Core/bin
-	rm -rf StyleCopCmd.Core.Test/bin
-
-integration:
+integration: analyze
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -t
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -v -t
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -s StyleCopCmd.sln -g=Xml -t
