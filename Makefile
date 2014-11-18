@@ -3,7 +3,7 @@ version:= `cat StyleCopCmd.Core/Properties/CommonAssemblyInfo.cs | grep "Assembl
 
 all: download build
 
-ci: download build integration
+ci: download integration
 
 release: ci package
 
@@ -29,7 +29,7 @@ download: clean
 build:
 	xbuild /property:Configuration="$(buildType)" StyleCopCmd.sln
 
-test:
+test: build
 	nunit-console2 StyleCopCmd.Core.Test/bin/$(buildType)/StyleCopCmd.Core.Test.dll -noshadow
 
 analyze: test
