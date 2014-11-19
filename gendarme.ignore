@@ -1,7 +1,3 @@
-# Handle assembly versions here since a callout to change the file vs assembly version is important
-R: Gendarme.Rules.BadPractice.AvoidAssemblyVersionMismatchRule
-A: *
-
 # StyleCop derived types can ignore some rules about locking
 R: Gendarme.Rules.Concurrency.DoNotLockOnThisOrTypesRule
 M: System.Void StyleCopCmd.Core.StyleCopXmlRunner::Violation(System.Object,StyleCop.ViolationEventArgs)
