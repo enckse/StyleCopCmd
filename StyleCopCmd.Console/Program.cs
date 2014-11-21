@@ -179,7 +179,8 @@ namespace StyleCopCmd.Console
                 .WithIgnorePatterns(ignorePatterns)
                 .WithDebug(debugAction)
                 .WithAddins(addins)
-                .WithProjectUnloads(projectUnloads);
+                .WithProjectUnloads(projectUnloads)
+                .WithProcessorSymbols(symbols);
 
             foreach (var opt in optionals)
             {

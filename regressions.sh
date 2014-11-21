@@ -76,7 +76,7 @@ else
 	exit 1
 fi
 
-#test "-x !SOMEOTHER -r -d" "StyleCopTestProject/" "5 violations"
+test "-x SOMEOTHER -r -d" "StyleCopTestProject/" "11 violations"
 test "-u StyleCop -s" "StyleCopTestProject.sln" "No violations"
 test "-u Style -s" "StyleCopTestProject.sln" "No violations"
 test "-g Xml -r -d" "StyleCopTestProject/" "Violations were encountered"

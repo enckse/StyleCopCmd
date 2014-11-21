@@ -1,2 +1,2 @@
 #!/bin/sh
-bash ./regressions.sh "/opt/scc/StyleCopCmd.Console.exe"
+bash ./regressions.sh "$1"

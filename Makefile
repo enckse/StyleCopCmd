@@ -55,7 +55,7 @@ integration: analyze
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -g=Xml -t
 
 regression: integration
-	./regression-wrapper.sh 
+	./regression-wrapper.sh "StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe"
 
 package:
 	zip -j StyleCopCmd-$(version).zip StyleCopCmd.Console/bin/$(buildType)/*.dll StyleCopCmd.Console/bin/$(buildType)/*.exe
