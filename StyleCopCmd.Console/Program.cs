@@ -90,108 +90,98 @@ namespace StyleCopCmd.Console
         /// </param>
         private static void Main(string[] args)
         {
-            IList<string> solutionFiles = new List<string>();
-            IList<string> projectFiles = new List<string>();
-            IList<string> ignorePatterns = new List<string>();
-            IList<string> directories = new List<string>();
-            IList<string> files = new List<string>();
-            IList<string> symbols = new List<string>();
-            IList<string> addins = new List<string>();
-            IList<string> projectUnloads = new List<string>();
-            string styleCopSettings = null;
-            string outputXml = null;
-            bool recurse = false;
-            bool needHelp = false;
-            bool violations = false;
-            bool quiet = false;
-            bool dedupe = false;
-            bool withDebug = false;
-            bool terminate = false;
-            string generator = null;
-            string currentOp = null;
-
-            var optionals = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-            opts = new OptionSet()
-            {
-                { "s=|solutionFiles=", "Solution files to check (.sln)", opt => { solutionFiles.Add(opt); } },
-                { "p=|projectFiles=", "Project files to check (.csproj)", opt => { projectFiles.Add(opt); } },
-                { "i=|ignoreFilePattern=", "Regular expression patterns to ignore files", opt => { ignorePatterns.Add(opt); } },
-                { "d=|directories=", "Directories to check for files (.cs)", opt => { directories.Add(opt); } },
-                { "f=|files=", "Files to check (.cs)", opt => { files.Add(opt); } },
-                { "r|recurse", "Recursive directory search", opt => { recurse = opt != null; } },
-                { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { styleCopSettings = opt; } },
-                { "o=|outputXmlFile=", "The file the XML output is written to", opt => { outputXml = opt; } },
-                { "x=|configurationSymbols=", "Configuration symbols to pass to StyleCop (ex. DEBUG, RELEASE)", opt => { symbols.Add(opt); } },
-                { "v|violations", "Print all violation information instead of the summary", opt => { violations = true; } },
-                { "q|quiet", "Do not print any information to console", opt => { quiet = true; } },
-                { "?|help", "Print the usage information", opt => { needHelp = true; } },
-                { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { dedupe = true; } },
-                { "w|withDebug", "Perform checks with debug output", opt => { withDebug = true; } },
-                { "a=|addIns=", "Addin paths to search", opt => { addins.Add(opt); } },
-                { "t|terminate", "Report a non-zero exit code on violation", opt => { terminate = true; } },
-                { "u|unloadProjects=", "Regular expressions to unload/ignore projects in a solution", opt => { projectUnloads.Add(opt); } },
-                { "g=|generator", GetGeneratorHelp(), opt => { generator = opt; } },
-                { "l|list", GetOptionalHelp(), opt => { currentOp = ListParameter; } },
-                { "<>", opt =>
-                    {
-                        if (currentOp != null && currentOp == ListParameter)
-                        {
-                            string[] values = opt.Split(new char[] { ':', '=' }, 2);
-                            optionals[values[0]] = values[1];
-                        }
-                    }
-                }
-            };
-            
+            var options = GetOptions();            
             Action<string> debugAction = null;
             try
             {
                 opts.Parse(args);
-                if (withDebug)
+                if (options.WithDebug)
                 {
                     debugAction = x => { Console.WriteLine(x); };
                     PrintVersion(debugAction);
                 }
 
-                needHelp = needHelp || (solutionFiles.Count == 0 && projectFiles.Count == 0 && directories.Count == 0 && files.Count == 0);
+                options.Validate();
             }
             catch (OptionException error)
             {
                 Console.WriteLine("Invalid arguments");
                 Console.WriteLine(error);
-                needHelp = true;
+                options.NeedHelp = true;
             }
             
-            if (needHelp)
+            if (options.NeedHelp)
             {
                 PrintUsageAndHelp();
                 return;
             }
             
             var report = new ReportBuilder()
-                .WithDedupe(dedupe)
-                .WithStyleCopSettingsFile(styleCopSettings)
-                .WithRecursion(recurse)
-                .WithSolutionsFiles(solutionFiles)
-                .WithProjectFiles(projectFiles)
-                .WithDirectories(directories)
-                .WithFiles(files)
-                .WithIgnorePatterns(ignorePatterns)
+                .WithDedupe(options.Dedupe)
+                .WithStyleCopSettingsFile(options.StyleCopSettings)
+                .WithRecursion(options.Recurse)
+                .WithSolutionsFiles(options.SolutionFiles)
+                .WithProjectFiles(options.ProjectFiles)
+                .WithDirectories(options.Directories)
+                .WithFiles(options.Files)
+                .WithIgnorePatterns(options.IgnorePatterns)
                 .WithDebug(debugAction)
-                .WithAddins(addins)
-                .WithProjectUnloads(projectUnloads)
-                .WithProcessorSymbols(symbols);
+                .WithAddins(options.Addins)
+                .WithProjectUnloads(options.ProjectUnloads)
+                .WithProcessorSymbols(options.Symbols);
 
-            foreach (var opt in optionals)
+            foreach (var opt in options.Optionals)
             {
                 report = report.AddOptional(opt.Key, opt.Value);
             }
 
-            RunReport(report, generator, outputXml, quiet, violations);
-            if (hadViolation && terminate)
+            RunReport(report, options.Generator, options.OutputXml, options.Quiet, options.Violations);
+            if (hadViolation && options.Terminate)
             {
                 Environment.Exit(1);
             }
+        }
+
+        /// <summary>
+        /// Get the program options
+        /// </summary>
+        /// <returns>Program options</returns>
+        private static ProgramOptions GetOptions()
+        {
+            var options = new ProgramOptions();
+            opts = new OptionSet()
+            {
+                { "s=|solutionFiles=", "Solution files to check (.sln)", opt => { options.SolutionFiles.Add(opt); } },
+                { "p=|projectFiles=", "Project files to check (.csproj)", opt => { options.ProjectFiles.Add(opt); } },
+                { "i=|ignoreFilePattern=", "Regular expression patterns to ignore files", opt => { options.IgnorePatterns.Add(opt); } },
+                { "d=|directories=", "Directories to check for files (.cs)", opt => { options.Directories.Add(opt); } },
+                { "f=|files=", "Files to check (.cs)", opt => { options.Files.Add(opt); } },
+                { "r|recurse", "Recursive directory search", opt => { options.Recurse = opt != null; } },
+                { "c=|styleCopSettingsFile=", "Use the given StyleCop settings file", opt => { options.StyleCopSettings = opt; } },
+                { "o=|outputXmlFile=", "The file the XML output is written to", opt => { options.OutputXml = opt; } },
+                { "x=|configurationSymbols=", "Configuration symbols to pass to StyleCop (ex. DEBUG, RELEASE)", opt => { options.Symbols.Add(opt); } },
+                { "v|violations", "Print all violation information instead of the summary", opt => { options.Violations = true; } },
+                { "q|quiet", "Do not print any information to console", opt => { options.Quiet = true; } },
+                { "?|help", "Print the usage information", opt => { options.NeedHelp = true; } },
+                { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { options.Dedupe = true; } },
+                { "w|withDebug", "Perform checks with debug output", opt => { options.WithDebug = true; } },
+                { "a=|addIns=", "Addin paths to search", opt => { options.Addins.Add(opt); } },
+                { "t|terminate", "Report a non-zero exit code on violation", opt => { options.Terminate = true; } },
+                { "u|unloadProjects=", "Regular expressions to unload/ignore projects in a solution", opt => { options.ProjectUnloads.Add(opt); } },
+                { "g=|generator", GetGeneratorHelp(), opt => { options.Generator = opt; } },
+                { "l|list", GetOptionalHelp(), opt => { options.CurrentOp = ListParameter; } },
+                { "<>", opt =>
+                    {
+                        if (options.CurrentOp != null && options.CurrentOp == ListParameter)
+                        {
+                            string[] values = opt.Split(new char[] { ':', '=' }, 2);
+                            options.Optionals[values[0]] = values[1];
+                        }
+                    }
+                }
+            };
+            
+            return options;
         }
 
         /// <summary>
@@ -345,6 +335,147 @@ namespace StyleCopCmd.Console
             Console.WriteLine("StyleCopCmd");
             Console.WriteLine("Provides a command line interface for using StyleCop");
             opts.WriteOptionDescriptions(Console.Out);
+        }
+
+        /// <summary>
+        /// Program options
+        /// </summary>
+        private sealed class ProgramOptions
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProgramOptions" /> class.
+            /// </summary>
+            public ProgramOptions()
+            {
+                this.SolutionFiles = new List<string>();
+                this.ProjectFiles = new List<string>();
+                this.IgnorePatterns = new List<string>();
+                this.Directories = new List<string>();
+                this.Files = new List<string>();
+                this.Symbols = new List<string>();
+                this.Addins = new List<string>();
+                this.ProjectUnloads = new List<string>();
+                this.StyleCopSettings = null;
+                this.OutputXml = null;
+                this.Recurse = false;
+                this.NeedHelp = false;
+                this.Violations = false;
+                this.Quiet = false;
+                this.Dedupe = false;
+                this.WithDebug = false;
+                this.Terminate = false;
+                this.Generator = null;
+                this.CurrentOp = null;
+                this.Optionals = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            }
+
+            /// <summary>
+            /// Gets or sets the optional inputs
+            /// </summary>
+            public IDictionary<string, object> Optionals { get; set; }
+
+            /// <summary>
+            /// Gets or sets the solution files to read
+            /// </summary>
+            public IList<string> SolutionFiles { get; set; }
+
+            /// <summary>
+            /// Gets or sets the project files to read
+            /// </summary>
+            public IList<string> ProjectFiles { get; set; }
+
+            /// <summary>
+            /// Gets or sets the file ignore patterns
+            /// </summary>
+            public IList<string> IgnorePatterns { get; set; }
+
+            /// <summary>
+            /// Gets or sets the directories to search
+            /// </summary>
+            public IList<string> Directories { get; set; }
+
+            /// <summary>
+            /// Gets or sets the files to read
+            /// </summary>
+            public IList<string> Files { get; set; }
+
+            /// <summary>
+            /// Gets or sets the symbols to include
+            /// </summary>
+            public IList<string> Symbols { get; set; }
+
+            /// <summary>
+            /// Gets or sets the add-ins directories to search
+            /// </summary>
+            public IList<string> Addins { get; set; }
+
+            /// <summary>
+            /// Gets or sets the patterns to unload projects from a solution
+            /// </summary>
+            public IList<string> ProjectUnloads { get; set; }
+
+            /// <summary>
+            /// Gets or sets the settings file
+            /// </summary>
+            public string StyleCopSettings { get; set; }
+
+            /// <summary>
+            /// Gets or sets the output file name
+            /// </summary>
+            public string OutputXml { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to recurse on directories
+            /// </summary>
+            public bool Recurse { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to show help
+            /// </summary>
+            public bool NeedHelp { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to display violation detail
+            /// </summary>
+            public bool Violations { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to display no outputs
+            /// </summary>
+            public bool Quiet { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to remove duplicate file processing
+            /// </summary>
+            public bool Dedupe { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to use debugging output
+            /// </summary>
+            public bool WithDebug { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether to report a non-zero exit on violation
+            /// </summary>
+            public bool Terminate { get; set; }
+
+            /// <summary>
+            /// Gets or sets the generator requested
+            /// </summary>
+            public string Generator { get; set; }
+
+            /// <summary>
+            /// Gets or sets the current parsing operation
+            /// </summary>
+            public string CurrentOp { get; set; }
+
+            /// <summary>
+            /// Validates the option set (determine if help should be display)
+            /// </summary>
+            public void Validate()
+            {
+                this.NeedHelp = this.NeedHelp || (this.SolutionFiles.Count == 0 && this.ProjectFiles.Count == 0 && this.Directories.Count == 0 && this.Files.Count == 0);
+            }
         }
     }
 }
