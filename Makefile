@@ -3,7 +3,7 @@ version:= `cat StyleCopCmd.Core/Properties/CommonAssemblyInfo.cs | grep "Assembl
 
 all: download build
 
-ci: download integration
+ci: download regression
 
 release: ci package
 
@@ -53,6 +53,9 @@ integration: analyze
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -t
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -v -t
 	mono StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Console.exe -p StyleCopCmd.Console/StyleCopCmd.Console.csproj -g=Xml -t
+
+regression: integration
+	./regression-wrapper.sh 
 
 package:
 	zip -j StyleCopCmd-$(version).zip StyleCopCmd.Console/bin/$(buildType)/*.dll StyleCopCmd.Console/bin/$(buildType)/*.exe
