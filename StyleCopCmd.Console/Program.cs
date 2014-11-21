@@ -57,9 +57,9 @@ namespace StyleCopCmd.Console
         private static OptionSet opts = new OptionSet();
 
         /// <summary>
-        /// Indicates if the program execute an analysis with violations
+        /// Number of violations encountered
         /// </summary>
-        private static bool hadViolation;
+        private static volatile int violationCount;
 
         /// <summary>
         /// Available generators
@@ -136,7 +136,7 @@ namespace StyleCopCmd.Console
             }
 
             RunReport(report, options.Generator, options.OutputXml, options.Quiet, options.Violations);
-            if (hadViolation && options.Terminate)
+            if (options.MaxViolations.HasValue && violationCount > options.MaxViolations.Value)
             {
                 Environment.Exit(1);
             }
@@ -166,8 +166,9 @@ namespace StyleCopCmd.Console
                 { "e|eliminate", "Eliminate checking duplicate files/projects", opt => { options.Dedupe = true; } },
                 { "w|withDebug", "Perform checks with debug output", opt => { options.WithDebug = true; } },
                 { "a=|addIns=", "Addin paths to search", opt => { options.Addins.Add(opt); } },
-                { "t|terminate", "Report a non-zero exit code on violation", opt => { options.Terminate = true; } },
+                { "t|terminate", "Report a non-zero exit code on violation", opt => { options.MaxViolations = 0; } },
                 { "u|unloadProjects=", "Regular expressions to unload/ignore projects in a solution", opt => { options.ProjectUnloads.Add(opt); } },
+                { "m|maxViolations=", "Report a non-zero exit for any violations beyond this value", opt => { options.MaxViolations = TryIntParse(opt, "maxViolations"); } },
                 { "g=|generator", GetGeneratorHelp(), opt => { options.Generator = opt; } },
                 { "l|list", GetOptionalHelp(), opt => { options.CurrentOp = ListParameter; } },
                 { "<>", opt =>
@@ -182,6 +183,29 @@ namespace StyleCopCmd.Console
             };
             
             return options;
+        }
+
+        /// <summary>
+        /// Try and parse a value. Value must be valid and greater than or equal to zero
+        /// </summary>
+        /// <param name="opt">Option input value</param>
+        /// <param name="option">Option name</param>
+        /// <returns>Parsed value</returns>
+        private static int TryIntParse(string opt, string option)
+        {
+            if (opt != null)
+            {
+                int returnValue = 0;
+                if (int.TryParse(opt, out returnValue))
+                {
+                    if (returnValue >= 0)
+                    {
+                        return returnValue;
+                    }
+                }
+            }
+
+            throw new OptionException(string.Format("The input value was invalid for {0}", option), option);
         }
 
         /// <summary>
@@ -240,7 +264,7 @@ namespace StyleCopCmd.Console
                     report = report.WithOutputEventHandler(
                         (x, y) => 
                             { 
-                                hadViolation = true; 
+                                violationCount++;
                                 if (!quiet)
                                 {
                                     OutputGenerated(x, y);
@@ -312,7 +336,7 @@ namespace StyleCopCmd.Console
         /// </param>
         private static void HadViolation(object sender, StyleCop.ViolationEventArgs e)
         {
-            hadViolation = true;
+            violationCount++;
         }
 
         /// <summary>
@@ -363,7 +387,7 @@ namespace StyleCopCmd.Console
                 this.Quiet = false;
                 this.Dedupe = false;
                 this.WithDebug = false;
-                this.Terminate = false;
+                this.MaxViolations = null;
                 this.Generator = null;
                 this.CurrentOp = null;
                 this.Optionals = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
@@ -457,7 +481,7 @@ namespace StyleCopCmd.Console
             /// <summary>
             /// Gets or sets a value indicating whether to report a non-zero exit on violation
             /// </summary>
-            public bool Terminate { get; set; }
+            public int? MaxViolations { get; set; }
 
             /// <summary>
             /// Gets or sets the generator requested

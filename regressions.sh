@@ -76,6 +76,22 @@ else
 	exit 1
 fi
 
+echo "Terminate on count exit"
+mono $SCC -m 3 -f $BASEPATH"StyleCopTestProject/ClassOne.cs"
+if [ $? -eq 0 ]; then
+	echo "Success"
+else
+	exit 1
+fi
+
+echo "Terminate on count exit successfully"
+mono $SCC -m 2 -f $BASEPATH"StyleCopTestProject/ClassOne.cs"
+if [ $? -eq 1 ]; then
+	echo "Success"
+else
+	exit 1
+fi
+
 test "-x SOMEOTHER -r -d" "StyleCopTestProject/" "11 violations"
 test "-u StyleCop -s" "StyleCopTestProject.sln" "No violations"
 test "-u Style -s" "StyleCopTestProject.sln" "No violations"

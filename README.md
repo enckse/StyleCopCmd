@@ -58,6 +58,8 @@ Provides a command line interface for using StyleCop
   -t, --terminate            Report a non-zero exit code on violation
   -u, --unloadProjects=VALUE Regular expressions to unload/ignore projects in 
                                a solution
+  -m, --maxViolations=VALUE  Report a non-zero exit for any violations beyond 
+                               this value
   -g, --generator=VALUE      Specify a generator engine for the analysis.
                                 Console - the default generator with caching 
                                and full console reporting available.
