@@ -449,7 +449,7 @@ namespace StyleCopCmd.Console
             public string OutputXml { get; set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether to recurse on directories
+            /// Gets or sets a value indicating whether to recursively search on directories
             /// </summary>
             public bool Recurse { get; set; }
 
