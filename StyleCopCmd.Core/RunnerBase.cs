@@ -48,7 +48,7 @@ namespace StyleCopCmd.Core
         protected IDictionary<string, object> Optionals { get; private set; }
         
         /// <summary>
-        /// Gets the addin paths for the runner to use
+        /// Gets the add-in paths for the runner to use
         /// </summary>
         protected IList<string> AddIns { get; private set; }
 

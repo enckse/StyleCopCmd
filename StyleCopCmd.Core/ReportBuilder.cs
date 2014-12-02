@@ -543,16 +543,11 @@ namespace StyleCopCmd.Core
         private void AddFile(string filePath, int? project)
         {
             this.WriteDebugLine("Adding file: " + filePath);
-            if (this.Settings.IgnorePatterns != null)
+            if (this.CheckIsFilteredOut(Path.GetFileName(filePath), this.Settings.IgnorePatterns))
             {
-                // Check to see if this file should be ignored.
-                if (this.Settings.IgnorePatterns.FirstOrDefault(fp => Regex.IsMatch(Path.GetFileName(filePath), fp)) != null)
-                {
-                    this.WriteDebugLine("File is being ignored");
-                    return;
-                }
+                return;
             }
-            
+
             var pr = project.HasValue ? project.Value : ReportStore.FileProject;
             this.Report.AddSourceFile(Path.GetFullPath(filePath), pr);
         }
@@ -585,13 +580,9 @@ namespace StyleCopCmd.Core
                             Path.GetFullPath(solutionFilePath)))
                     + Path.DirectorySeparatorChar.ToString() + mstring;
 
-                if (this.Settings.ProjectUnloads != null)
+                if (this.CheckIsFilteredOut(ppath, this.Settings.ProjectUnloads))
                 {
-                    // Ignore any projects matching the unload request
-                    if (this.Settings.ProjectUnloads.Where(x => Regex.IsMatch(ppath, x)).Any())
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 this.AddProjectFile(ppath);
@@ -710,6 +701,27 @@ namespace StyleCopCmd.Core
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if a value should be filtered out (using regular expressions)
+        /// </summary>
+        /// <param name="input">Input string</param>
+        /// <param name="filters">Possible filters</param>
+        /// <returns>True if the value matches any of the input filters</returns>
+        private bool CheckIsFilteredOut(string input, IList<string> filters)
+        {
+            if (filters != null && filters.Count > 0)
+            {
+                // Check to see if this file should be ignored.
+                if (filters.Where(x => Regex.IsMatch(input, x)).Any())
+                {
+                    this.WriteDebugLine(string.Format("Input is being filtered out: {0}", input));
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
