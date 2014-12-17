@@ -187,7 +187,8 @@ namespace StyleCopCmd.Core.Test
             }
             catch (FormatException error)
             {
-                Assert.AreEqual("Input string was not in the correct format", error.Message);
+                // Match using a regex since mono and .NET have different message texts
+                Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(error.Message, "Input string was not in (the|a) correct format(.)*"));
             }
         }
 
