@@ -7,7 +7,7 @@ before_install:
   - wget "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/gendarme.sh"
   - sudo chmod a+x gendarme.sh
   - ./gendarme.sh
-  - wget "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/nunit-wrapper.sh"
+  - wget -O "nunit-wrapper.sh" "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/nunit-wrapper.sh"
   - sudo chmod a+x nunit-wrapper.sh
 
 script: make ci nunit=./nunit-wrapper
