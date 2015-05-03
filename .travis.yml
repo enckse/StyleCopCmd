@@ -1,13 +1,8 @@
 language: objective-c
 
 before_install:
-  - wget "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/mono.sh"
-  - sudo chmod a+x mono.sh
-  - ./mono.sh
-  - wget "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/gendarme.sh"
-  - sudo chmod a+x gendarme.sh
-  - ./gendarme.sh
-  - wget -O "nunit-wrapper.sh" "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/nunit-wrapper.sh"
-  - sudo chmod a+x nunit-wrapper.sh
+  - wget "https://raw.githubusercontent.com/enckse/travis-mono-scripts/master/download-all.sh"
+  - sudo chmod a+x download-all.sh
+  - ./download-all.sh
 
 script: make ci nunit=./nunit-wrapper
