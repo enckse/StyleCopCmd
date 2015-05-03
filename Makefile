@@ -1,4 +1,5 @@
 buildType=Release
+nunit=nunit-console4
 version:= `cat StyleCopCmd.Core/Properties/CommonAssemblyInfo.cs | grep "AssemblyFileVersion"| cut -f2 -d '"' | cut -f1,2,3 -d '.' | awk '{print $0}'`
 
 all: download build
@@ -30,7 +31,7 @@ build:
 	xbuild /property:Configuration="$(buildType)" StyleCopCmd.sln
 
 test: build
-	nunit-console4 StyleCopCmd.Core.Test/bin/$(buildType)/StyleCopCmd.Core.Test.dll -noshadow
+	"$(nunit)" StyleCopCmd.Core.Test/bin/$(buildType)/StyleCopCmd.Core.Test.dll -noshadow
 
 analyze: test
 	gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Core.dll
