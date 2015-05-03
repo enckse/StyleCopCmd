@@ -30,7 +30,7 @@ build:
 	xbuild /property:Configuration="$(buildType)" StyleCopCmd.sln
 
 test: build
-	nunit-console2 StyleCopCmd.Core.Test/bin/$(buildType)/StyleCopCmd.Core.Test.dll -noshadow
+	nunit-console4 StyleCopCmd.Core.Test/bin/$(buildType)/StyleCopCmd.Core.Test.dll -noshadow
 
 analyze: test
 	gendarme --ignore gendarme.ignore StyleCopCmd.Console/bin/$(buildType)/StyleCopCmd.Core.dll
