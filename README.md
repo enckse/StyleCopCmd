@@ -1,3 +1,17 @@
+Notice
+------
+(2015-05-30): StyleCop itself may or may not be 'dead' as a project BUT there is good news in that with 
+all the recent Microsoft open source changes - it is really being reborn. I do not know what that means 
+for StyleCopCmd or how it will interact going forward. I think that will require a more stable core of 
+analyzers. I'll have to take a further look later as to whether StyleCopCmd even needs to continue to 
+exist or not. For now, if there is a new release of the 'current' StyleCop, I'll update otherwise it is 
+just a matter of what the future brings.
+
+The new analyzing stuff for StyleCop is here: https://github.com/DotNetAnalyzers/StyleCopAnalyzers
+
+General
+-------
+
 This is a (highly) modified version of the original StyleCopCmd that uses more recent versions of the dependencies and is mainly targeted at running in a Mono + Linux environment (but there is no known reason it shouldn't run elsewhere)
 
 Installing
